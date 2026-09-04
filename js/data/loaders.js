@@ -1,0 +1,97 @@
+/* Category: Loaders & Spinners */
+(function () {
+  var L = (window.MOTION_LAB = window.MOTION_LAB || []);
+  L.push(
+
+{ id: 'ring-spinner', title: 'Classic Ring', cat: 'loaders', tags: ['css', 'spinner'],
+  html: '<div class="ring"></div>',
+  css: '.ring{width:56px;height:56px;border-radius:50%;border:5px solid rgba(140,140,180,.25);border-top-color:#7c5cff;animation:spin 1s linear infinite}\n@keyframes spin{to{transform:rotate(1turn)}}'
+},
+
+{ id: 'dual-ring', title: 'Dual Counter Ring', cat: 'loaders', tags: ['css', 'spinner'],
+  html: '<div class="dual"><span></span><span></span></div>',
+  css: '.dual{position:relative;width:64px;height:64px}\n.dual span{position:absolute;inset:0;border-radius:50%;border:4px solid transparent}\n.dual span:nth-child(1){border-top-color:#7c5cff;border-bottom-color:#7c5cff;animation:d1 1.1s cubic-bezier(.6,.1,.4,.9) infinite}\n.dual span:nth-child(2){inset:10px;border-left-color:#22d3ee;border-right-color:#22d3ee;animation:d1 1.1s cubic-bezier(.6,.1,.4,.9) infinite reverse}\n@keyframes d1{to{transform:rotate(1turn)}}'
+},
+
+{ id: 'dots-bounce', title: 'Bouncing Dots', cat: 'loaders', tags: ['css', 'dots'],
+  html: '<div class="db"><i></i><i></i><i></i></div>',
+  css: '.db{display:flex;gap:10px}\n.db i{width:14px;height:14px;border-radius:50%;background:#7c5cff;animation:bnc .6s ease-in-out infinite alternate}\n.db i:nth-child(2){background:#a855f7;animation-delay:.15s}\n.db i:nth-child(3){background:#22d3ee;animation-delay:.3s}\n@keyframes bnc{to{transform:translateY(-18px) scale(1.1)}}'
+},
+
+{ id: 'pulse-circle', title: 'Pulse Beacon', cat: 'loaders', tags: ['css', 'pulse'],
+  html: '<div class="pb"><span></span><span></span><span></span></div>',
+  css: '.pb{position:relative;width:70px;height:70px;display:grid;place-items:center}\n.pb span{position:absolute;width:70px;height:70px;border-radius:50%;background:#22d3ee;opacity:0;animation:pl 2.1s cubic-bezier(.2,.6,.3,1) infinite}\n.pb span:nth-child(2){animation-delay:.7s}\n.pb span:nth-child(3){animation-delay:1.4s}\n@keyframes pl{0%{transform:scale(.25);opacity:.85}100%{transform:scale(1);opacity:0}}'
+},
+
+{ id: 'equalizer', title: 'Audio Equalizer', cat: 'loaders', tags: ['css', 'bars'],
+  html: '<div class="eq"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>',
+  css: '.eq{display:flex;align-items:flex-end;gap:5px;height:60px}\n.eq i{width:8px;border-radius:4px;background:linear-gradient(#22d3ee,#7c5cff);animation:eqb .9s ease-in-out infinite alternate}\n.eq i:nth-child(1){height:20%;animation-delay:0s}\n.eq i:nth-child(2){height:55%;animation-delay:.1s}\n.eq i:nth-child(3){height:85%;animation-delay:.2s}\n.eq i:nth-child(4){height:40%;animation-delay:.3s}\n.eq i:nth-child(5){height:70%;animation-delay:.4s}\n.eq i:nth-child(6){height:30%;animation-delay:.5s}\n.eq i:nth-child(7){height:60%;animation-delay:.6s}\n@keyframes eqb{to{height:100%}}'
+},
+
+{ id: 'square-flip', title: 'Flipping Square', cat: 'loaders', tags: ['css', '3d'],
+  html: '<div class="sq"></div>',
+  css: '.sq{width:48px;height:48px;background:linear-gradient(135deg,#7c5cff,#ff5c8a);border-radius:8px;animation:flipsq 2s ease-in-out infinite}\n@keyframes flipsq{0%{transform:perspective(160px) rotateX(0) rotateY(0)}50%{transform:perspective(160px) rotateX(-180deg) rotateY(0)}100%{transform:perspective(160px) rotateX(-180deg) rotateY(-180deg)}}'
+},
+
+{ id: 'orbit-loader', title: 'Orbiting Moons', cat: 'loaders', tags: ['css', 'orbit'],
+  html: '<div class="orb"><i></i><i></i><i></i></div>',
+  css: '.orb{position:relative;width:80px;height:80px}\n.orb i{position:absolute;inset:0;border-radius:50%;border:2px dashed rgba(140,140,180,.28);animation:ospin 3s linear infinite}\n.orb i::after{content:"";position:absolute;top:-7px;left:50%;margin-left:-7px;width:14px;height:14px;border-radius:50%;background:#7c5cff;box-shadow:0 0 14px #7c5cff}\n.orb i:nth-child(2){inset:14px;animation-duration:2s;animation-direction:reverse}\n.orb i:nth-child(2)::after{background:#22d3ee;box-shadow:0 0 14px #22d3ee}\n.orb i:nth-child(3){inset:28px;animation-duration:1.3s}\n.orb i:nth-child(3)::after{background:#ff5c8a;box-shadow:0 0 14px #ff5c8a}\n@keyframes ospin{to{transform:rotate(1turn)}}'
+},
+
+{ id: 'ripple-loader', title: 'Ripple Rings', cat: 'loaders', tags: ['css', 'ripple'],
+  html: '<div class="rp"><span></span><span></span></div>',
+  css: '.rp{position:relative;width:80px;height:80px}\n.rp span{position:absolute;top:50%;left:50%;border:4px solid #7c5cff;border-radius:50%;animation:rip 1.6s cubic-bezier(0,.2,.8,1) infinite}\n.rp span:nth-child(2){border-color:#22d3ee;animation-delay:-.8s}\n@keyframes rip{0%{width:0;height:0;margin:0;opacity:1}100%{width:80px;height:80px;margin:-40px 0 0 -40px;opacity:0}}'
+},
+
+{ id: 'conic-spinner', title: 'Conic Gradient Spin', cat: 'loaders', tags: ['css', 'gradient'],
+  html: '<div class="cg"></div>',
+  css: '.cg{width:62px;height:62px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,#7c5cff 90deg,#22d3ee 260deg,transparent 360deg);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 0);mask:radial-gradient(farthest-side,transparent calc(100% - 8px),#000 0);animation:spin 1s linear infinite}\n@keyframes spin{to{transform:rotate(1turn)}}'
+},
+
+{ id: 'typing-dots', title: 'Chat Typing Bubble', cat: 'loaders', tags: ['css', 'chat'],
+  html: '<div class="bub"><i></i><i></i><i></i></div>',
+  css: '.bub{display:flex;gap:6px;align-items:center;padding:16px 20px;border-radius:22px 22px 22px 6px;background:rgba(140,140,180,.16);border:1px solid rgba(160,160,200,.2)}\n.bub i{width:9px;height:9px;border-radius:50%;background:#9a9ab0;animation:td 1.3s ease-in-out infinite}\n.bub i:nth-child(2){animation-delay:.18s}\n.bub i:nth-child(3){animation-delay:.36s}\n@keyframes td{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-8px);opacity:1}}'
+},
+
+{ id: 'indeterminate-bar', title: 'Indeterminate Bar', cat: 'loaders', tags: ['css', 'progress'],
+  html: '<div class="ib"><span></span></div>',
+  css: '.ib{width:220px;height:8px;border-radius:99px;background:rgba(140,140,180,.2);overflow:hidden;position:relative}\n.ib span{position:absolute;inset:0 auto 0 0;width:40%;border-radius:99px;background:linear-gradient(90deg,#7c5cff,#22d3ee);animation:slide 1.5s cubic-bezier(.65,0,.35,1) infinite}\n@keyframes slide{0%{left:-40%}100%{left:100%}}'
+},
+
+{ id: 'hourglass', title: 'Hourglass Flip', cat: 'loaders', tags: ['css', 'shape'],
+  html: '<div class="hg"></div>',
+  css: '.hg{width:0;height:0;border:26px solid #7c5cff;border-color:#7c5cff transparent;animation:hgf 1.4s cubic-bezier(.7,0,.3,1) infinite}\n@keyframes hgf{0%{transform:rotate(0);border-width:26px 26px 0 26px}25%{border-width:0 26px 26px 26px}50%{transform:rotate(180deg);border-width:0 26px 26px 26px}75%{border-width:26px 26px 0 26px}100%{transform:rotate(180deg);border-width:26px 26px 0 26px}}'
+},
+
+{ id: 'cube-grid', title: 'Cube Grid Wave', cat: 'loaders', tags: ['css', 'grid'],
+  html: '<div class="cgd"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>',
+  css: '.cgd{display:grid;grid-template-columns:repeat(3,18px);gap:5px}\n.cgd i{width:18px;height:18px;border-radius:4px;background:#7c5cff;animation:cgs 1.3s ease-in-out infinite}\n.cgd i:nth-child(1),.cgd i:nth-child(5),.cgd i:nth-child(9){animation-delay:.2s}\n.cgd i:nth-child(2),.cgd i:nth-child(6){animation-delay:.3s}\n.cgd i:nth-child(3){animation-delay:.4s}\n.cgd i:nth-child(4),.cgd i:nth-child(8){animation-delay:.1s}\n.cgd i:nth-child(7){animation-delay:0s}\n@keyframes cgs{0%,70%,100%{transform:scale3d(1,1,1);background:#7c5cff}35%{transform:scale3d(0,0,1);background:#22d3ee}}'
+},
+
+{ id: 'heartbeat', title: 'Heartbeat', cat: 'loaders', tags: ['css', 'icon'],
+  html: '<div class="hb">&#10084;</div>',
+  css: '.hb{font-size:52px;color:#ff5c8a;line-height:1;filter:drop-shadow(0 0 14px rgba(255,92,138,.6));animation:beat 1.2s ease-in-out infinite}\n@keyframes beat{0%,100%{transform:scale(1)}14%{transform:scale(1.25)}28%{transform:scale(1)}42%{transform:scale(1.18)}70%{transform:scale(1)}}'
+},
+
+{ id: 'blade-spinner', title: 'Twelve Blades', cat: 'loaders', tags: ['css', 'ios'],
+  html: '<div class="bl"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>',
+  css: '.bl{position:relative;width:64px;height:64px}\n.bl i{position:absolute;top:0;left:50%;width:5px;height:16px;margin-left:-2.5px;border-radius:3px;background:#7c5cff;transform-origin:2.5px 32px;animation:blf 1.2s linear infinite}\n.bl i:nth-child(1){transform:rotate(0deg);animation-delay:-1.1s}\n.bl i:nth-child(2){transform:rotate(30deg);animation-delay:-1s}\n.bl i:nth-child(3){transform:rotate(60deg);animation-delay:-.9s}\n.bl i:nth-child(4){transform:rotate(90deg);animation-delay:-.8s}\n.bl i:nth-child(5){transform:rotate(120deg);animation-delay:-.7s}\n.bl i:nth-child(6){transform:rotate(150deg);animation-delay:-.6s}\n.bl i:nth-child(7){transform:rotate(180deg);animation-delay:-.5s}\n.bl i:nth-child(8){transform:rotate(210deg);animation-delay:-.4s}\n.bl i:nth-child(9){transform:rotate(240deg);animation-delay:-.3s}\n.bl i:nth-child(10){transform:rotate(270deg);animation-delay:-.2s}\n.bl i:nth-child(11){transform:rotate(300deg);animation-delay:-.1s}\n.bl i:nth-child(12){transform:rotate(330deg);animation-delay:0s}\n@keyframes blf{0%{opacity:1}100%{opacity:.15}}'
+},
+
+{ id: 'yin-yang', title: 'Yin Yang Spin', cat: 'loaders', tags: ['css', 'shape'],
+  html: '<div class="yy"></div>',
+  css: '.yy{width:64px;height:32px;border:3px solid #7c5cff;border-bottom-width:32px;border-radius:50%;position:relative;animation:spin 1.6s linear infinite}\n.yy::before,.yy::after{content:"";position:absolute;top:50%;width:6px;height:6px;border-radius:50%;border:13px solid #7c5cff}\n.yy::before{left:0;background:#22d3ee;border-color:#7c5cff}\n.yy::after{right:0;background:#7c5cff;border-color:#22d3ee}\n@keyframes spin{to{transform:rotate(1turn)}}'
+},
+
+{ id: 'infinity-dash', title: 'Infinity Trace', cat: 'loaders', tags: ['svg', 'stroke'],
+  html: '<svg class="inf" viewBox="0 0 100 50"><path d="M25,25 C25,10 45,10 50,25 C55,40 75,40 75,25 C75,10 55,10 50,25 C45,40 25,40 25,25 Z"/></svg>',
+  css: '.inf{width:150px;height:75px;overflow:visible}\n.inf path{fill:none;stroke:#7c5cff;stroke-width:4;stroke-linecap:round;stroke-dasharray:40 160;filter:drop-shadow(0 0 6px rgba(124,92,255,.8));animation:dashmove 2s linear infinite}\n@keyframes dashmove{to{stroke-dashoffset:-200}}'
+},
+
+{ id: 'atom-loader', title: 'Atom Orbitals', cat: 'loaders', tags: ['css', '3d'],
+  html: '<div class="at"><i></i><i></i><i></i><b></b></div>',
+  css: '.at{position:relative;width:90px;height:90px;display:grid;place-items:center}\n.at i{position:absolute;inset:0;border:2px solid #7c5cff;border-radius:50%;transform-style:preserve-3d}\n.at i:nth-child(1){animation:at1 2s linear infinite}\n.at i:nth-child(2){border-color:#22d3ee;animation:at2 2s linear infinite}\n.at i:nth-child(3){border-color:#ff5c8a;animation:at3 2s linear infinite}\n.at b{width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 18px #7c5cff}\n@keyframes at1{to{transform:rotateY(70deg) rotateZ(360deg)}}\n@keyframes at2{to{transform:rotateY(-70deg) rotateZ(360deg)}}\n@keyframes at3{to{transform:rotateX(70deg) rotateZ(360deg)}}'
+}
+
+  );
+})();

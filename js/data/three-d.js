@@ -1,0 +1,58 @@
+/* Category: 3D & Perspective */
+(function () {
+  var L = (window.MOTION_LAB = window.MOTION_LAB || []);
+  L.push(
+
+{ id: 'cube-rotate', title: 'Rotating Cube', cat: '3d', tags: ['3d', 'css'],
+  html: '<div class="scene"><div class="cube"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="f5"></i><i class="f6"></i></div></div>',
+  css: '.scene{width:120px;height:120px;perspective:600px}\n.cube{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:cuberot 9s linear infinite}\n.cube i{position:absolute;inset:0;border:1px solid rgba(255,255,255,.35);opacity:.85}\n.f1{background:#7c5cff;transform:translateZ(60px)}\n.f2{background:#22d3ee;transform:rotateY(180deg) translateZ(60px)}\n.f3{background:#ff5c8a;transform:rotateY(90deg) translateZ(60px)}\n.f4{background:#ffd479;transform:rotateY(-90deg) translateZ(60px)}\n.f5{background:#34d399;transform:rotateX(90deg) translateZ(60px)}\n.f6{background:#a855f7;transform:rotateX(-90deg) translateZ(60px)}\n@keyframes cuberot{0%{transform:rotateX(-25deg) rotateY(0)}100%{transform:rotateX(-25deg) rotateY(360deg)}}'
+},
+
+{ id: 'carousel-3d', title: '3D Carousel', cat: '3d', tags: ['3d', 'css'],
+  html: '<div class="cs"><div class="ring"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i></div></div>',
+  css: '.cs{width:160px;height:150px;perspective:700px}\n.ring{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:ringrot 14s linear infinite}\n.ring i{position:absolute;top:36px;left:35px;width:90px;height:70px;display:grid;place-items:center;border-radius:10px;font:700 22px "Space Grotesk",sans-serif;color:#fff;background:linear-gradient(140deg,rgba(124,92,255,.9),rgba(34,211,238,.75));border:1px solid rgba(255,255,255,.3);backface-visibility:hidden}\n.ring i:nth-child(1){transform:rotateY(0deg) translateZ(95px)}\n.ring i:nth-child(2){transform:rotateY(60deg) translateZ(95px)}\n.ring i:nth-child(3){transform:rotateY(120deg) translateZ(95px)}\n.ring i:nth-child(4){transform:rotateY(180deg) translateZ(95px)}\n.ring i:nth-child(5){transform:rotateY(240deg) translateZ(95px)}\n.ring i:nth-child(6){transform:rotateY(300deg) translateZ(95px)}\n@keyframes ringrot{to{transform:rotateY(-360deg)}}'
+},
+
+{ id: 'coin-flip', title: 'Spinning Coin', cat: '3d', tags: ['3d', 'css'],
+  html: '<div class="cn"><i class="h">&#9733;</i><i class="t">100</i></div>',
+  css: '.cn{position:relative;width:110px;height:110px;transform-style:preserve-3d;animation:coin 3s cubic-bezier(.5,0,.5,1) infinite}\n.cn i{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;font:700 30px "Space Grotesk",sans-serif;color:#6b4a00;backface-visibility:hidden;background:radial-gradient(circle at 34% 30%,#ffe9a8,#e0a800 65%,#a87800);box-shadow:inset 0 0 0 6px rgba(255,255,255,.35)}\n.cn .t{transform:rotateY(180deg);font-size:26px}\n@keyframes coin{0%{transform:rotateY(0) translateY(0)}50%{transform:rotateY(900deg) translateY(-34px)}100%{transform:rotateY(1800deg) translateY(0)}}'
+},
+
+{ id: 'perspective-stack', title: 'Perspective Deck', cat: '3d', tags: ['3d', 'hover'],
+  html: '<div class="pd"><i></i><i></i><i></i><i></i></div>',
+  css: '.pd{position:relative;width:130px;height:170px;transform-style:preserve-3d;transform:rotateX(52deg) rotateZ(-32deg);animation:deckfloat 5s ease-in-out infinite}\n.pd i{position:absolute;inset:0;border-radius:12px;border:1px solid rgba(255,255,255,.3);background:linear-gradient(140deg,rgba(124,92,255,.85),rgba(76,47,214,.8));box-shadow:0 10px 20px -12px #000}\n.pd i:nth-child(2){transform:translateZ(22px);background:linear-gradient(140deg,rgba(168,85,247,.85),rgba(124,92,255,.8))}\n.pd i:nth-child(3){transform:translateZ(44px);background:linear-gradient(140deg,rgba(34,211,238,.85),rgba(14,143,163,.8))}\n.pd i:nth-child(4){transform:translateZ(66px);background:linear-gradient(140deg,rgba(255,92,138,.9),rgba(192,44,88,.85))}\n@keyframes deckfloat{0%,100%{transform:rotateX(52deg) rotateZ(-32deg) translateZ(0)}50%{transform:rotateX(52deg) rotateZ(-20deg) translateZ(16px)}}'
+},
+
+{ id: 'cylinder-text', title: 'Cylinder Text Spin', cat: '3d', tags: ['3d', 'text'],
+  html: '<div class="cy"><div class="cyi"><b>MOTION</b><b>DESIGN</b><b>SPEED</b><b>DEPTH</b><b>COLOUR</b><b>LIGHT</b></div></div>',
+  css: '.cy{width:200px;height:120px;perspective:600px;-webkit-mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent);mask-image:linear-gradient(transparent,#000 25%,#000 75%,transparent)}\n.cyi{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:cyr 10s linear infinite}\n.cyi b{position:absolute;top:44px;left:0;width:100%;text-align:center;font:700 24px "Space Grotesk",sans-serif;color:#22d3ee}\n.cyi b:nth-child(1){transform:rotateX(0deg) translateZ(58px)}\n.cyi b:nth-child(2){transform:rotateX(60deg) translateZ(58px)}\n.cyi b:nth-child(3){transform:rotateX(120deg) translateZ(58px)}\n.cyi b:nth-child(4){transform:rotateX(180deg) translateZ(58px)}\n.cyi b:nth-child(5){transform:rotateX(240deg) translateZ(58px)}\n.cyi b:nth-child(6){transform:rotateX(300deg) translateZ(58px)}\n@keyframes cyr{to{transform:rotateX(-360deg)}}'
+},
+
+{ id: 'cube-unfold', title: 'Unfolding Box', cat: '3d', tags: ['3d', 'hover'],
+  html: '<div class="uf"><div class="box"><i class="top"></i><i class="front"></i><i class="left"></i><i class="right"></i></div></div>',
+  css: '.uf{width:130px;height:130px;perspective:700px;cursor:pointer}\n.box{position:relative;width:100%;height:100%;transform-style:preserve-3d;transform:rotateX(-22deg) rotateY(-32deg);transition:transform .8s}\n.box i{position:absolute;width:80px;height:80px;left:25px;top:25px;border:1px solid rgba(255,255,255,.3);transition:transform .8s cubic-bezier(.65,0,.35,1)}\n.top{background:#7c5cff;transform:rotateX(90deg) translateZ(40px)}\n.front{background:#22d3ee;transform:translateZ(40px)}\n.left{background:#ff5c8a;transform:rotateY(-90deg) translateZ(40px)}\n.right{background:#ffd479;transform:rotateY(90deg) translateZ(40px)}\n.uf:hover .top{transform:rotateX(0deg) translateZ(40px) translateY(-80px)}\n.uf:hover .left{transform:rotateY(0deg) translateZ(40px) translateX(-80px)}\n.uf:hover .right{transform:rotateY(0deg) translateZ(40px) translateX(80px)}\n.uf:hover .box{transform:rotateX(-8deg) rotateY(0deg)}'
+},
+
+{ id: 'pyramid-spin', title: 'Spinning Pyramid', cat: '3d', tags: ['3d', 'css'],
+  html: '<div class="py"><div class="pyi"><i></i><i></i><i></i><i></i></div></div>',
+  css: '.py{width:130px;height:130px;perspective:600px}\n.pyi{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:pyr 8s linear infinite}\n.pyi i{position:absolute;left:15px;top:20px;width:0;height:0;border-left:50px solid transparent;border-right:50px solid transparent;border-bottom:96px solid rgba(124,92,255,.75);transform-origin:50% 100%}\n.pyi i:nth-child(1){transform:rotateY(0deg) translateZ(29px) rotateX(24deg)}\n.pyi i:nth-child(2){border-bottom-color:rgba(34,211,238,.75);transform:rotateY(90deg) translateZ(29px) rotateX(24deg)}\n.pyi i:nth-child(3){border-bottom-color:rgba(255,92,138,.75);transform:rotateY(180deg) translateZ(29px) rotateX(24deg)}\n.pyi i:nth-child(4){border-bottom-color:rgba(255,212,121,.75);transform:rotateY(270deg) translateZ(29px) rotateX(24deg)}\n@keyframes pyr{0%{transform:rotateX(-12deg) rotateY(0)}100%{transform:rotateX(-12deg) rotateY(360deg)}}'
+},
+
+{ id: 'parallax-layers', title: 'Parallax Layers', cat: '3d', tags: ['js', 'parallax'],
+  html: '<div class="px"><i class="l1"></i><i class="l2"></i><i class="l3"></i><b>DEPTH</b></div>',
+  css: '.px{position:relative;width:230px;height:170px;border-radius:16px;overflow:hidden;background:linear-gradient(#1a1038,#2b1a5c);display:grid;place-items:center;cursor:crosshair}\n.px i{position:absolute;border-radius:50%;transition:transform .25s ease-out}\n.l1{width:150px;height:150px;background:rgba(124,92,255,.55);filter:blur(6px)}\n.l2{width:90px;height:90px;background:rgba(34,211,238,.6);left:26px;top:22px;filter:blur(3px)}\n.l3{width:60px;height:60px;background:rgba(255,92,138,.75);right:26px;bottom:20px}\n.px b{position:relative;z-index:3;font:700 26px "Space Grotesk",sans-serif;color:#fff;letter-spacing:.18em;transition:transform .25s ease-out}',
+  js: 'var w=root.querySelector(".px"),ls=[[root.querySelector(".l1"),8],[root.querySelector(".l2"),18],[root.querySelector(".l3"),30],[root.querySelector("b"),44]];\nw.addEventListener("mousemove",function(e){var r=w.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;ls.forEach(function(p){p[0].style.transform="translate("+x*p[1]+"px,"+y*p[1]+"px)";});});\nw.addEventListener("mouseleave",function(){ls.forEach(function(p){p[0].style.transform="";});});'
+},
+
+{ id: 'iso-tower', title: 'Isometric Tower', cat: '3d', tags: ['3d', 'css'],
+  html: '<div class="it"><i></i><i></i><i></i><i></i><i></i></div>',
+  css: '.it{position:relative;width:120px;height:170px;transform-style:preserve-3d;transform:rotateX(60deg) rotateZ(45deg);animation:itspin 9s linear infinite}\n.it i{position:absolute;left:0;top:35px;width:100px;height:100px;border-radius:8px;border:1px solid rgba(255,255,255,.25);animation:itfloat 3s ease-in-out infinite}\n.it i:nth-child(1){background:rgba(124,92,255,.85);transform:translateZ(0)}\n.it i:nth-child(2){background:rgba(168,85,247,.8);transform:translateZ(18px);animation-delay:.15s}\n.it i:nth-child(3){background:rgba(34,211,238,.8);transform:translateZ(36px);animation-delay:.3s}\n.it i:nth-child(4){background:rgba(255,92,138,.8);transform:translateZ(54px);animation-delay:.45s}\n.it i:nth-child(5){background:rgba(255,212,121,.85);transform:translateZ(72px);animation-delay:.6s}\n@keyframes itspin{to{transform:rotateX(60deg) rotateZ(405deg)}}\n@keyframes itfloat{50%{filter:brightness(1.3)}}'
+},
+
+{ id: 'dot-sphere', title: 'Dotted Sphere', cat: '3d', tags: ['3d', 'css'],
+  html: '<div class="ds"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>',
+  css: '.ds{position:relative;width:150px;height:150px;transform-style:preserve-3d;animation:dsrot 12s linear infinite}\n.ds i{position:absolute;inset:0;border-radius:50%;border:2px solid rgba(124,92,255,.55);border-top-color:rgba(34,211,238,.9);border-bottom-color:rgba(255,92,138,.7)}\n.ds i:nth-child(1){transform:rotateY(0deg)}\n.ds i:nth-child(2){transform:rotateY(22.5deg)}\n.ds i:nth-child(3){transform:rotateY(45deg)}\n.ds i:nth-child(4){transform:rotateY(67.5deg)}\n.ds i:nth-child(5){transform:rotateY(90deg)}\n.ds i:nth-child(6){transform:rotateY(112.5deg)}\n.ds i:nth-child(7){transform:rotateY(135deg)}\n.ds i:nth-child(8){transform:rotateY(157.5deg)}\n@keyframes dsrot{0%{transform:rotateX(16deg) rotateY(0)}100%{transform:rotateX(16deg) rotateY(360deg)}}'
+}
+
+  );
+})();
