@@ -85,6 +85,19 @@
 { id: 'btn-glass', title: 'Glass Hover', cat: 'buttons', tags: ['glass', 'hover'],
   html: '<div class="gwrap"><button class="glassb">Glassmorphic</button></div>',
   css: '.gwrap{padding:22px 12px;border-radius:20px;background:linear-gradient(120deg,#ff5c8a,#7c5cff 50%,#22d3ee)}\n.glassb{padding:15px 32px;border:1px solid rgba(255,255,255,.4);border-radius:14px;background:rgba(255,255,255,.16);backdrop-filter:blur(10px);color:#fff;font:600 15px "Space Grotesk",sans-serif;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 8px 24px -10px rgba(0,0,0,.6);transition:all .35s cubic-bezier(.2,1,.3,1)}\n.glassb:hover{background:rgba(255,255,255,.32);transform:translateY(-3px) scale(1.03);letter-spacing:.04em}'
+},
+{ id: 'btn-3d-flip', title: '3D Flip Button', cat: 'buttons', tags: ['3d', 'hover'],
+  html: '<button class="flip3"><span class="a">Hover me</span><span class="b">Flipped!</span></button>',
+  css: '.flip3{position:relative;width:176px;height:54px;border:0;background:none;cursor:pointer;perspective:500px}\n.flip3 span{position:absolute;inset:0;display:grid;place-items:center;border-radius:13px;font:600 15px "Space Grotesk",sans-serif;backface-visibility:hidden;transition:transform .55s cubic-bezier(.6,.1,.3,1)}\n.flip3 .a{background:linear-gradient(120deg,#7c5cff,#a855f7);color:#fff;box-shadow:0 10px 24px -10px rgba(124,92,255,.9)}\n.flip3 .b{background:linear-gradient(120deg,#22d3ee,#0ea5b7);color:#04303a;transform:rotateX(180deg)}\n.flip3:hover .a{transform:rotateX(180deg)}\n.flip3:hover .b{transform:rotateX(360deg)}'
+},
+{ id: 'btn-cursor-fill', title: 'Cursor Fill', cat: 'buttons', tags: ['js', 'hover'],
+  html: '<button class="cuf">Cursor follows me</button>',
+  css: '.cuf{position:relative;overflow:hidden;padding:15px 36px;border-radius:99px;border:1px solid rgba(160,160,210,.32);background:#12121e;color:#c9c9dd;font:600 15px "Space Grotesk",sans-serif;cursor:pointer;transition:color .3s,border-color .3s,box-shadow .3s}\n.cuf::before{content:"";position:absolute;top:var(--fy,50%);left:var(--fx,50%);width:190px;height:190px;border-radius:50%;background:radial-gradient(circle,#7c5cff 0%,#22d3ee 55%,transparent 74%);transform:translate(-50%,-50%) scale(0);transition:transform .5s cubic-bezier(.2,1.3,.4,1);z-index:-1}\n.cuf:hover::before{transform:translate(-50%,-50%) scale(1)}\n.cuf:hover{color:#fff;border-color:transparent;box-shadow:0 8px 26px -12px rgba(124,92,255,.9)}',
+  js: 'var b=root.querySelector(".cuf");\nb.addEventListener("mousemove",function(e){var r=b.getBoundingClientRect();b.style.setProperty("--fx",(e.clientX-r.left)+"px");b.style.setProperty("--fy",(e.clientY-r.top)+"px");});\nb.addEventListener("mouseleave",function(){b.style.setProperty("--fx","50%");b.style.setProperty("--fy","50%");});'
+},
+{ id: 'btn-aura', title: 'Aura Glow', cat: 'buttons', tags: ['gradient', 'hover'],
+  html: '<button class="au3"><span>Join premium</span><b class="st">&#10022;</b></button>',
+  css: '.au3{position:relative;display:inline-flex;align-items:center;gap:9px;padding:16px 40px;border-radius:14px;border:1px solid rgba(160,160,210,.3);background:#141424;color:#dcdcf0;font:600 15px "Space Grotesk",sans-serif;cursor:pointer;overflow:hidden;transition:transform .3s,color .3s,border-color .3s,box-shadow .3s}\n.au3::before{content:"";position:absolute;top:-65%;left:-65%;width:230%;height:230%;background:conic-gradient(from 0deg,#7c5cff,#22d3ee,#ff5c8a,#ffd479,#7c5cff);opacity:0;animation:aurago 3.2s linear infinite;transition:opacity .4s;z-index:0}\n.au3 span,.au3 b{position:relative;z-index:1}\n.au3 .st{color:#ffd479;font-weight:700;transition:transform .4s cubic-bezier(.3,1.5,.5,1)}\n.au3:hover{color:#fff;border-color:rgba(255,255,255,.35);transform:translateY(-2px)}\n.au3:hover::before{opacity:1}\n.au3:hover .st{transform:rotate(180deg) scale(1.3)}\n@keyframes aurago{to{transform:rotate(1turn)}}'
 }
 
   );
