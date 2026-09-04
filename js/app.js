@@ -9,17 +9,31 @@
   var ITEMS = window.MOTION_LAB || [];
   var T = window.MotionLabTune;
 
+  var ICONS = {
+    all:         '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+    loaders:     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 8 8"/></svg>',
+    buttons:     '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="8" rx="4"/><circle cx="9" cy="12" r="1.6"/></svg>',
+    text:        '<svg viewBox="0 0 24 24"><path d="M5 6h14M12 6v12M8 18h8"/></svg>',
+    cards:       '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="14" height="14" rx="2"/><path d="M8 9h10a2 2 0 0 1 2 2v8"/></svg>',
+    backgrounds: '<svg viewBox="0 0 24 24"><circle cx="8" cy="9" r="2.2"/><path d="M4 18l5-6 4 5 3-4 4 5H4z"/></svg>',
+    controls:    '<svg viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="4" rx="2"/><circle cx="15" cy="12" r="3"/></svg>',
+    svg:         '<svg viewBox="0 0 24 24"><path d="M4 16c4-10 12 10 16 0"/><circle cx="5" cy="16" r="1.4"/><circle cx="19" cy="16" r="1.4"/></svg>',
+    '3d':        '<svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>',
+    motion:      '<svg viewBox="0 0 24 24"><path d="M4 12h4l3-7 4 14 3-7h2"/></svg>'
+  };
+  window.ML_ICONS = ICONS;
+
   var CATS = [
-    { id: 'all',         label: 'Everything' },
-    { id: 'loaders',     label: 'Loaders' },
-    { id: 'buttons',     label: 'Buttons' },
-    { id: 'text',        label: 'Text FX' },
-    { id: 'cards',       label: 'Cards & Hover' },
-    { id: 'backgrounds', label: 'Backgrounds' },
-    { id: 'controls',    label: 'Controls' },
-    { id: 'svg',         label: 'SVG & Lines' },
-    { id: '3d',          label: '3D' },
-    { id: 'motion',      label: 'Interaction' }
+    { id: 'all',         label: 'Everything',    desc: 'The full collection',                 demo: null },
+    { id: 'loaders',     label: 'Loaders',       desc: 'Spinners, progress, waiting states',  demo: 'ring-spinner' },
+    { id: 'buttons',     label: 'Buttons',       desc: 'Press, hover, magnetic CTAs',         demo: 'btn-shine' },
+    { id: 'text',        label: 'Text FX',       desc: 'Type, glitch, scramble, kinetic',     demo: 'gradient-text' },
+    { id: 'cards',       label: 'Cards & Hover', desc: 'Tilt, foil, flip, spotlight',         demo: 'conic-border' },
+    { id: 'backgrounds', label: 'Backgrounds',   desc: 'Particles, aurora, fields',           demo: 'aurora' },
+    { id: 'controls',    label: 'Controls',      desc: 'Toggles, knobs, inputs',              demo: 'day-night' },
+    { id: 'svg',         label: 'SVG & Lines',   desc: 'Draw, morph, marching ants',          demo: 'stroke-draw' },
+    { id: '3d',          label: '3D',            desc: 'Cubes, helix, isometric scenes',      demo: 'cube-rotate' },
+    { id: 'motion',      label: 'Interaction',   desc: 'Scroll, drag, spring, confetti',      demo: 'logo-marquee' }
   ];
 
   var $  = function (s, c) { return (c || document).querySelector(s); };
@@ -175,20 +189,34 @@
   var shown = 0;
 
   /* ---------------- chips ---------------- */
+  function iconFor(id) {
+    return (window.ML_ICONS && window.ML_ICONS[id]) || '';
+  }
+  function setCat(id, scroll) {
+    state.cat = id;
+    $$('.chip').forEach(function (x) {
+      var on = x.dataset.cat === id;
+      x.classList.toggle('active', on);
+      x.setAttribute('aria-pressed', String(on));
+    });
+    render(true);
+    window.dispatchEvent(new Event('ml:chips'));
+    if (scroll) {
+      var g = $('#gallery');
+      if (g) g.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
   CATS.forEach(function (c) {
     var n = c.id === 'all' ? ITEMS.length : ITEMS.filter(function (i) { return i.cat === c.id; }).length;
     var b = document.createElement('button');
     b.className = 'chip' + (c.id === 'all' ? ' active' : '');
     b.dataset.cat = c.id;
-    b.innerHTML = c.label + '<span class="n">' + n + '</span>';
+    b.innerHTML = iconFor(c.id) + c.label + '<span class="n">' + n + '</span>';
     b.setAttribute('aria-pressed', c.id === 'all' ? 'true' : 'false');
-    b.addEventListener('click', function () {
-      state.cat = c.id;
-      $$('.chip').forEach(function (x) { x.classList.toggle('active', x === b); x.setAttribute('aria-pressed', String(x === b)); });
-      render(true);
-    });
+    b.addEventListener('click', function () { setCat(c.id, false); });
     chipBox.appendChild(b);
   });
+  requestAnimationFrame(function () { window.dispatchEvent(new Event('ml:chips')); });
 
   /* ---------------- lazy observer ---------------- */
   var io = new IntersectionObserver(function (entries) {
@@ -472,10 +500,9 @@
     deb = setTimeout(function () { state.q = search.value.trim(); render(true); }, 120);
   });
   $('#clearSearch').addEventListener('click', function () {
-    search.value = ''; state.q = ''; state.cat = 'all'; state.favOnly = false;
+    search.value = ''; state.q = ''; state.favOnly = false;
     $('#favFilter').setAttribute('aria-pressed', 'false');
-    $$('.chip').forEach(function (x, i) { x.classList.toggle('active', i === 0); });
-    render(true);
+    setCat('all', false);
   });
 
   $('#favFilter').addEventListener('click', function () {
@@ -508,11 +535,11 @@
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === '/' && document.activeElement !== search && tuner.hidden) { e.preventDefault(); search.focus(); }
+    var cmdk = $('#cmdk');
     if (e.key === 'Escape') {
+      if (cmdk && !cmdk.hidden) return;
       if (!modal.hidden) closeModal();
       else if (!tuner.hidden) closeTuner();
-      else if (document.activeElement === search) search.blur();
     }
   });
 
@@ -558,6 +585,81 @@
   render(true);
   var per = {};
   ITEMS.forEach(function (i) { per[i.cat] = (per[i.cat] || 0) + 1; });
-  console.log('%c Motion Lab ', 'background:#7c5cff;color:#fff;border-radius:4px',
+  console.log('%c Motion Lab ', 'background:#8b7dff;color:#fff;border-radius:4px',
     ITEMS.length + ' effects · ' + Object.keys(per).map(function (k) { return k + ' ' + per[k]; }).join(', '));
+
+  /* ---------------- hero stage + bento ---------------- */
+  function itemById(id) {
+    for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === id) return ITEMS[i];
+    return null;
+  }
+  function firstIn(cat) {
+    for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].cat === cat) return ITEMS[i];
+    return null;
+  }
+  (function heroStage() {
+    var stage = $('#heroStage');
+    if (!stage) return;
+    var ids = ['ring-spinner', 'equalizer', 'atom-loader', 'conic-spinner', 'heartbeat', 'btn-neon'];
+    ids.forEach(function (id, i) {
+      var item = itemById(id) || ITEMS[i];
+      if (!item) return;
+      var card = document.createElement('div');
+      card.className = 'float-card fc-' + (i + 1);
+      var host = document.createElement('div');
+      host.className = 'demo-host';
+      card.appendChild(host);
+      stage.appendChild(card);
+      try { mount(item, host).setVisible(true); } catch (e) {}
+    });
+  })();
+  (function bento() {
+    var box = $('#bento');
+    if (!box) return;
+    CATS.filter(function (c) { return c.id !== 'all'; }).forEach(function (c) {
+      var n = ITEMS.filter(function (i) { return i.cat === c.id; }).length;
+      var item = (c.demo && itemById(c.demo)) || firstIn(c.id);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'bento-card';
+      b.innerHTML =
+        '<span class="count">' + n + '</span>' +
+        '<div class="bento-preview"><div class="demo-host"></div></div>' +
+        '<h3></h3><p></p>';
+      b.querySelector('h3').textContent = c.label;
+      b.querySelector('p').textContent = c.desc;
+      b.addEventListener('click', function () { setCat(c.id, true); });
+      box.appendChild(b);
+      if (item) {
+        try { mount(item, $('.demo-host', b)).setVisible(true); } catch (e) {}
+      }
+    });
+  })();
+
+  function queryItems(q) {
+    q = (q || '').trim().toLowerCase();
+    if (!q) return ITEMS.slice(0, 12);
+    return ITEMS.filter(function (item) {
+      var hay = (item.title + ' ' + item.cat + ' ' + item.tags.join(' ') + ' ' + item.id).toLowerCase();
+      return q.split(/\s+/).every(function (w) { return hay.indexOf(w) > -1; });
+    });
+  }
+
+  window.MotionLab = {
+    items: ITEMS,
+    cats: CATS,
+    filter: function (cat) { setCat(cat, true); },
+    search: function (q) { state.q = q || ''; if (search) search.value = q || ''; render(true); },
+    open: function (id) {
+      var it = typeof id === 'string' ? itemById(id) : id;
+      if (it) openModal(it);
+    },
+    query: queryItems,
+    mount: mount,
+    random: function () {
+      var pool = list.length ? list : ITEMS;
+      openModal(pool[Math.floor(Math.random() * pool.length)]);
+    }
+  };
+  window.dispatchEvent(new Event('ml:ready'));
 })();
