@@ -1,11 +1,13 @@
 /* ============================================================
    Motion Lab — gallery engine
-   Mounts every demo inside its own Shadow DOM, lazily.
+   Mounts every demo inside its own Shadow DOM, lazily, and pipes the
+   Tune layer (js/tune.js) through it so all 900 effects are customisable.
    ============================================================ */
 (function () {
   'use strict';
 
   var ITEMS = window.MOTION_LAB || [];
+  var T = window.MotionLabTune;
 
   var CATS = [
     { id: 'all',         label: 'Everything' },
@@ -22,24 +24,37 @@
 
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+  var src = function (item, k) { return T ? T.srcOf(item)[k] : (item[k] || ''); };
 
-  /* ---------------- global animation frame pump ---------------- */
+  /* ---------------- global animation frame pump ----------------
+     One rAF loop for every JS-driven demo. Each task can be frame-stepped
+     (`rate`), which is what makes the Speed control work on JS demos too. */
   var pump = [];
   var paused = false;
   (function loop() {
     if (!paused) {
       for (var i = 0; i < pump.length; i++) {
         var t = pump[i];
-        if (t.alive && t.visible) { try { t.fn(); } catch (e) { t.alive = false; } }
+        if (!t.alive || !t.visible) continue;
+        var rate = t.rate && t.rate !== 1 ? t.rate : 1;
+        if (rate === 1) { run(t); continue; }
+        t.acc = (t.acc || 0) + rate;
+        var steps = Math.floor(t.acc);
+        if (steps < 1) continue;
+        t.acc -= steps;
+        var guard = 0;
+        while (steps > 0 && guard++ < 6) { run(t); steps--; }
       }
     }
     pump = pump.filter(function (t) { return t.alive; });
     requestAnimationFrame(loop);
   })();
+  function run(t) { try { t.fn(); } catch (e) { t.alive = false; } }
 
   /* ---------------- mounting ---------------- */
   function mount(item, host) {
     if (host.__inst) return host.__inst;
+    host.__item = item;
     return remount(item, host);
   }
 
@@ -50,36 +65,34 @@
     root.innerHTML = '';
 
     var style = document.createElement('style');
-    style.textContent =
-      ':host{display:contents}' +
-      ':host(.is-paused) *{animation-play-state:paused !important}' +
-      '*{box-sizing:border-box}' +
-      ':host,div,span,b,i,em,p,button,input,label,svg,figure,figcaption,h4,nav,output{font-family:"Space Grotesk",system-ui,sans-serif}' +
-      item.css;
+    style.textContent = T ? T.styleFor(item) : item.css;
     root.appendChild(style);
 
     var wrap = document.createElement('div');
     wrap.className = 'demo-root';
-    wrap.style.cssText = 'display:grid;place-items:center;width:100%;';
-    wrap.innerHTML = item.html;
+    wrap.style.cssText = (T && T.WRAP) || 'display:grid;place-items:center;width:100%';
+    wrap.innerHTML = src(item, 'html');
     root.appendChild(wrap);
 
-    var inst = { root: root, visible: true, cleanups: [], tasks: [] };
+    var inst = { root: root, wrap: wrap, host: host, item: item, visible: true, cleanups: [], tasks: [], styleEl: style };
 
-    if (item.js) {
+    var code = src(item, 'js');
+    if (code) {
       var api = {
         raf: function (fn) {
-          var t = { fn: fn, alive: true, visible: true };
+          var t = { fn: fn, alive: true, visible: true, rate: T ? T.rate(item) : 1 };
           pump.push(t); inst.tasks.push(t);
         },
         onCleanup: function (fn) { inst.cleanups.push(fn); }
       };
       try {
-        new Function('root', 'api', item.js)(root, api);
+        new Function('root', 'api', code)(root, api);
       } catch (e) {
         console.warn('[motion-lab] demo failed:', item.id, e);
       }
     }
+
+    if (T) T.applyLive(item, inst);
 
     inst.setVisible = function (v) {
       inst.visible = v;
@@ -88,11 +101,32 @@
     inst.destroy = function () {
       inst.tasks.forEach(function (t) { t.alive = false; });
       inst.cleanups.forEach(function (f) { try { f(); } catch (e) {} });
+      host.__inst = null;
     };
 
     if (paused) host.classList.add('is-paused');
     host.__inst = inst;
     return inst;
+  }
+
+  function refresh(id) {
+    $$('.demo-host').forEach(function (h) {
+      if (!h.__inst) return;
+      if (id !== '*' && (!h.__item || h.__item.id !== id)) return;
+      if (T.needsRerun(h.__item)) remount(h.__item, h);
+      else T.applyLive(h.__item, h.__inst);
+      if (h.__item) {
+        var card = h.closest('.card');
+        if (card) card.classList.toggle('is-tuned', T.isTuned(h.__item.id));
+        if (current && current.id === h.__item.id) modalTuneNote();
+      }
+    });
+  }
+  if (T) T.on(function (id) { queueRefresh(id); });
+  var rq;
+  function queueRefresh(id) {
+    cancelAnimationFrame(rq);
+    rq = requestAnimationFrame(function () { refresh(id); });
   }
 
   /* ---------------- syntax highlighting ---------------- */
@@ -129,11 +163,16 @@
   var favs = {};
   try { favs = JSON.parse(localStorage.getItem('ml-favs') || '{}'); } catch (e) { favs = {}; }
   var state = { cat: 'all', q: '', favOnly: false };
+  var IDX = {};
+  ITEMS.forEach(function (it, i) { IDX[it.id] = i; });
 
   var grid = $('#grid');
   var chipBox = $('#chips');
   var resultCount = $('#resultCount');
   var emptyMsg = $('#empty');
+  var PAGE = 60;
+  var list = [];
+  var shown = 0;
 
   /* ---------------- chips ---------------- */
   CATS.forEach(function (c) {
@@ -142,10 +181,11 @@
     b.className = 'chip' + (c.id === 'all' ? ' active' : '');
     b.dataset.cat = c.id;
     b.innerHTML = c.label + '<span class="n">' + n + '</span>';
+    b.setAttribute('aria-pressed', c.id === 'all' ? 'true' : 'false');
     b.addEventListener('click', function () {
       state.cat = c.id;
-      $$('.chip').forEach(function (x) { x.classList.toggle('active', x === b); });
-      render();
+      $$('.chip').forEach(function (x) { x.classList.toggle('active', x === b); x.setAttribute('aria-pressed', String(x === b)); });
+      render(true);
     });
     chipBox.appendChild(b);
   });
@@ -156,21 +196,30 @@
       var host = $('.demo-host', e.target);
       if (!host) return;
       if (e.isIntersecting) {
-        var item = ITEMS[+e.target.dataset.idx];
-        var inst = mount(item, host);
-        inst.setVisible(true);
+        var item = ITEMS[+e.target.dataset.i];
+        mount(item, host).setVisible(true);
       } else if (host.__inst) {
         host.__inst.setVisible(false);
       }
     });
   }, { rootMargin: '250px 0px' });
 
+  /* infinite scroll for the pages below the fold */
+  var sentinel = $('#sentinel');
+  var moreBtn = $('#moreBtn');
+  var moreIo = new IntersectionObserver(function (es) {
+    if (es[0].isIntersecting && shown < list.length) paint();
+  }, { rootMargin: '800px 0px' });
+  moreIo.observe(sentinel);
+  moreBtn.addEventListener('click', function () { paint(); });
+
   /* ---------------- card factory ---------------- */
-  function cardFor(item, idx, n) {
+  function cardFor(item, i) {
     var el = document.createElement('article');
-    el.className = 'card';
-    el.dataset.idx = ITEMS.indexOf(item);
-    el.style.animationDelay = Math.min(idx * 22, 420) + 'ms';
+    el.className = 'card' + (T && T.isTuned(item.id) ? ' is-tuned' : '');
+    el.dataset.i = i;
+    el.dataset.id = item.id;
+    el.style.animationDelay = Math.min((i % PAGE) * 22, 420) + 'ms';
 
     var stage = document.createElement('div');
     stage.className = 'card-stage';
@@ -181,13 +230,16 @@
     var body = document.createElement('div');
     body.className = 'card-body';
     body.innerHTML =
-      '<div class="card-top"><h3 class="card-title"></h3><span class="card-num">' +
-        String(n).padStart(3, '0') + '</span></div>' +
+      '<div class="card-top"><h3 class="card-title"></h3>' +
+        (item.cfg && item.cfg.length ? '<span class="knob-n" title="' + item.cfg.length + ' built-in parameters">' + item.cfg.length + ' knobs</span>' : '') +
+        '<span class="card-num">' + String(i + 1).padStart(3, '0') + '</span></div>' +
       '<div class="card-tags">' +
         '<span class="tag">' + item.cat + '</span>' +
         item.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('') +
+        (item.cfg && item.cfg.length ? '<span class="tag tunable">customisable</span>' : '<span class="tag tunable">tunable</span>') +
       '</div>' +
       '<div class="card-actions">' +
+        '<button class="mini tune"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>Customise</button>' +
         '<button class="mini code">' +
           '<svg viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>Code</button>' +
         '<button class="mini replay flex-none" title="Replay">' +
@@ -207,11 +259,12 @@
       favBtn.setAttribute('aria-pressed', favs[item.id] ? 'true' : 'false');
       localStorage.setItem('ml-favs', JSON.stringify(favs));
       toast(favs[item.id] ? 'Added to favourites' : 'Removed from favourites');
-      if (state.favOnly) render();
+      if (state.favOnly) render(false);
     });
 
     $('.code', body).addEventListener('click', function () { openModal(item); });
-    $('.replay', body).addEventListener('click', function () { replay(host, item); });
+    $('.replay', body).addEventListener('click', function () { remount(item, host); });
+    $('.tune', body).addEventListener('click', function () { openTuner(item); });
 
     el.addEventListener('mousemove', function (e) {
       var r = el.getBoundingClientRect();
@@ -223,27 +276,39 @@
     return el;
   }
 
-  function replay(host, item) {
-    remount(item, host).setVisible(true);
-  }
-
   /* ---------------- rendering ---------------- */
   function matches(item) {
     if (state.cat !== 'all' && item.cat !== state.cat) return false;
     if (state.favOnly && !favs[item.id]) return false;
     if (!state.q) return true;
-    var hay = (item.title + ' ' + item.cat + ' ' + item.tags.join(' ') + ' ' + item.id).toLowerCase();
+    var hay = (item.title + ' ' + item.cat + ' ' + item.tags.join(' ') + ' ' + item.id + ' ' +
+      (item.cfg ? item.cfg.map(function (c) { return c.label; }).join(' ') : '')).toLowerCase();
     return state.q.toLowerCase().split(/\s+/).every(function (w) { return hay.indexOf(w) > -1; });
   }
 
-  function render() {
-    var list = ITEMS.filter(matches);
-    grid.innerHTML = '';
-    list.forEach(function (item, i) {
-      grid.appendChild(cardFor(item, i, ITEMS.indexOf(item) + 1));
-    });
-    resultCount.textContent = list.length + ' / ' + ITEMS.length + ' effects shown';
+  function render(reset) {
+    list = ITEMS.filter(matches);
+    if (reset !== false) { shown = 0; grid.innerHTML = ''; }
+    if (!shown) paint(); else count();
+  }
+
+  function paint() {
+    var frag = document.createDocumentFragment();
+    var stop = Math.min(shown + PAGE, list.length);
+    for (var i = shown; i < stop; i++) frag.appendChild(cardFor(list[i], IDX[list[i].id]));
+    shown = stop;
+    grid.appendChild(frag);
+    count();
+  }
+
+  function count() {
+    resultCount.textContent = (list.length ? 'Showing 1–' + shown : 'Nothing') + ' of ' + list.length +
+      (state.cat === 'all' ? '' : ' in ' + state.cat) + '  ·  ' + ITEMS.length + ' in the collection';
     emptyMsg.hidden = list.length > 0;
+    sentinel.hidden = shown >= list.length;
+    if (shown >= list.length) $('#moreBtn').parentNode.hidden = true;
+    else $('#moreBtn').parentNode.hidden = false;
+    $('#moreBtn').textContent = 'Load ' + Math.min(PAGE, list.length - shown) + ' more';
   }
 
   /* ---------------- modal ---------------- */
@@ -258,18 +323,25 @@
     if (item.js) t.push(['js', 'JS']);
     return t;
   }
-
   function showTab(k) {
     currentTab = k;
     $$('button', codeTabs).forEach(function (b) { b.classList.toggle('active', b.dataset.k === k); });
-    var src = current[k] || '';
-    codeOut.innerHTML = k === 'html' ? hlHtml(src) : k === 'css' ? hlCss(src) : hlJs(src);
+    var s = src(current, k);
+    codeOut.innerHTML = k === 'html' ? hlHtml(s) : k === 'css' ? hlCss(s) : hlJs(s);
+  }
+  function modalTuneNote() {
+    var n = $('#modalTuned');
+    if (!n || !current) return;
+    var on = T && T.isTuned(current.id);
+    n.hidden = !on;
+    if (on) n.textContent = 'showing your customisation';
   }
 
   function openModal(item) {
     current = item;
     $('#modalTitle').textContent = item.title;
     $('#modalMeta').textContent = item.cat + ' · ' + item.tags.join(' · ') + (item.js ? ' · interactive' : ' · pure css');
+    modalTuneNote();
 
     modalPreview.innerHTML = '<div class="demo-host"></div>';
     mount(item, $('.demo-host', modalPreview)).setVisible(true);
@@ -296,13 +368,15 @@
     modal.hidden = true;
     document.body.style.overflow = '';
   }
-
   $$('[data-close]').forEach(function (b) { b.addEventListener('click', closeModal); });
 
   function fullSnippet(item) {
-    return '<!-- ' + item.title + ' — Motion Lab -->\n' +
-      '<style>\n' + item.css + '\n</style>\n\n' + item.html +
-      (item.js ? '\n\n<script>\n(function(){\n  var root = document;\n  var api = { raf: function(f){ (function l(){ f(); requestAnimationFrame(l); })(); }, onCleanup: function(){} };\n' + item.js + '\n})();\n<\/script>' : '') + '\n';
+    var attrs = T ? T.exportAttrs(item) : ' class="ml-tuned"';
+    var tuned = !!T && T.isTuned(item.id);
+    return '<!-- ' + item.title + ' — Motion Lab' + (tuned ? ' (customised)' : '') + ' -->\n' +
+      '<style>\n' + (T ? T.exportCss(item) : item.css) + '\n</style>\n\n' +
+      '<div' + attrs + '>\n  ' + src(item, 'html') + '\n</div>' +
+      (src(item, 'js') ? '\n\n<script>\n(function(){\n  var root = document;\n  var api = { raf: function(f){ (function l(){ f(); requestAnimationFrame(l); })(); }, onCleanup: function(){} };\n' + src(item, 'js') + '\n})();\n<\/script>' : '') + '\n';
   }
 
   function copy(text, msg) {
@@ -320,14 +394,64 @@
   }
 
   $('#copyBtn').addEventListener('click', function () {
-    copy(current[currentTab] || '', currentTab.toUpperCase() + ' copied to clipboard');
+    copy(src(current, currentTab), currentTab.toUpperCase() + ' copied to clipboard');
   });
   $('#copyAllBtn').addEventListener('click', function () {
-    copy(fullSnippet(current), 'Full snippet copied — paste it into any HTML file');
+    copy(fullSnippet(current), 'Full snippet copied' + (T && T.isTuned(current.id) ? ' — with your customisation baked in' : ''));
   });
   $('#replayModal').addEventListener('click', function () {
     var h = $('.demo-host', modalPreview);
-    if (h) replay(h, current);
+    if (h) remount(current, h);
+  });
+  $('#tuneModalBtn').addEventListener('click', function () { openTuner(current, true); });
+
+  /* ---------------- tuner drawer ---------------- */
+  var tuner = $('#tuner');
+  var tunerBody = $('#tunerBody');
+  var tunerFor = null;
+
+  function openTuner(item, fromModal) {
+    if (!T) return;
+    tunerFor = item;
+    $('#tunerTitle').textContent = 'Customise';
+    $('#tunerSub').textContent = item.title + ' · #' + (IDX[item.id] + 1);
+    $('#tunerAllMode').hidden = !!fromModal;
+    T.buildPanel(item, tunerBody, { scope: $('#tunerAllMode').checked ? '*' : item.id, onChange: function () {
+      tuner.classList.toggle('is-global', $('#tunerAllMode').checked);
+      $('#tunerScope').textContent = $('#tunerAllMode').checked ? 'every effect' : 'this effect only';
+      var card = $('.card[data-id="' + item.id + '"]');
+      if (card) card.classList.toggle('is-tuned', T.isTuned(item.id));
+      if (current && current.id === item.id) modalTuneNote();
+    } });
+    $('#tunerScope').textContent = $('#tunerAllMode').checked ? 'every effect' : 'this effect only';
+    tuner.hidden = false;
+    requestAnimationFrame(function () { tuner.classList.add('open'); });
+    $('#tunerFav').textContent = favs[item.id] ? '★ Favourited' : '☆ Favourite';
+    $('#tunerFav').onclick = function () {
+      if (favs[item.id]) delete favs[item.id]; else favs[item.id] = 1;
+      localStorage.setItem('ml-favs', JSON.stringify(favs));
+      $('#tunerFav').textContent = favs[item.id] ? '★ Favourited' : '☆ Favourite';
+      render(false);
+    };
+    $('#tunerCopy').onclick = function () { copy(fullSnippet(item), 'Customised snippet copied'); };
+    $('#tunerCode').onclick = function () { openModal(item); };
+  }
+  function closeTuner() {
+    tuner.classList.remove('open');
+    setTimeout(function () { tuner.hidden = true; }, 320);
+  }
+  $('#tunerClose').addEventListener('click', closeTuner);
+  $('#tunerBackdrop').addEventListener('click', closeTuner);
+  $('#tunerAllMode').addEventListener('change', function () {
+    if (tunerFor) T.buildPanel(tunerFor, tunerBody, { scope: this.checked ? '*' : tunerFor.id });
+    tuner.classList.toggle('is-global', this.checked);
+    $('#tunerScope').textContent = this.checked ? 'every effect' : 'this effect only';
+  });
+  $('#tuneAll').addEventListener('click', function () {
+    var target = current || list[0] || ITEMS[0];
+    openTuner(target, false);
+    $('#tunerAllMode').checked = true;
+    $('#tunerAllMode').dispatchEvent(new Event('change'));
   });
 
   /* ---------------- toast ---------------- */
@@ -338,25 +462,26 @@
     clearTimeout(toastId);
     toastId = setTimeout(function () { toastEl.classList.remove('show'); }, 2400);
   }
+  window.MotionLabToast = toast;
 
   /* ---------------- header controls ---------------- */
   var search = $('#search');
   var deb;
   search.addEventListener('input', function () {
     clearTimeout(deb);
-    deb = setTimeout(function () { state.q = search.value.trim(); render(); }, 120);
+    deb = setTimeout(function () { state.q = search.value.trim(); render(true); }, 120);
   });
   $('#clearSearch').addEventListener('click', function () {
     search.value = ''; state.q = ''; state.cat = 'all'; state.favOnly = false;
     $('#favFilter').setAttribute('aria-pressed', 'false');
     $$('.chip').forEach(function (x, i) { x.classList.toggle('active', i === 0); });
-    render();
+    render(true);
   });
 
   $('#favFilter').addEventListener('click', function () {
     state.favOnly = !state.favOnly;
     this.setAttribute('aria-pressed', String(state.favOnly));
-    render();
+    render(true);
     if (state.favOnly && !Object.keys(favs).length) toast('No favourites yet — tap the heart on a card');
   });
 
@@ -378,13 +503,17 @@
   });
 
   $('#randomBtn').addEventListener('click', function () {
-    var item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-    openModal(item);
+    var pool = list.length ? list : ITEMS;
+    openModal(pool[Math.floor(Math.random() * pool.length)]);
   });
 
   document.addEventListener('keydown', function (e) {
-    if (e.key === '/' && document.activeElement !== search) { e.preventDefault(); search.focus(); }
-    if (e.key === 'Escape') { if (!modal.hidden) closeModal(); else if (document.activeElement === search) search.blur(); }
+    if (e.key === '/' && document.activeElement !== search && tuner.hidden) { e.preventDefault(); search.focus(); }
+    if (e.key === 'Escape') {
+      if (!modal.hidden) closeModal();
+      else if (!tuner.hidden) closeTuner();
+      else if (document.activeElement === search) search.blur();
+    }
   });
 
   /* ---------------- page chrome ---------------- */
@@ -419,7 +548,16 @@
   if (heroCount) heroCount.textContent = ITEMS.length;
   search.placeholder = 'Search ' + ITEMS.length + ' effects\u2026  (press /)';
   $$('.hero-stats b')[0].dataset.count = ITEMS.length;
+  $$('.hero-stats b')[1].dataset.count = CATS.length - 1;
+  var tunedCount = $('#tunedCount');
+  if (tunedCount) {
+    var n = T ? T.count() : 0;
+    tunedCount.textContent = n ? n + ' customised' : 'every effect customisable';
+  }
 
-  render();
-  console.log('%c Motion Lab ', 'background:#7c5cff;color:#fff;border-radius:4px', ITEMS.length + ' effects loaded');
+  render(true);
+  var per = {};
+  ITEMS.forEach(function (i) { per[i.cat] = (per[i.cat] || 0) + 1; });
+  console.log('%c Motion Lab ', 'background:#7c5cff;color:#fff;border-radius:4px',
+    ITEMS.length + ' effects · ' + Object.keys(per).map(function (k) { return k + ' ' + per[k]; }).join(', '));
 })();
