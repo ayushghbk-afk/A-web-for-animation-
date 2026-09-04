@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Motion Lab — 100+ Web Animations &amp; UI Elements</title>
+<meta name="description" content="An open gallery of 100+ hand-crafted CSS &amp; JavaScript animations, loaders, buttons, text effects, 3D scenes and interactive UI elements. Copy the code, use it anywhere." />
+<meta name="theme-color" content="#0b0b12" />
+<meta property="og:title" content="Motion Lab — 100+ Web Animations" />
+<meta property="og:description" content="A living gallery of 100+ copy-paste CSS &amp; JS animations." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9889;</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="./css/site.css" />
+</head>
+<body>
+
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<div class="bg-orbs" aria-hidden="true">
+  <span class="orb orb-1"></span>
+  <span class="orb orb-2"></span>
+  <span class="orb orb-3"></span>
+  <span class="grid-overlay"></span>
+</div>
+
+<header class="site-header" id="siteHeader">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+    </span>
+    <span class="brand-text">Motion<b>Lab</b></span>
+  </a>
+
+  <div class="header-tools">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Search 116 effects…  (press /)" aria-label="Search animations" autocomplete="off" />
+      <kbd class="slash-hint">/</kbd>
+    </div>
+    <button class="icon-btn" id="favFilter" title="Show favourites only" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.5-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.5 6c-2 4.3-9.5 9-9.5 9z"/></svg>
+    </button>
+    <button class="icon-btn" id="motionToggle" title="Pause / play all animations" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="i-pause"><path d="M9 5v14M15 5v14"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="i-play"><path d="M7 4l13 8-13 8z"/></svg>
+    </button>
+    <button class="icon-btn" id="themeToggle" title="Toggle light / dark">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="i-moon"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="i-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
+    </button>
+    <a class="icon-btn gh" id="repoLink" href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" title="Source on GitHub">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" stroke="none"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.9 10.9c.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.6-1.3-1.4-1.7-1.4-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.7 4.8 18.7 5 18.7 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+    </a>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow"><span class="dot-live"></span> pure CSS &amp; vanilla JS · zero dependencies</p>
+      <h1 class="hero-title">
+        <span class="line"><span>A gallery of</span></span>
+        <span class="line"><span><em id="counterHero">116</em> web animations</span></span>
+        <span class="line"><span>you can steal today.</span></span>
+      </h1>
+      <p class="hero-sub">Loaders, buttons, text effects, 3D scenes, backgrounds, toggles, SVG draw-ons and interactions — every one is live, isolated in its own shadow root, and one click away from your clipboard.</p>
+      <div class="hero-cta">
+        <a href="#gallery" class="btn-primary">Browse the lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <button class="btn-ghost" id="randomBtn">Surprise me ✦</button>
+      </div>
+      <ul class="hero-stats">
+        <li><b data-count="116">0</b><span>effects</span></li>
+        <li><b data-count="9">0</b><span>categories</span></li>
+        <li><b data-count="0">0</b><span>dependencies</span></li>
+        <li><b data-count="100">0</b><span>% copy-paste</span></li>
+      </ul>
+    </div>
+    <div class="scroll-cue" aria-hidden="true"><span></span></div>
+  </section>
+
+  <nav class="filters" id="filters" aria-label="Filter by category">
+    <div class="filters-inner" id="chips"></div>
+  </nav>
+
+  <section id="gallery" class="gallery-section">
+    <div class="section-head">
+      <h2>The collection</h2>
+      <p id="resultCount">Loading effects…</p>
+    </div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+    <p class="empty" id="empty" hidden>No effects match that search. <button id="clearSearch">Clear filters</button></p>
+  </section>
+
+  <section class="outro">
+    <h2>Built to be taken apart</h2>
+    <p>Every card is rendered inside a Shadow DOM, so no two demos can ever fight over a class name. Hit <b>Code</b> on any card to read the exact HTML, CSS and JS that produces it — then copy the whole thing in one click.</p>
+    <div class="outro-cards">
+      <article><h3>⚡ Static &amp; fast</h3><p>No framework, no bundler, no build step. It is HTML, CSS and a few kilobytes of JavaScript, served straight from GitHub Pages.</p></article>
+      <article><h3>🧪 Isolated demos</h3><p>Shadow roots + lazy mounting mean 116 animated demos on one page without your fan taking off.</p></article>
+      <article><h3>♿ Respectful motion</h3><p>Honours <code>prefers-reduced-motion</code>, and there is a global pause button in the header for everyone else.</p></article>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <p>Motion Lab — an open collection of web animations. Use anything here, no attribution needed.</p>
+  <p class="muted">Made with CSS, patience and far too many keyframes.</p>
+</footer>
+
+<!-- Code viewer -->
+<div class="modal" id="modal" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <header class="modal-head">
+      <div>
+        <h3 id="modalTitle">Effect</h3>
+        <p id="modalMeta" class="muted"></p>
+      </div>
+      <button class="icon-btn" data-close title="Close">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+    <div class="modal-body">
+      <div class="modal-preview" id="modalPreview"></div>
+      <div class="modal-code">
+        <div class="code-tabs" id="codeTabs"></div>
+        <pre class="code-block"><code id="codeOut"></code></pre>
+        <div class="modal-actions">
+          <button class="btn-primary sm" id="copyBtn">Copy this tab</button>
+          <button class="btn-ghost sm" id="copyAllBtn">Copy full snippet</button>
+          <button class="btn-ghost sm" id="replayModal">Replay ⟳</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="./js/data/loaders.js"></script>
+<script src="./js/data/buttons.js"></script>
+<script src="./js/data/text.js"></script>
+<script src="./js/data/cards.js"></script>
+<script src="./js/data/backgrounds.js"></script>
+<script src="./js/data/controls.js"></script>
+<script src="./js/data/svg.js"></script>
+<script src="./js/data/three-d.js"></script>
+<script src="./js/data/motion.js"></script>
+<script src="./js/app.js"></script>
+</body>
+</html>
