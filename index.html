@@ -5,41 +5,64 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Motion Lab — 900 Web Animations, every one customisable</title>
 <meta name="description" content="An open gallery of 900 hand-crafted CSS &amp; JavaScript animations — 100 loaders, 100 buttons, 100 text effects and more. Every single one is customisable: retune its speed, colours, size, glow and built-in parameters, then copy the code with your settings baked in." />
-<meta name="theme-color" content="#0b0b12" />
+<meta name="theme-color" content="#05050a" />
 <meta property="og:title" content="Motion Lab — 900 customisable Web Animations" />
 <meta property="og:description" content="100 animations in each of 9 categories, and a tuner on every one. Copy the code with your settings baked in." />
 <meta property="og:type" content="website" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#9889;</text></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2305050a'/><circle cx='16' cy='16' r='10' fill='none' stroke='%238b7dff' stroke-width='2'/><circle cx='16' cy='6' r='2.4' fill='%2322d3ee'/><circle cx='16' cy='16' r='3.2' fill='%238b7dff'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="./css/site.css" />
 </head>
 <body>
 
+<a class="skip-link" href="#gallery">Skip to the collection</a>
 <div class="scroll-progress" id="scrollProgress"></div>
+<div class="pointer-glow" id="pointerGlow" aria-hidden="true"></div>
 
 <div class="bg-orbs" aria-hidden="true">
   <span class="orb orb-1"></span>
   <span class="orb orb-2"></span>
   <span class="orb orb-3"></span>
+  <span class="orb orb-4"></span>
   <span class="grid-overlay"></span>
+  <span class="noise-overlay"></span>
 </div>
 
 <header class="site-header" id="siteHeader">
   <a class="brand" href="#top">
     <span class="brand-mark" aria-hidden="true">
-      <span></span><span></span><span></span><span></span>
+      <svg viewBox="0 0 36 36" fill="none">
+        <circle class="bm-ring" cx="18" cy="18" r="14.5" />
+        <circle class="bm-ring bm-2" cx="18" cy="18" r="9" />
+        <circle class="bm-core" cx="18" cy="18" r="3.4" />
+        <circle class="bm-dot" cx="18" cy="3.5" r="2.2" />
+      </svg>
     </span>
     <span class="brand-text">Motion<b>Lab</b></span>
   </a>
 
+  <nav class="primary-nav" id="primaryNav" aria-label="Primary">
+    <span class="nav-ink" id="navInk" aria-hidden="true"></span>
+    <button class="nav-link has-menu" id="navProduct" type="button" aria-expanded="false" aria-controls="megaProduct" data-menu="product">
+      Product
+      <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+    </button>
+    <a class="nav-link" href="#gallery" data-nav>Gallery</a>
+    <a class="nav-link" href="#how" data-nav>How it works</a>
+    <button class="nav-link has-menu" id="navResources" type="button" aria-expanded="false" aria-controls="megaResources" data-menu="resources">
+      Resources
+      <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
+    </button>
+  </nav>
+
   <div class="header-tools">
-    <div class="search-wrap">
-      <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="search" type="search" placeholder="Search 900 effects…  (press /)" aria-label="Search animations" autocomplete="off" />
-      <kbd class="slash-hint">/</kbd>
-    </div>
+    <button class="search-trigger" id="searchTrigger" type="button" title="Search (⌘K)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span>Search effects…</span>
+      <kbd class="slash-hint">⌘K</kbd>
+    </button>
     <button class="icon-btn wide" id="tuneAll" title="Customise this effect — or the whole collection">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg>
       <span>Tune</span>
@@ -55,52 +78,176 @@
       <svg viewBox="0 0 24 24" aria-hidden="true" class="i-moon"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg>
       <svg viewBox="0 0 24 24" aria-hidden="true" class="i-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
     </button>
-    <a class="icon-btn gh" id="repoLink" href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" title="Source on GitHub">
-      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor" stroke="none"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.9 10.9c.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.6-1.3-1.4-1.7-1.4-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.7 4.8 18.7 5 18.7 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
-    </a>
+    <a class="btn-primary sm header-cta" href="#gallery">Open the lab</a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
+
+<!-- Product mega menu -->
+<div class="mega" id="megaProduct" hidden>
+  <div class="mega-panel" role="menu" aria-label="Product">
+    <div class="mega-grid" id="megaGrid"></div>
+    <footer class="mega-foot">
+      <p>Nine families. One hundred of each. Every demo is live, isolated, and copy-ready.</p>
+      <a href="#gallery" class="mega-cta">Browse the full collection <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </footer>
+  </div>
+</div>
+
+<!-- Resources mega menu -->
+<div class="mega mega-sm" id="megaResources" hidden>
+  <div class="mega-panel" role="menu" aria-label="Resources">
+    <div class="mega-list">
+      <a href="#how" class="mega-row">
+        <span class="mega-ico" aria-hidden="true">01</span>
+        <span><b>How it works</b><small>Shadow DOM, lazy mounting, zero build step.</small></span>
+      </a>
+      <a href="#gallery" class="mega-row" data-open-tune>
+        <span class="mega-ico" aria-hidden="true">02</span>
+        <span><b>Customise anything</b><small>Speed, colour, glow — then copy the snippet.</small></span>
+      </a>
+      <button type="button" class="mega-row" id="openShortcuts">
+        <span class="mega-ico" aria-hidden="true">⌘</span>
+        <span><b>Keyboard shortcuts</b><small>⌘K search · / focus · Esc close.</small></span>
+      </button>
+      <a class="mega-row" href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener">
+        <span class="mega-ico gh" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.9 10.9c.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.6-1.3-1.4-1.7-1.4-1.7-1.1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.3 1.2a11.4 11.4 0 0 1 6 0C17.7 4.8 18.7 5 18.7 5c.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .4.2.7.8.6A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5z"/></svg>
+        </span>
+        <span><b>Source on GitHub</b><small>MIT licensed. Fork it, ship it.</small></span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile navigation -->
+<div class="mobile-nav" id="mobileNav" hidden>
+  <div class="mobile-nav-backdrop" data-close-menu></div>
+  <section class="mobile-nav-panel" role="dialog" aria-modal="true" aria-label="Menu">
+    <header class="mobile-nav-head">
+      <span class="brand-text">Motion<b>Lab</b></span>
+      <button class="icon-btn" type="button" data-close-menu title="Close menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+    <div class="mobile-nav-body">
+      <p class="mobile-kicker">Product</p>
+      <div class="mobile-cats" id="mobileCats"></div>
+      <p class="mobile-kicker">Navigate</p>
+      <a href="#gallery" class="mobile-link" data-close-menu>Gallery</a>
+      <a href="#how" class="mobile-link" data-close-menu>How it works</a>
+      <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
+    </div>
+    <footer class="mobile-nav-foot">
+      <a href="#gallery" class="btn-primary" data-close-menu>Open the lab</a>
+    </footer>
+  </section>
+</div>
+
+<!-- Command palette -->
+<div class="cmdk" id="cmdk" hidden>
+  <div class="cmdk-backdrop" data-close-cmdk></div>
+  <div class="cmdk-panel" role="dialog" aria-modal="true" aria-labelledby="cmdkLabel">
+    <div class="cmdk-bar">
+      <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="search" type="search" placeholder="Search 900 effects…" aria-label="Search animations" autocomplete="off" />
+      <kbd>esc</kbd>
+    </div>
+    <p class="cmdk-label" id="cmdkLabel">Jump to an effect, or filter the gallery</p>
+    <div class="cmdk-results" id="cmdkResults" role="listbox"></div>
+    <footer class="cmdk-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+      <span><kbd>↵</kbd> open</span>
+      <span><kbd>⌘</kbd><kbd>K</kbd> toggle</span>
+    </footer>
+  </div>
+</div>
 
 <main id="top">
 
   <section class="hero">
-    <div class="hero-inner">
-      <p class="eyebrow"><span class="dot-live"></span> pure CSS &amp; vanilla JS · zero dependencies · <b id="tunedCount">every effect customisable</b></p>
-      <h1 class="hero-title">
-        <span class="line"><span>A gallery of</span></span>
-        <span class="line"><span><em id="counterHero">900</em> web animations</span></span>
-        <span class="line"><span>you can steal today.</span></span>
-      </h1>
-      <p class="hero-sub">100 loaders, 100 buttons, 100 text effects, 100 cards, 100 backgrounds, 100 controls, 100 SVG lines, 100 3D scenes and 100 interactions. Every one is live, isolated in its own shadow root, <b>customisable</b> from its own panel, and one click from your clipboard.</p>
-      <div class="hero-cta">
-        <a href="#gallery" class="btn-primary">Browse the lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <button class="btn-ghost" id="randomBtn">Surprise me ✦</button>
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="dot-live"></span> Pure CSS &amp; vanilla JS · zero dependencies · <b id="tunedCount">every effect customisable</b></p>
+        <h1 class="hero-title">
+          <span class="line"><span>The motion system</span></span>
+          <span class="line"><span>behind a thousand</span></span>
+          <span class="line"><span><em id="counterHero">900</em> interfaces.</span></span>
+        </h1>
+        <p class="hero-sub">A product-grade gallery of loaders, buttons, type, cards, backgrounds, controls, SVG, 3D and interaction — each one live in its own shadow root, tunable from a panel, and one click from your clipboard.</p>
+        <div class="hero-cta">
+          <a href="#gallery" class="btn-primary mag-btn">Browse the lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+          <button class="btn-ghost mag-btn" id="randomBtn" type="button">Surprise me <span class="spark">✦</span></button>
+        </div>
+        <ul class="hero-stats">
+          <li><b data-count="900">0</b><span>effects</span></li>
+          <li><b data-count="9">0</b><span>categories</span></li>
+          <li><b data-count="100">0</b><span>per category</span></li>
+          <li><b data-count="100">0</b><span>% customisable</span></li>
+          <li><b data-count="0">0</b><span>dependencies</span></li>
+        </ul>
       </div>
-      <ul class="hero-stats">
-        <li><b data-count="900">0</b><span>effects</span></li>
-        <li><b data-count="9">0</b><span>categories</span></li>
-        <li><b data-count="100">0</b><span>per category</span></li>
-        <li><b data-count="100">0</b><span>% customisable</span></li>
-        <li><b data-count="0">0</b><span>dependencies</span></li>
-      </ul>
+      <div class="hero-stage" id="heroStage" aria-hidden="true">
+        <div class="stage-glow"></div>
+        <div class="stage-ring"></div>
+        <div class="stage-ring r2"></div>
+      </div>
     </div>
     <div class="scroll-cue" aria-hidden="true"><span></span></div>
   </section>
 
+  <section class="steps" id="how">
+    <div class="steps-inner">
+      <article style="--i:0">
+        <span class="step-n">01</span>
+        <h3>Browse live</h3>
+        <p>Nine families, one hundred of each. Every card is a real animation — not a screenshot — isolated so nothing collides.</p>
+      </article>
+      <article style="--i:1">
+        <span class="step-n">02</span>
+        <h3>Tune it</h3>
+        <p>Open Customise: speed, colour, size, glow, easing, plus the knobs that demo exposes. Settings persist in this browser.</p>
+      </article>
+      <article style="--i:2">
+        <span class="step-n">03</span>
+        <h3>Copy &amp; ship</h3>
+        <p>The snippet you copy already carries your numbers. Drop it into any page. No framework, no attribution required.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="explore" id="product">
+    <div class="section-head">
+      <div>
+        <p class="kicker">The product</p>
+        <h2>Nine studios. One lab.</h2>
+      </div>
+      <p>Pick a family to filter the collection — or stay for the whole set.</p>
+    </div>
+    <div class="bento" id="bento"></div>
+  </section>
+
   <nav class="filters" id="filters" aria-label="Filter by category">
-    <div class="filters-inner" id="chips"></div>
+    <div class="filters-inner" id="chips">
+      <span class="chip-ink" id="chipInk" aria-hidden="true"></span>
+    </div>
   </nav>
 
   <section id="gallery" class="gallery-section">
     <div class="section-head">
-      <h2>The collection</h2>
+      <div>
+        <p class="kicker">The collection</p>
+        <h2>Every effect, live.</h2>
+      </div>
       <p id="resultCount">Loading effects…</p>
     </div>
     <div class="grid" id="grid" aria-live="polite"></div>
-    <p class="empty" id="empty" hidden>Nothing matches that search. <button id="clearSearch">Clear filters</button></p>
+    <p class="empty" id="empty" hidden>Nothing matches that search. <button id="clearSearch" type="button">Clear filters</button></p>
     <div class="more" id="more">
       <div id="sentinel" aria-hidden="true"></div>
-      <button class="btn-ghost sm" id="moreBtn">Load more</button>
+      <button class="btn-ghost sm" id="moreBtn" type="button">Load more</button>
     </div>
   </section>
 
@@ -108,17 +255,70 @@
     <h2>Built to be taken apart</h2>
     <p>Every card is rendered inside a Shadow DOM, so no two demos can ever fight over a class name. Hit <b>Code</b> to read the exact HTML, CSS and JS that produces it, or <b>Customise</b> to retune it — the snippet you copy out already carries your settings.</p>
     <div class="outro-cards">
-      <article><h3>🎛️ Tune every effect</h3><p>Open the Customise panel on any card: speed, colours, size, glow, direction, easing plus that demo's own parameters. Settings persist per effect, can be pushed to all 900 at once, and are baked into the snippet you copy.</p></article>
-      <article><h3>⚡ Static &amp; fast</h3><p>No framework, no bundler, no build step. It is HTML, CSS and a few kilobytes of JavaScript, served straight from GitHub Pages.</p></article>
-      <article><h3>🧪 Isolated demos</h3><p>Shadow roots + lazy mounting mean 900 animated demos on one page without your fan taking off.</p></article>
-      <article><h3>♿ Respectful motion</h3><p>Honours <code>prefers-reduced-motion</code>, and there is a global pause button in the header for everyone else.</p></article>
+      <article>
+        <span class="outro-ico" aria-hidden="true">🎛️</span>
+        <h3>Tune every effect</h3>
+        <p>Open the Customise panel on any card: speed, colours, size, glow, direction, easing plus that demo's own parameters. Settings persist per effect, can be pushed to all 900 at once, and are baked into the snippet you copy.</p>
+      </article>
+      <article>
+        <span class="outro-ico" aria-hidden="true">⚡</span>
+        <h3>Static &amp; fast</h3>
+        <p>No framework, no bundler, no build step. It is HTML, CSS and a few kilobytes of JavaScript, served straight from GitHub Pages.</p>
+      </article>
+      <article>
+        <span class="outro-ico" aria-hidden="true">🧪</span>
+        <h3>Isolated demos</h3>
+        <p>Shadow roots + lazy mounting mean 900 animated demos on one page without your fan taking off.</p>
+      </article>
+      <article>
+        <span class="outro-ico" aria-hidden="true">♿</span>
+        <h3>Respectful motion</h3>
+        <p>Honours <code>prefers-reduced-motion</code>, and there is a global pause button in the header for everyone else.</p>
+      </article>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
-  <p>Motion Lab — an open collection of web animations. Use anything here, no attribution needed.</p>
-  <p class="muted">Made with CSS, patience and far too many keyframes.</p>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="#top">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 36 36" fill="none">
+            <circle class="bm-ring" cx="18" cy="18" r="14.5" />
+            <circle class="bm-ring bm-2" cx="18" cy="18" r="9" />
+            <circle class="bm-core" cx="18" cy="18" r="3.4" />
+            <circle class="bm-dot" cx="18" cy="3.5" r="2.2" />
+          </svg>
+        </span>
+        <span class="brand-text">Motion<b>Lab</b></span>
+      </a>
+      <p>An open collection of web animations. Use anything here, no attribution needed.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <a href="#gallery">Gallery</a>
+      <a href="#product">Categories</a>
+      <a href="#how">How it works</a>
+    </div>
+    <div>
+      <h4>Studio</h4>
+      <a href="#gallery" data-cat="loaders">Loaders</a>
+      <a href="#gallery" data-cat="buttons">Buttons</a>
+      <a href="#gallery" data-cat="text">Text FX</a>
+      <a href="#gallery" data-cat="3d">3D</a>
+    </div>
+    <div>
+      <h4>Open source</h4>
+      <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/ayushghbk-afk/A-web-for-animation-/blob/main/LICENSE" target="_blank" rel="noopener">MIT licence</a>
+      <button type="button" id="footerSearch">Search ⌘K</button>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <p>Made with CSS, patience and far too many keyframes.</p>
+    <p class="muted">© 2026 Motion Lab</p>
+  </div>
 </footer>
 
 <!-- Code viewer -->
@@ -205,5 +405,6 @@
 <script src="./js/gen/expand.js"></script>
 <script src="./js/tune.js"></script>
 <script src="./js/app.js"></script>
+<script src="./js/nav.js"></script>
 </body>
 </html>

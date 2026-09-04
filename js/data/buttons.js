@@ -132,7 +132,7 @@
 ,
 
 { id: 'btn-slideup', title: 'Slide Up Label', cat: 'buttons', tags: ['css', 'hover'],
-  html: '<button class="sl2">Get Started</button>',
+  html: '<button class="sl2" data-hover="Dive in"><span>Get Started</span></button>',
   css: '\n.sl2{position:relative;overflow:hidden;padding:14px 30px;border:0;border-radius:12px;background:#0e0e1c;color:#8f8fa8;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer}\n.sl2 span{display:block;transition:transform .35s cubic-bezier(.6,.05,.3,1)}\n.sl2::after{content:attr(data-hover);position:absolute;inset:0;display:grid;place-items:center;color:#22d3ee;transform:translateY(110%);transition:transform .35s cubic-bezier(.6,.05,.3,1)}\n.sl2:hover span{transform:translateY(-110%)}\n.sl2:hover::after{transform:translateY(0)}\n'
 }
 ,
