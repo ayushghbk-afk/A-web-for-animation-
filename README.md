@@ -1,7 +1,7 @@
-# ⚡ Motion Lab — 116 web animations & UI elements
+# ⚡ Motion Lab — 141 web animations & UI elements
 
-A zero-dependency, static showcase of **116 hand-written web animations**: loaders, buttons,
-text effects, cards, backgrounds, controls, SVG line art, 3D scenes and interaction patterns.
+A zero-dependency, static showcase of **141 hand-written web animations**: loaders, buttons,
+text effects, cards, backgrounds, controls, SVG line art, 3D scenes, UI widgets and interaction patterns.
 Every demo is live, isolated, and one click away from your clipboard.
 
 Built to be dropped straight onto **GitHub Pages** — no build step, no bundler, no npm install.
@@ -12,23 +12,23 @@ Built to be dropped straight onto **GitHub Pages** — no build step, no bundler
 
 | Category | Count | Examples |
 | --- | --- | --- |
-| Loaders | 18 | conic spinner, equalizer, atom orbitals, hourglass, infinity trace |
-| Buttons | 16 | magnetic pull, material ripple, liquid blob, cyber clip, loading state |
-| Text FX | 14 | typewriter, glitch, scramble decode, split-flap board, neon flicker |
-| Cards & Hover | 14 | 3D tilt, holographic foil, cursor spotlight, flip card, fanning stack |
-| Backgrounds | 12 | particle network, matrix rain, aurora, synthwave grid, lava lamp |
-| Controls | 12 | day/night toggle, tick-draw checkbox, heart burst, icon tab bar |
-| SVG & Lines | 10 | self-drawing path, progress ring, radar sweep, chart draw, gooey blobs |
-| 3D | 10 | rotating cube, 3D carousel, unfolding box, isometric tower, dot sphere |
-| Interaction | 10 | scroll reveal, count-up, toast, spring modal, smooth accordion |
-| **Total** | **116** | |
+| Loaders | 20 | conic spinner, equalizer, atom orbitals, hourglass, metronome tick |
+| Buttons | 19 | magnetic pull, material ripple, liquid blob, 3D flip, cursor fill |
+| Text FX | 16 | typewriter, glitch, scramble decode, bouncing letters, neon breath |
+| Cards & Hover | 16 | 3D tilt, holographic foil, cursor spotlight, concert ticket, profile card |
+| Backgrounds | 19 | particle network, meteor shower, lightning storm, warp speed, snowfall |
+| Controls | 15 | day/night toggle, PIN code, password meter, mini music player, icon tab bar |
+| SVG & Lines | 12 | self-drawing path, progress ring, radar sweep, morphing blob, live bar chart |
+| 3D | 11 | rotating cube, 3D carousel, unfolding box, rolling dice, dot sphere |
+| Interaction | 13 | scroll reveal, cookie banner, upload dropzone, checkout stepper, spring modal |
+| **Total** | **141** | |
 
 ## 🧠 How it works
 
 * Every effect is a plain data object — `{ id, title, cat, tags, html, css, js? }` — living in
   `js/data/*.js`.
 * `js/app.js` renders a card per effect and mounts each demo inside its **own Shadow DOM**, so
-  116 independent stylesheets can coexist without a single class-name collision.
+  141 independent stylesheets can coexist without a single class-name collision.
 * Demos are **lazily mounted** as they scroll into view, and JS-driven demos share one global
   `requestAnimationFrame` pump that pauses whenever a demo is off-screen — so the page stays
   smooth even with a hundred things moving.

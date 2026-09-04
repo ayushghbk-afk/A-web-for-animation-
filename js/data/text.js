@@ -72,6 +72,14 @@
 { id: 'underline-grow', title: 'Underline Reveal', cat: 'text', tags: ['hover', 'link'],
   html: '<div class="ul-wrap"><a href="#" class="ul">Hover this link</a><a href="#" class="ul ul2">And this one</a></div>',
   css: '.ul-wrap{display:grid;gap:16px;text-align:center}\n.ul{position:relative;font:600 22px "Space Grotesk",sans-serif;color:#e8e8f5;text-decoration:none;padding-bottom:4px}\n.ul::after{content:"";position:absolute;left:0;bottom:0;width:100%;height:2px;background:#7c5cff;transform:scaleX(0);transform-origin:right;transition:transform .42s cubic-bezier(.65,0,.35,1)}\n.ul:hover::after{transform:scaleX(1);transform-origin:left}\n.ul2::after{background:#22d3ee;height:3px;border-radius:2px;transform-origin:center;transition-duration:.5s}\n.ul2:hover{color:#22d3ee}'
+},
+{ id: 'text-bounce', title: 'Bouncing Letters', cat: 'text', tags: ['letters', 'css'],
+  html: '<div class="hop2"><span>B</span><span>O</span><span>U</span><span>N</span><span>C</span><span>E</span><span>!</span></div>',
+  css: '.hop2{display:flex;gap:3px;font:700 44px "Space Grotesk",sans-serif;line-height:1}\n.hop2 span{display:inline-block;color:#22d3ee;transform-origin:50% 100%;animation:hops2 1.5s cubic-bezier(.33,.7,.4,1) infinite}\n.hop2 span:nth-child(2){color:#7c5cff;animation-delay:.07s}\n.hop2 span:nth-child(3){color:#a855f7;animation-delay:.14s}\n.hop2 span:nth-child(4){color:#ff5c8a;animation-delay:.21s}\n.hop2 span:nth-child(5){color:#ffd479;animation-delay:.28s}\n.hop2 span:nth-child(6){color:#34d399;animation-delay:.35s}\n.hop2 span:nth-child(7){color:#9a9ab0;animation-delay:.42s}\n@keyframes hops2{0%,100%{transform:translateY(0) scale(1,1)}18%{transform:translateY(-28px) scale(.92,1.1)}36%{transform:translateY(0) scale(1.24,.7)}50%{transform:translateY(-11px) scale(.95,1.08)}66%{transform:translateY(0) scale(1.04,.92)}80%{transform:translateY(-3px) scale(1,1)}}'
+},
+{ id: 'neon-breathe', title: 'Neon Breath', cat: 'text', tags: ['glow', 'css'],
+  html: '<div class="nb2">BREATHE</div>',
+  css: '.nb2{font:700 44px "Space Grotesk",sans-serif;letter-spacing:.12em;color:#eafffe;animation:bre2 3s ease-in-out infinite}\n@keyframes bre2{0%,100%{text-shadow:0 0 5px rgba(34,211,238,.55),0 0 14px rgba(34,211,238,.35),0 0 30px rgba(34,211,238,.2);opacity:.8}50%{text-shadow:0 0 9px rgba(34,211,238,1),0 0 24px rgba(34,211,238,.85),0 0 52px rgba(34,211,238,.55),0 0 90px rgba(124,92,255,.45);opacity:1}}'
 }
 
   );
