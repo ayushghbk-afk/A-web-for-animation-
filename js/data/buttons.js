@@ -98,6 +98,48 @@
 { id: 'btn-aura', title: 'Aura Glow', cat: 'buttons', tags: ['gradient', 'hover'],
   html: '<button class="au3"><span>Join premium</span><b class="st">&#10022;</b></button>',
   css: '.au3{position:relative;display:inline-flex;align-items:center;gap:9px;padding:16px 40px;border-radius:14px;border:1px solid rgba(160,160,210,.3);background:#141424;color:#dcdcf0;font:600 15px "Space Grotesk",sans-serif;cursor:pointer;overflow:hidden;transition:transform .3s,color .3s,border-color .3s,box-shadow .3s}\n.au3::before{content:"";position:absolute;top:-65%;left:-65%;width:230%;height:230%;background:conic-gradient(from 0deg,#7c5cff,#22d3ee,#ff5c8a,#ffd479,#7c5cff);opacity:0;animation:aurago 3.2s linear infinite;transition:opacity .4s;z-index:0}\n.au3 span,.au3 b{position:relative;z-index:1}\n.au3 .st{color:#ffd479;font-weight:700;transition:transform .4s cubic-bezier(.3,1.5,.5,1)}\n.au3:hover{color:#fff;border-color:rgba(255,255,255,.35);transform:translateY(-2px)}\n.au3:hover::before{opacity:1}\n.au3:hover .st{transform:rotate(180deg) scale(1.3)}\n@keyframes aurago{to{transform:rotate(1turn)}}'
+},
+
+{ id: 'btn-swoosh', title: 'Sweep Under', cat: 'buttons', tags: ['css', 'hover'],
+  html: '<button class="swoosh2">Explore</button>',
+  css: '\n.swoosh2{position:relative;padding:12px 26px;border:0;border-radius:11px;background:linear-gradient(120deg,#7c5cff,#a855f7);color:#fff;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer;overflow:hidden;transition:transform .2s}\n.swoosh2::before{content:"";position:absolute;left:0;bottom:0;width:100%;height:0;background:#fff;opacity:.18;transition:height .28s ease}\n.swoosh2::after{content:"";position:absolute;top:0;left:-140%;width:120%;height:100%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);transition:left .5s ease}\n.swoosh2:hover{transform:translateY(-2px)}\n.swoosh2:hover::before{height:100%}\n.swoosh2:hover::after{left:130%}\n'
+}
+,
+
+{ id: 'btn-ink', title: 'Ink Rise', cat: 'buttons', tags: ['css', 'hover'],
+  html: '<button class="ink2">Activate</button>',
+  css: '\n.ink2{position:relative;padding:12px 26px;border-radius:11px;border:1.5px solid rgba(160,160,210,.45);background:transparent;color:#e8e8f5;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer;overflow:hidden;transition:color .3s .06s}\n.ink2::before{content:"";position:absolute;left:0;right:0;bottom:0;height:0;background:#22d3ee;transition:height .35s cubic-bezier(.6,.05,.3,1);z-index:-1}\n.ink2:hover{color:#06121a;border-color:#22d3ee}\n.ink2:hover::before{height:100%}\n'
+}
+,
+
+{ id: 'btn-chrome', title: 'Chrome Press', cat: 'buttons', tags: ['css', '3d'],
+  html: '<button class="chr2">Press me</button>',
+  css: '\n.chr2{width:150px;height:52px;border:0;border-radius:14px;background:linear-gradient(180deg,#3b3657,#1c1a30);color:#e8e8f5;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer;box-shadow:0 10px 0 #0b0a16,0 14px 22px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.25);transition:all .08s}\n.chr2::before{content:"";position:absolute;inset:3px;border-radius:11px;background:linear-gradient(120deg,transparent 30%,rgba(124,92,255,.25) 45%,rgba(34,211,238,.25) 55%,transparent 70%);background-size:200% 100%;opacity:0;transition:opacity .3s}\n.chr2:hover{filter:brightness(1.1)}.chr2:hover::before{opacity:1;animation:chr2sh 1.4s linear infinite}\n.chr2:active{transform:translateY(8px);box-shadow:0 2px 0 #0b0a16,0 6px 14px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25)}\n@keyframes chr2sh{0%{background-position:0 0}100%{background-position:200% 0}}\n'
+}
+,
+
+{ id: 'btn-pop', title: 'Pop & Glow', cat: 'buttons', tags: ['css', 'micro'],
+  html: '<button class="pop2">Download</button>',
+  css: '\n.pop2{position:relative;padding:13px 28px;border:0;border-radius:999px;background:#ff5c8a;color:#fff;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer;box-shadow:0 0 0 0 rgba(255,92,138,.55);animation:pop2glow 1.8s ease-out infinite}\n.pop2:hover{animation:none;transform:scale(1.08);box-shadow:0 0 26px rgba(255,92,138,.8)}\n.pop2:active{transform:scale(.94)}\n@keyframes pop2glow{0%{box-shadow:0 0 0 0 rgba(255,92,138,.5)}70%{box-shadow:0 0 0 14px rgba(255,92,138,0)}100%{box-shadow:0 0 0 0 rgba(255,92,138,0)}}\n'
+}
+,
+
+{ id: 'btn-confirm', title: 'Two-Step Confirm', cat: 'buttons', tags: ['js', 'feedback'],
+  html: '<button class="cf2">Send message</button>',
+  css: '\n.cf2{padding:12px 24px;border:0;border-radius:11px;background:#7c5cff;color:#fff;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer;min-width:170px;transition:background .25s,transform .15s}\n.cf2.armed{background:#ff5c8a;animation:cf2shake .4s ease}\n.cf2.done{background:#22c55e}\n.cf2:active{transform:scale(.97)}\n@keyframes cf2shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}\n',
+  js: 'var b=root.querySelector(\'.cf2\');var step=0;b.addEventListener(\'click\',function(){if(step===0){step=1;b.classList.add(\'armed\');b.textContent=\'Sure? Tap again\';}else if(step===1){step=2;b.classList.remove(\'armed\');b.classList.add(\'done\');b.textContent=\'Message sent ✓\';setTimeout(function(){step=0;b.classList.remove(\'done\');b.textContent=\'Send message\';},1800);}else{step=1;b.classList.add(\'armed\');b.textContent=\'Sure? Tap again\';}});'
+}
+,
+
+{ id: 'btn-slideup', title: 'Slide Up Label', cat: 'buttons', tags: ['css', 'hover'],
+  html: '<button class="sl2">Get Started</button>',
+  css: '\n.sl2{position:relative;overflow:hidden;padding:14px 30px;border:0;border-radius:12px;background:#0e0e1c;color:#8f8fa8;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer}\n.sl2 span{display:block;transition:transform .35s cubic-bezier(.6,.05,.3,1)}\n.sl2::after{content:attr(data-hover);position:absolute;inset:0;display:grid;place-items:center;color:#22d3ee;transform:translateY(110%);transition:transform .35s cubic-bezier(.6,.05,.3,1)}\n.sl2:hover span{transform:translateY(-110%)}\n.sl2:hover::after{transform:translateY(0)}\n'
+}
+,
+
+{ id: 'btn-shape', title: 'Morph Corners', cat: 'buttons', tags: ['css', 'shape'],
+  html: '<button class="sh2">Hover me</button>',
+  css: '\n.sh2{padding:13px 26px;border:2px solid #a855f7;background:transparent;color:#e8e8f5;font:700 14px \'Space Grotesk\',sans-serif;cursor:pointer;clip-path:polygon(12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px) 100%,0 100%,0 12px);transition:all .3s}\n.sh2:hover{background:#a855f7;color:#fff;clip-path:polygon(0 0,100% 0,100% 100%,100% 100%,0 100%,0 0);letter-spacing:.06em}\n'
 }
 
   );
