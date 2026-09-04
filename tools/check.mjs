@@ -168,6 +168,76 @@ else {
 
 console.log(`  sources: ${checked.js} interactive demos compiled · ${ITEMS.length} html/css pairs validated`);
 
+/* ---- starter templates (js/templates.js + ./templates) ---- */
+run('js/templates.js');
+const TPL = win.ML_TEMPLATES;
+const html = read('index.html');
+
+function checkTemplates() {
+  if (!Array.isArray(TPL) || !TPL.length) { ok = false; note('js/templates.js did not define ML_TEMPLATES'); return; }
+
+  const tplIds = new Set();
+  let files = 0, lines = 0, knobs = 0;
+
+  TPL.forEach((t) => {
+    const where = `template ${t.id || '(missing id)'}`;
+    if (!t.id) { ok = false; note(`${where}: no id`); return; }
+    if (tplIds.has(t.id)) { ok = false; note(`duplicate template id "${t.id}"`); } else tplIds.add(t.id);
+    if (!t.title || !t.name || !t.tagline || !t.desc) note(`${where}: missing title/name/tagline/desc`);
+    if (t.dir !== `templates/${t.id}`) { ok = false; note(`${where}: dir "${t.dir}" must be templates/${t.id}`); }
+    if (!/^https:\/\/github\.com\/[^/]+\/[^/]+$/.test(t.repo || '')) { ok = false; note(`${where}: repo is not a clean github.com URL`); }
+    if (!/^https:\/\/github\.com\/[^/]+\/[^/]+\/blob\/[^/]+\/$/.test(t.repoFile || '')) { ok = false; note(`${where}: repoFile must end in /blob/<branch>/`); }
+    if (!/^https:\/\//.test(t.live || '')) note(`${where}: no hosted "live" URL`);
+    if (!Array.isArray(t.stack) || !t.stack.length) note(`${where}: no stack tags`);
+    if (!Array.isArray(t.folders) || !t.folders.length) { ok = false; note(`${where}: no control folders listed`); }
+    if (!Array.isArray(t.uses) || !t.uses.length) note(`${where}: no "good for" uses listed`);
+    if (!t.hint) note(`${where}: no interaction hint for the preview overlay`);
+    if (!/^[A-F0-9]{6}$/i.test(String(t.a1 || '').replace('#', '')) || !/^[A-F0-9]{6}$/i.test(String(t.a2 || '').replace('#', ''))) {
+      ok = false; note(`${where}: a1/a2 must be #rrggbb accent colours`);
+    }
+    if (!/<svg[\s\S]*<\/svg>/.test(t.icon || '')) { ok = false; note(`${where}: icon must be an inline <svg>`); }
+
+    /* every declared file must exist, and its line count must be honest */
+    if (!Array.isArray(t.files) || !t.files.length) { ok = false; note(`${where}: no files declared`); return; }
+    const names = t.files.map((f) => f.p);
+    if (!names.includes(t.entry)) { ok = false; note(`${where}: entry "${t.entry}" is not one of its files`); }
+    if (new Set(names).size !== names.length) { ok = false; note(`${where}: duplicate file names`); }
+    let entrySrc = '';
+    t.files.forEach((f) => {
+      const rel = `${t.dir}/${f.p}`;
+      if (!fs.existsSync(path.join(root, rel))) { ok = false; note(`${where}: ${rel} does not exist`); return; }
+      const src = read(rel);
+      files++;
+      const real = src.replace(/\n$/, '').split('\n').length;
+      lines += real;
+      if (f.lines !== real) { ok = false; note(`${where}: ${f.p} declares ${f.lines} lines, on disk it is ${real}`); }
+      if (!/\.(html|css|js)$/.test(f.p)) note(`${where}: ${f.p} has an unusual extension`);
+      if (f.p === t.entry) entrySrc = src;
+      else if (entrySrc && !entrySrc.includes(f.p)) {
+        ok = false; note(`${where}: ${t.entry} never references ${f.p} — the vendored copy looks broken`);
+      }
+    });
+    (t.folders || []).forEach((fo) => {
+      if (!fo.g || !Array.isArray(fo.k) || !fo.k.length) { ok = false; note(`${where}: control folder "${fo.g}" has no controls`); return; }
+      knobs += fo.k.length;
+    });
+  });
+
+  /* nothing vendored on disk should be missing from the catalogue */
+  const onDisk = fs.existsSync(path.join(root, 'templates'))
+    ? fs.readdirSync(path.join(root, 'templates')).filter((d) => fs.statSync(path.join(root, 'templates', d)).isDirectory())
+    : [];
+  onDisk.forEach((d) => { if (!tplIds.has(d)) note(`templates/${d} is on disk but not in the ML_TEMPLATES catalogue`); });
+
+  /* and the page must still be wired up */
+  ['id="templateGrid"', 'id="tplPlay"', 'id="tplCode"', 'id="templates"', 'href="#templates"', 'js/templates.js'].forEach((needle) => {
+    if (!html.includes(needle)) { ok = false; note(`index.html is missing ${needle} — the templates section is not wired up`); }
+  });
+
+  console.log(`  templates: ${TPL.length} vendored · ${files} files · ${lines} lines · ${knobs} live controls · ${onDisk.length === TPL.length ? '\u001b[32m✓ catalogue matches disk\u001b[0m' : '\u001b[33mcatalogue and disk disagree\u001b[0m'}`);
+}
+checkTemplates();
+
 if (fail.length) {
   console.log(`\n  \u001b[31m${fail.length} problem(s):\u001b[0m`);
   fail.slice(0, 40).forEach((m) => console.log('   · ' + m));

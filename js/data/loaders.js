@@ -127,7 +127,7 @@
 
 { id: 'cycle-text', title: 'Cycling Words', cat: 'loaders', tags: ['css', 'text'],
   html: '<div class="cyc"><div class="cyc-track"><span>RENDERING</span><span>BUFFERING</span><span>SYNCING</span><span>OPTIMIZING</span><span>RENDERING</span></div></div>',
-  css: '\n.cyc{height:32px;overflow:hidden;font:700 15px \'Space Grotesk\',sans-serif;letter-spacing:.18em}\n.cyc-track{animation:cycroll 8s steps(4) infinite}\n.cyc span{display:block;height:32px;line-height:32px;color:#22d3ee;text-shadow:0 0 12px rgba(34,211,238,.6)}\n.cyc span:nth-child(2){color:#7c5cff}.cyc span:nth-child(3){color:#ff5c8a}.cyc span:nth-child(4){color:#a855f7}\n.cyc span::after{content:"_";animation:cyc_blink .6s steps(2) infinite}\n@keyframes cyc_blink{50%{opacity:0}}\n'
+  css: '\n.cyc{height:32px;overflow:hidden;font:700 15px \'Space Grotesk\',sans-serif;letter-spacing:.18em}\n.cyc-track{animation:cycroll 8s steps(4) infinite}\n.cyc span{display:block;height:32px;line-height:32px;color:#22d3ee;text-shadow:0 0 12px rgba(34,211,238,.6)}\n.cyc span:nth-child(2){color:#7c5cff}.cyc span:nth-child(3){color:#ff5c8a}.cyc span:nth-child(4){color:#a855f7}\n.cyc span::after{content:"_";animation:cyc_blink .6s steps(2) infinite}\n@keyframes cycroll{to{transform:translateY(-128px)}}\n@keyframes cyc_blink{50%{opacity:0}}\n'
 }
 ,
 

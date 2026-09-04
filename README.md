@@ -3,7 +3,9 @@
 A zero-dependency, static showcase of **900 live web animations**: exactly **100 in each of nine
 categories** — loaders, buttons, text effects, cards & hover, backgrounds, controls, SVG line art,
 3D scenes and interaction patterns. 204 are hand-written, 696 were generated as distinct mechanics
-(not colour swaps) through the same pipeline.
+(not colour swaps) through the same pipeline. Two **full-page starter templates** ship alongside
+them: a Three.js galaxy and a neon particle geometry engine — preview them inline, launch them,
+copy them out, fork them.
 
 **Every single one is customisable.** Each demo ships a tuner — speed, size, glow, hue, easing and
 direction plus per-effect parameters — that animates live *and* bakes your numbers into the snippet
@@ -43,7 +45,39 @@ Built to be dropped straight onto **GitHub Pages** — no build step, no bundler
   TOTAL               204   696    900   3004
 ```
 
-Run `node tools/stats.mjs` to reprint that table.
+Run `node tools/stats.mjs` to reprint that table — it prints the template shelf too.
+
+---
+
+## 📦 Starter templates
+
+Effects are building blocks; templates are finished rooms. Two full-page interactive scenes live in
+[`templates/`](templates), vendored **file-for-file and unmodified** from sibling repositories:
+
+| Template | What it is | Files | Lines | Live controls | Source |
+| --- | --- | --- | --- | --- | --- |
+| **Interactive 3D Galaxy** | 100 000 Three.js points in spiral arms, additive blending, OrbitControls, warm-core → cool-edge colour ramp | 2 | 208 | 10 | [`Hi-this-is-time-pass`](https://github.com/ayushghbk-afk/Hi-this-is-time-pass) |
+| **Interactive Geometry Engine** | 600 neon particles marching a parametric curve (heart / star / infinity / butterfly) over a parallax starfield | 3 | 238 | 9 | [`Hart-for-html`](https://github.com/ayushghbk-afk/Hart-for-html) |
+
+They get their own section (`#templates`, straight after the gallery), and every card can:
+
+* **preview live** — a sandboxed iframe renders the *real* page scaled to fill the card. It is
+  loaded only when it scrolls into view, unloaded when it scrolls away, honours
+  `prefers-reduced-motion` (poster instead of autoplay) and obeys the header's global pause.
+* **launch** — an interactive full-screen overlay, the page in a new tab, or the original
+  github.io deployment.
+* **read, copy, download** — a source viewer with one tab per file: copy this file, copy every
+  file, download one, or open that exact file on GitHub.
+
+Templates are wired into the rest of the site too: the ⌘K palette (search `galaxy`, `heart`,
+`three.js`, `template`…), a nav link with a count pill, the Resources mega menu, the mobile drawer,
+the footer and a hero stat.
+
+Adding a third is one folder plus one object in the `TEMPLATES` array of
+[`js/templates.js`](js/templates.js) — `node tools/check.mjs` then audits it: declared files must
+exist, `entry` must be one of them, the line counts must match what is on disk, the entry page must
+really reference its siblings, and nothing vendored may be missing from the catalogue. Details in
+[`templates/README.md`](templates/README.md).
 
 ---
 
@@ -73,6 +107,9 @@ Under the hood every effect is written against custom properties — `var(--sz, 
 
 ## 🧠 How it works
 
+* `js/templates.js` holds the template catalogue and its UI (cards, live previews, the launch and
+  source overlays). The vendored pages themselves stay untouched in `templates/<id>/`, so the
+  source viewer always shows the real files.
 * A hand-written effect is a plain data object — `{ id, title, cat, tags, html, css, js? }` —
   in `js/data/*.js`.
 * A generated family lives in `js/gen/<category>.gen.js` and uses `js/gen/kit.js` (colour maths,
@@ -89,8 +126,9 @@ Under the hood every effect is written against custom properties — `var(--sz, 
 ## ✅ Verify it
 
 ```bash
-node tools/check.mjs     # 100 per category, unique ids, honest knobs, 900 stylesheets compiled
-node tools/stats.mjs     # the table above
+node tools/check.mjs     # 100 per category, unique ids, honest knobs, 900 stylesheets compiled,
+                         # plus the template catalogue vs what is really in ./templates
+node tools/stats.mjs     # the table above, and the template shelf
 
 # deeper QA (needs two dev-only packages, the site itself has none):
 npm i --no-save --prefix /tmp/qa jsdom css-tree
@@ -98,8 +136,9 @@ QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 900 demos, fires 330 interacti
 ```
 
 `check.mjs` refuses duplicate ids/titles, `@keyframes` that no longer exist, knobs a demo never
-reads, effects that cannot be stopped or re-run, and CSS that will not parse. `smoke.mjs` renders
-every demo in jsdom, drives clicks and pointer moves, and reports anything that throws.
+reads, effects that cannot be stopped or re-run, CSS that will not parse, and templates whose
+declared files, line counts or wiring do not match reality. `smoke.mjs` renders every demo in
+jsdom, drives clicks and pointer moves, and reports anything that throws.
 
 ## 🚀 Deploy to GitHub Pages
 
