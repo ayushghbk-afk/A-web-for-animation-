@@ -115,7 +115,7 @@
 }
 ,
 
-{ id: 'corner-bracket', title: 'Corner Brackets', cat: 'cards', tags: ['css', 'hover'],
+{ id: 'corner-bracket', title: 'Corner Bracket Frame', cat: 'cards', tags: ['css', 'hover'],
   html: '<div class="cb4"><h4>Hover me</h4></div>',
   css: '\n.cb4{position:relative;width:190px;height:120px;border-radius:8px;display:grid;place-items:center;background:rgba(140,140,190,.06)}\n.cb4::before,.cb4::after{content:"";position:absolute;width:22px;height:22px;border:2px solid #22d3ee;transition:all .3s}\n.cb4::before{top:8px;left:8px;border-right:0;border-bottom:0}\n.cb4::after{bottom:8px;right:8px;border-left:0;border-top:0}\n.cb4 h4{margin:0;font:700 14px \'Space Grotesk\',sans-serif;color:#e8e8f5}\n.cb4:hover::before{top:-2px;left:-2px;width:34px;height:34px}\n.cb4:hover::after{bottom:-2px;right:-2px;width:34px;height:34px}\n.cb4:hover{background:rgba(34,211,238,.08)}\n'
 }
