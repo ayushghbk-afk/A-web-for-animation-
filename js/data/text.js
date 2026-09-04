@@ -80,6 +80,47 @@
 { id: 'neon-breathe', title: 'Neon Breath', cat: 'text', tags: ['glow', 'css'],
   html: '<div class="nb2">BREATHE</div>',
   css: '.nb2{font:700 44px "Space Grotesk",sans-serif;letter-spacing:.12em;color:#eafffe;animation:bre2 3s ease-in-out infinite}\n@keyframes bre2{0%,100%{text-shadow:0 0 5px rgba(34,211,238,.55),0 0 14px rgba(34,211,238,.35),0 0 30px rgba(34,211,238,.2);opacity:.8}50%{text-shadow:0 0 9px rgba(34,211,238,1),0 0 24px rgba(34,211,238,.85),0 0 52px rgba(34,211,238,.55),0 0 90px rgba(124,92,255,.45);opacity:1}}'
+},
+
+{ id: 'press-rise', title: 'Press Letters', cat: 'text', tags: ['css', 'stagger'],
+  html: '<h3 class="pr3"><span>L</span><span>E</span><span>V</span><span>I</span><span>T</span><span>A</span><span>T</span><span>E</span></h3>',
+  css: '\n.pr3{display:inline-flex;font:800 34px \'Space Grotesk\',sans-serif;letter-spacing:.04em;margin:0}\n.pr3 span{display:inline-block;background:linear-gradient(#fff,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent;animation:pr3 1.2s cubic-bezier(.2,1,.3,1) infinite}\n.pr3 span:nth-child(2){animation-delay:.06s}.pr3 span:nth-child(3){animation-delay:.12s}.pr3 span:nth-child(4){animation-delay:.18s}.pr3 span:nth-child(5){animation-delay:.24s}.pr3 span:nth-child(6){animation-delay:.3s}.pr3 span:nth-child(7){animation-delay:.36s}.pr3 span:nth-child(8){animation-delay:.42s}\n@keyframes pr3{0%,55%,100%{transform:translateY(0)}22%{transform:translateY(-14px) scale(1.12)}35%{transform:translateY(0)}}\n'
+}
+,
+
+{ id: 'stamp-in', title: 'Stamp Letters', cat: 'text', tags: ['css', 'entrance'],
+  html: '<h3 class="st3"><span>A</span><span>L</span><span>P</span><span>H</span><span>A</span></h3>',
+  css: '\n.st3{display:flex;gap:2px;margin:0;font:800 40px \'Space Grotesk\',sans-serif;color:#fff;text-shadow:0 0 18px rgba(168,85,247,.5)}\n.st3 span{display:inline-block;animation:st3 .5s cubic-bezier(.2,1.4,.3,1) both;transform-origin:50% 100%}\n.st3 span:nth-child(2){animation-delay:.1s}.st3 span:nth-child(3){animation-delay:.2s}.st3 span:nth-child(4){animation-delay:.3s}.st3 span:nth-child(5){animation-delay:.4s}\n@keyframes st3{0%{opacity:0;transform:scale(2.6);filter:blur(6px)}100%{opacity:1;transform:scale(1);filter:blur(0)}}\n'
+}
+,
+
+{ id: 'chrome-text', title: 'Chrome Sheen', cat: 'text', tags: ['css', 'sheen'],
+  html: '<h3 class="chr3">VAPOR</h3>',
+  css: '\n.chr3{margin:0;font:900 54px \'Space Grotesk\',sans-serif;letter-spacing:.08em;background:linear-gradient(120deg,#9c8cff 0%,#e6e6ff 20%,#7c5cff 40%,#22d3ee 55%,#9c8cff 75%,#e6e6ff 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:chr3 3.2s linear infinite}\n@keyframes chr3{0%{background-position:0 0}100%{background-position:220% 0}}\n'
+}
+,
+
+{ id: 'highlight-cycle', title: 'Focus Words', cat: 'text', tags: ['css', 'highlight'],
+  html: '<p class="hc3">Rip <b>it</b>.<b>Send</b>.<b>it</b>.We&nbsp;<b>build</b>.We&nbsp;<b>ship</b>.</p>',
+  css: '\n.hc3{font:600 17px \'Space Grotesk\',sans-serif;color:#8f8fa8;max-width:230px;text-align:left;margin:0}\n.hc3 b{color:#e8e8f5;position:relative}\n.hc3 b::after{content:"";position:absolute;left:-2px;right:-2px;bottom:1px;height:8px;background:#7c5cff;z-index:-1;transform:scaleX(0);transform-origin:left}\n.hc3 b:nth-child(1)::after{animation:hc3 1s linear infinite;animation-delay:0s}\n.hc3 b:nth-child(2)::after{animation:hc3 1s linear infinite;animation-delay:.33s}\n.hc3 b:nth-child(3)::after{animation:hc3 1s linear infinite;animation-delay:.66s}\n@keyframes hc3{0%,70%{transform:scaleX(0)}100%{transform:scaleX(1)}}\n'
+}
+,
+
+{ id: 'layer-reveal', title: 'Layer Reveal', cat: 'text', tags: ['css', 'mask'],
+  html: '<div class="lr3"><b>NOW</b><em>NOW</em></div>',
+  css: '\n.lr3{position:relative;display:grid;place-items:center;font:900 58px \'Space Grotesk\',sans-serif}\n.lr3 b{color:transparent;-webkit-text-stroke:2px #22d3ee}\n.lr3 em{position:absolute;font-style:normal;background:linear-gradient(90deg,#7c5cff,#22d3ee,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent;clip-path:inset(0 100% 0 0);animation:lr3 3s ease-in-out infinite;filter:drop-shadow(0 0 14px rgba(124,92,255,.5))}\n@keyframes lr3{0%{clip-path:inset(0 100% 0 0)}50%{clip-path:inset(0 0 0 0)}100%{clip-path:inset(0 100% 0 0)}}\n'
+}
+,
+
+{ id: 'underline-sweep', title: 'Underline Sweep', cat: 'text', tags: ['css', 'decor'],
+  html: '<h3 class="us3">Read more</h3>',
+  css: '\n.us3{position:relative;display:inline-block;font:700 24px \'Space Grotesk\',sans-serif;color:#e8e8f5;margin:0;padding-bottom:6px}\n.us3::after{content:"";position:absolute;left:0;bottom:0;height:3px;border-radius:99px;background:linear-gradient(90deg,#7c5cff,#22d3ee);width:100%;transform-origin:right;animation:us3 2.2s ease-in-out infinite}\n@keyframes us3{0%{transform:scaleX(0)}45%{transform:scaleX(1);transform-origin:right}55%{transform-origin:left}100%{transform:scaleX(0);transform-origin:left}}\n'
+}
+,
+
+{ id: 'flicker-type', title: 'Electric Flicker', cat: 'text', tags: ['css', 'neon'],
+  html: '<p class="ef3">STAY TUNED</p>',
+  css: '\n.ef3{font:800 34px \'Space Grotesk\',sans-serif;letter-spacing:.2em;color:#eaf7ff;text-shadow:0 0 6px #22d3ee,0 0 18px #22d3ee,0 0 40px #7c5cff;margin:0;animation:ef3 3s linear infinite}\n@keyframes ef3{0%,6%,11%,100%{opacity:1}3%{opacity:.3}5%{opacity:.85}8%{opacity:.25}9%{opacity:.9}12%,20%{opacity:1}16%{opacity:.5}17%{opacity:1}}\n'
 }
 
   );

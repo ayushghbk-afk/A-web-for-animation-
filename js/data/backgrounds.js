@@ -93,6 +93,49 @@
 { id: 'rain-ripples', title: 'Rain on a Pond', cat: 'backgrounds', tags: ['weather', 'css'],
   html: '<div class="rr4"><i class="rip4 w1"></i><i class="rip4 w2"></i><i class="rip4 w3"></i><i class="rip4 w4"></i><i class="rip4 w5"></i><i class="st4 s1"></i><i class="st4 s2"></i><i class="st4 s3"></i><i class="st4 s4"></i><i class="st4 s5"></i></div>',
   css: '.rr4{position:relative;width:100%;height:210px;overflow:hidden;background:linear-gradient(#0d1026,#141a3e 55%,#182a52)}\n.rr4::after{content:"";position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(rgba(120,170,255,.14),rgba(90,140,230,.05));border-top:1px solid rgba(160,200,255,.3);box-shadow:0 -8px 24px rgba(90,140,230,.12)}\n.rip4{position:absolute;width:44px;height:16px;border-radius:50%;border:1.5px solid rgba(170,205,255,.75);transform:scale(0);animation:ripw4 ease-out infinite;pointer-events:none}\n.rip4.w1{left:16%;top:156px;animation-duration:2.6s}\n.rip4.w2{left:46%;top:180px;animation-duration:3.2s;animation-delay:.9s}\n.rip4.w3{left:70%;top:150px;animation-duration:2.3s;animation-delay:.4s}\n.rip4.w4{left:84%;top:178px;animation-duration:2.9s;animation-delay:1.6s}\n.rip4.w5{left:30%;top:190px;animation-duration:2.2s;animation-delay:2s}\n.st4{position:absolute;top:-24px;width:1.5px;height:44px;border-radius:99px;background:linear-gradient(rgba(170,200,255,.6),transparent);animation:rain4 linear infinite}\n.st4.s1{left:8%;animation-duration:.95s}\n.st4.s2{left:26%;height:34px;animation-duration:1.35s;animation-delay:.5s}\n.st4.s3{left:42%;height:52px;animation-duration:1.1s;animation-delay:.25s}\n.st4.s4{left:60%;height:38px;animation-duration:1.5s;animation-delay:.8s}\n.st4.s5{left:92%;height:46px;animation-duration:1.2s;animation-delay:.4s}\n@keyframes ripw4{0%{transform:scale(.15);opacity:.9}70%{opacity:.5}100%{transform:scale(2.3);opacity:0}}\n@keyframes rain4{to{transform:translateY(290px)}}'
+},
+
+{ id: 'rising-dots', title: 'Rising Dots', cat: 'backgrounds', tags: ['css', 'pattern'],
+  html: '<div class="rdots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>',
+  css: '\n.rdots{position:relative;width:230px;height:150px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 120%,rgba(124,92,255,.3),transparent 60%),#0a0a16}\n.rdots span{position:absolute;bottom:-10px;width:5px;height:5px;border-radius:50%;background:#22d3ee;box-shadow:0 0 8px #22d3ee;animation:rdots 3s linear infinite;opacity:0}\n.rdots span:nth-child(odd){background:#7c5cff;box-shadow:0 0 8px #7c5cff;width:4px}\n.rdots span:nth-child(1){left:8%;animation-delay:0s}.rdots span:nth-child(2){left:20%;animation-delay:.8s}.rdots span:nth-child(3){left:33%;animation-delay:.3s}.rdots span:nth-child(4){left:47%;animation-delay:1.4s}.rdots span:nth-child(5){left:58%;animation-delay:.6s}.rdots span:nth-child(6){left:70%;animation-delay:2s}.rdots span:nth-child(7){left:80%;animation-delay:1s}.rdots span:nth-child(8){left:90%;animation-delay:.4s}.rdots span:nth-child(9){left:14%;animation-delay:1.8s}.rdots span:nth-child(10){left:65%;animation-delay:2.4s}\n@keyframes rdots{0%{transform:translateY(0);opacity:0}10%{opacity:.9}90%{opacity:.7}100%{transform:translateY(-160px);opacity:0}}\n'
+}
+,
+
+{ id: 'rain-stripes', title: 'Rain Shower', cat: 'backgrounds', tags: ['css', 'rain'],
+  html: '<div class="rain4"></div>',
+  css: '\n.rain4{width:230px;height:150px;border-radius:14px;background:repeating-linear-gradient(90deg,rgba(34,211,238,.4) 0 1px,transparent 1px 3px);background-size:100% 100%;position:relative;overflow:hidden;background-color:#07141f;mask-image:linear-gradient(rgba(0,0,0,.2),#000)}\n.rain4::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,transparent 0 24px,#22d3ee 24px 25px,transparent 25px 26px),repeating-linear-gradient(90deg,transparent 0 18px,transparent 18px 19px);background-size:100% 100%;animation:rain4 1s linear infinite;opacity:.35}\n@keyframes rain4{to{transform:translateY(26px)}}\n'
+}
+,
+
+{ id: 'hex-pan', title: 'Hex Pan', cat: 'backgrounds', tags: ['css', 'pattern'],
+  html: '<div class="hex4"></div>',
+  css: '\n.hex4{width:230px;height:150px;border-radius:14px;background:linear-gradient(rgba(124,92,255,.12),rgba(124,92,255,.04));position:relative;overflow:hidden}\n.hex4::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 50% 50%,#22d3ee 0 4px,transparent 4px 11px),radial-gradient(circle at 0 100%,#22d3ee 0 4px,transparent 4px 11px),radial-gradient(circle at 100% 100%,#22d3ee 0 4px,transparent 4px 11px),radial-gradient(circle at 50% 0,#7c5cff 0 4px,transparent 4px 11px),radial-gradient(circle at 0 0,#7c5cff 0 4px,transparent 4px 11px),radial-gradient(circle at 100% 0,#7c5cff 0 4px,transparent 4px 11px);background-size:60px 52px,60px 52px,60px 52px,60px 52px,60px 52px,60px 52px;opacity:.5;animation:hex4 8s linear infinite}\n@keyframes hex4{to{transform:translateY(52px)}}\n'
+}
+,
+
+{ id: 'colorwave', title: 'Color Wave', cat: 'backgrounds', tags: ['css', 'gradient'],
+  html: '<div class="cw4"></div>',
+  css: '\n.cw4{width:230px;height:150px;border-radius:14px;background:linear-gradient(120deg,#ff5c8a,#ff9d5c,#ffe066,#22c55e,#22d3ee,#7c5cff,#ff5c8a);background-size:400% 400%;animation:cw4 7s ease infinite}\n@keyframes cw4{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}\n'
+}
+,
+
+{ id: 'grid-pulse', title: 'Pulse Grid', cat: 'backgrounds', tags: ['css', 'grid'],
+  html: '<div class="pg4"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>',
+  css: '\n.pg4{width:230px;height:150px;border-radius:14px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:22px;background:#0b0b18}\n.pg4 i{border-radius:8px;background:rgba(124,92,255,.14);border:1px solid rgba(124,92,255,.2);animation:pg4 2.4s ease-in-out infinite}\n.pg4 i:nth-child(1){animation-delay:0s}.pg4 i:nth-child(2){animation-delay:.2s}.pg4 i:nth-child(3){animation-delay:.4s}.pg4 i:nth-child(4){animation-delay:.6s}.pg4 i:nth-child(5){animation-delay:.8s}.pg4 i:nth-child(6){animation-delay:1s}.pg4 i:nth-child(7){animation-delay:1.2s}.pg4 i:nth-child(8){animation-delay:1.4s}.pg4 i:nth-child(9){animation-delay:1.6s}\n@keyframes pg4{0%,100%{background:rgba(124,92,255,.14);border-color:rgba(124,92,255,.2);transform:scale(1)}50%{background:rgba(34,211,238,.4);border-color:#22d3ee;transform:scale(1.12);box-shadow:0 0 18px rgba(34,211,238,.4)}}\n'
+}
+,
+
+{ id: 'pixel-rain', title: 'Pixel Rain', cat: 'backgrounds', tags: ['js', 'canvas'],
+  html: '<canvas class="px4" width="230" height="150"></canvas>',
+  css: '\n.px4{width:230px;height:150px;border-radius:14px;background:#07070f;display:block}\n',
+  js: 'var cv=root.querySelector(\'canvas\'),ctx=cv.getContext(\'2d\'),cols=14;var drops=[];var frame=0;api.raf(function(){frame++;if(frame%4)return;var cs=cv.width/cols;if(drops.length<40&&Math.random()<.3){drops.push({x:Math.random()*cv.width,y:-Math.random()*40,s:Math.random()*2+1});}ctx.fillStyle=\'rgba(7,7,15,.15)\';ctx.fillRect(0,0,cv.width,cv.height);for(var i=drops.length-1;i>=0;i--){var d=drops[i];ctx.fillStyle=d.s>1.7?\'#22d3ee\':\'#7c5cff\';ctx.fillRect(d.x,d.y,cs-2,cs-2);d.y+=d.s*4;if(d.y>cv.height)drops.splice(i,1);}api.onCleanup(function(){});});'
+}
+,
+
+{ id: 'orbit-nodes', title: 'Orbit Network', cat: 'backgrounds', tags: ['js', 'particles'],
+  html: '<div class="on4"><canvas class="onc4" width="230" height="150"></canvas></div>',
+  css: '\n.on4{width:230px;height:150px;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 50% 50%,#161b3a,#0a0a16 70%)}\n.onc4{width:100%;height:100%;display:block}\n',
+  js: 'var cv=root.querySelector(\'canvas\'),ctx=cv.getContext(\'2d\'),cx=115,cy=75;var n=7,parts=[];for(var i=0;i<n;i++){parts.push({r:30+Math.random()*55,a:Math.random()*6.28,s:(Math.random()>.5?1:-1)*(0.008+Math.random()*0.02),l:1});}api.raf(function(){ctx.clearRect(0,0,230,150);ctx.fillStyle=\'rgba(124,92,255,.7)\';ctx.beginPath();ctx.arc(cx,cy,4,0,6.28);ctx.fill();for(var i=0;i<n;i++){var p=parts[i];p.a+=p.s;var x=cx+Math.cos(p.a)*p.r,y=cy+Math.sin(p.a)*p.r*0.6;ctx.fillStyle=i%2?\'#22d3ee\':\'#7c5cff\';ctx.shadowBlur=8;ctx.shadowColor=\'#7c5cff\';ctx.beginPath();ctx.arc(x,y,3.2,0,6.28);ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle=\'rgba(124,92,255,.35)\';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(x,y);ctx.stroke();}});'
 }
 
   );

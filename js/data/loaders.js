@@ -99,6 +99,48 @@
 { id: 'battery-charge', title: 'Charging Battery', cat: 'loaders', tags: ['css', 'power'],
   html: '<div class="btc2"><div class="cell"><i></i><b>&#9889;</b></div><p>CHARGING<b>.</b><b>.</b><b>.</b></p></div>',
   css: '.btc2{display:grid;gap:16px;justify-items:center}\n.cell{position:relative;width:132px;height:58px;border:3px solid rgba(160,160,210,.4);border-radius:12px;background:#0a0a17;overflow:hidden}\n.cell::after{content:"";position:absolute;right:-10px;top:50%;width:7px;height:24px;margin-top:-12px;border-radius:0 5px 5px 0;background:rgba(160,160,210,.4)}\n.cell i{position:absolute;top:3px;bottom:3px;left:3px;width:0;border-radius:8px;background:linear-gradient(90deg,#22c55e,#22d3ee 55%,#7c5cff);box-shadow:0 0 20px rgba(34,211,238,.5);animation:chg2 3s cubic-bezier(.6,.05,.3,1) infinite}\n.cell i::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.6) 50%,transparent 75%);transform:translateX(-120%);animation:chgshine 3s ease-in-out infinite}\n.cell b{position:absolute;inset:0;display:grid;place-items:center;font-size:20px;z-index:2;filter:drop-shadow(0 0 8px rgba(255,255,255,.9))}\n.btc2 p{margin:0;font:700 12px "Space Grotesk",sans-serif;letter-spacing:.3em;text-indent:.3em;color:#9a9ab0}\n.btc2 p b{color:#22d3ee;opacity:0;animation:dt2 1.2s infinite}\n.btc2 p b:nth-child(2){animation-delay:.2s}\n.btc2 p b:nth-child(3){animation-delay:.4s}\n@keyframes chg2{0%{width:2%}55%{width:97%}82%{width:97%}90%{width:66%}100%{width:97%}}\n@keyframes chgshine{0%{transform:translateX(-120%)}40%,100%{transform:translateX(220%)}}\n@keyframes dt2{0%{opacity:0}50%{opacity:1}100%{opacity:0}}'
+},
+
+{ id: 'square-grid', title: 'Bouncy Grid', cat: 'loaders', tags: ['css', 'grid'],
+  html: '<div class="sg2"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>',
+  css: '\n.sg2{display:grid;grid-template-columns:repeat(3,20px);grid-template-rows:repeat(3,20px);gap:6px}\n.sg2 i{background:linear-gradient(135deg,#7c5cff,#22d3ee);border-radius:3px;animation:sg2 .9s ease-in-out infinite}\n.sg2 i:nth-child(2){animation-delay:.1s}.sg2 i:nth-child(3){animation-delay:.2s}\n.sg2 i:nth-child(4){animation-delay:.3s}.sg2 i:nth-child(5){animation-delay:.4s}\n.sg2 i:nth-child(6){animation-delay:.5s}.sg2 i:nth-child(7){animation-delay:.6s}\n.sg2 i:nth-child(8){animation-delay:.7s}.sg2 i:nth-child(9){animation-delay:.8s}\n@keyframes sg2{0%,80%,100%{opacity:.12;transform:scale(.55)}40%{opacity:1;transform:scale(1)}}\n'
+}
+,
+
+{ id: 'orbit-dot', title: 'Orbit Pulse', cat: 'loaders', tags: ['css', 'orbit'],
+  html: '<div class="od1"><i></i></div>',
+  css: '\n.od1{position:relative;width:78px;height:78px;border-radius:50%;border:2px dashed rgba(140,140,180,.3)}\n.od1::before{content:"";position:absolute;inset:-2px;border-radius:50%;border-top:3px solid #7c5cff;animation:od1s 1.1s linear infinite}\n.od1 i{position:absolute;left:50%;top:50%;width:15px;height:15px;margin:-8px 0 0 -8px;border-radius:50%;background:#22d3ee;box-shadow:0 0 16px #22d3ee;animation:od1p 1.1s ease-in-out infinite}\n@keyframes od1s{to{transform:rotate(1turn)}}\n@keyframes od1p{0%,100%{transform:scale(.75);box-shadow:0 0 6px #22d3ee}50%{transform:scale(1.25);box-shadow:0 0 22px #22d3ee}}\n'
+}
+,
+
+{ id: 'hop-cube', title: 'Hop & Shadow', cat: 'loaders', tags: ['css', '3d'],
+  html: '<div class="hop2"><i></i></div>',
+  css: '\n.hop2{position:relative;width:70px;height:80px;display:flex;align-items:flex-end;justify-content:center}\n.hop2 i{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#ff5c8a,#7c5cff);transform-origin:center bottom;animation:hop2 .8s cubic-bezier(.35,0,.2,1) infinite}\n.hop2::after{content:"";position:absolute;bottom:4px;left:50%;width:40px;height:7px;margin-left:-20px;border-radius:50%;background:rgba(0,0,0,.45);filter:blur(2px);animation:hopsh2 .8s ease-in-out infinite}\n@keyframes hop2{0%{transform:translateY(0) scaleY(1)}18%{transform:translateY(0) scale(1.06,.8)}45%{transform:translateY(-38px) scaleY(1.05)}70%{transform:translateY(0) scale(.94,1.12)}100%{transform:translateY(0) scaleY(1)}}\n@keyframes hopsh2{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(.45);opacity:.25}}\n'
+}
+,
+
+{ id: 'triple-race', title: 'Lane Racer', cat: 'loaders', tags: ['css', 'bars'],
+  html: '<div class="tr2"><b></b><b></b><b></b></div>',
+  css: '\n.tr2{width:200px;display:grid;gap:12px}\n.tr2 b{height:9px;border-radius:99px;background:linear-gradient(90deg,#22d3ee,#7c5cff);position:relative;overflow:hidden}\n.tr2 b::after{content:"";position:absolute;top:0;bottom:0;left:-40px;width:40px;border-radius:99px;background:rgba(255,255,255,.55);animation:race2 1.6s ease-in-out infinite}\n.tr2 b:nth-child(2){opacity:.85}.tr2 b:nth-child(2)::after{animation-delay:.25s}\n.tr2 b:nth-child(3){opacity:.7}.tr2 b:nth-child(3)::after{animation-delay:.5s}\n@keyframes race2{0%{left:-40px}100%{left:105%}}\n'
+}
+,
+
+{ id: 'cycle-text', title: 'Cycling Words', cat: 'loaders', tags: ['css', 'text'],
+  html: '<div class="cyc"><span>RENDERING</span><span>BUFFERING</span><span>SYNCING</span><span>OPTIMIZING</span></div>',
+  css: '\n.cyc{height:32px;overflow:hidden;font:700 15px \'Space Grotesk\',sans-serif;letter-spacing:.18em}\n.cyc span{display:block;height:32px;color:#22d3ee;text-shadow:0 0 12px rgba(34,211,238,.6)}\n.cyc span:nth-child(2){color:#7c5cff}.cyc span:nth-child(3){color:#ff5c8a}.cyc span:nth-child(4){color:#a855f7}\n.cyc span::after{content:"_";animation:cyc_blink .6s steps(2) infinite}\n@keyframes cyc_blink{50%{opacity:0}}\n'
+}
+,
+
+{ id: 'buffer-blob', title: 'Buffer Blob', cat: 'loaders', tags: ['css', 'morph'],
+  html: '<div class="blob2"><i></i><b>BUFFERING</b></div>',
+  css: '\n.blob2{display:grid;justify-items:center;gap:12px}\n.blob2 i{width:70px;height:70px;background:conic-gradient(#7c5cff,#ff5c8a,#22d3ee,#7c5cff);border-radius:50%;animation:bl2r 1.6s linear infinite}\n.blob2 i::before{content:"";position:absolute;width:70px;height:70px;border-radius:50%;background:#131027;transform:scale(.9);animation:bl2m 2.2s ease-in-out infinite;display:block}\n.blob2 b{font:700 12px \'JetBrains Mono\',monospace;color:#8f8fa8;letter-spacing:.3em;animation:cyc_blink 1.4s ease-in-out infinite}\n@keyframes bl2r{to{transform:rotate(1turn)}}\n@keyframes bl2m{0%,100%{border-radius:50%}33%{border-radius:38% 62% 55% 45%/45% 40% 60% 55%}66%{border-radius:60% 40% 38% 62%/55% 60% 40% 45%}}\n@keyframes cyc_blink{50%{opacity:.4}}\n'
+}
+,
+
+{ id: 'ring-count', title: 'Ring Counter', cat: 'loaders', tags: ['js', 'percentage'],
+  html: '<div class="rc2"><div class="track"><i></i><em>0%</em></div></div>',
+  css: '\n.rc2 .track{position:relative;width:86px;height:86px;border-radius:50%;background:conic-gradient(#7c5cff var(--p,0%),rgba(160,160,210,.15) 0);display:grid;place-items:center;-webkit-mask:radial-gradient(circle,transparent 58%,#000 59%);mask:radial-gradient(circle,transparent 58%,#000 59%)}\n.rc2 em{font:700 18px \'JetBrains Mono\',monospace;color:#e8e8f5;font-style:normal}\n',
+  js: 'var t=0;var el=root.querySelector(\'.rc2 .track\');var out=root.querySelector(\'em\');api.raf(function(){t=(t+1.6)%100;el.style.setProperty(\'--p\',t+\'%\');out.textContent=Math.floor(t)+\'%\';});'
 }
 
   );

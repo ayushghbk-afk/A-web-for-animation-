@@ -83,6 +83,47 @@
   html: '<div class="pf3"><div class="top"><i class="av3">AK<i class="dot3"></i></i><div class="nm"><b>Ada Kim</b><span>Product designer</span></div></div><p class="bio3">Small experiments, big interfaces. Currently shipping motion for the web.</p><div class="act3"><button class="fol3" aria-pressed="false">Follow</button><button class="msg3">Message</button></div></div>',
   css: '.pf3{position:relative;width:238px;padding:16px;border-radius:18px;overflow:hidden;border:1px solid rgba(160,160,210,.16);background:linear-gradient(160deg,#19192c,#10101f);box-shadow:0 18px 36px -20px #000;transition:transform .3s cubic-bezier(.2,1,.3,1),border-color .3s;display:grid;gap:11px}\n.pf3::before{content:"";position:absolute;top:-70px;right:-50px;width:190px;height:130px;background:radial-gradient(circle,rgba(124,92,255,.55),rgba(34,211,238,.25) 60%,transparent 75%);opacity:0;transition:opacity .4s;pointer-events:none}\n.pf3:hover{transform:translateY(-5px);border-color:rgba(124,92,255,.55)}\n.pf3:hover::before{opacity:1}\n.top{display:flex;align-items:center;gap:12px}\n.av3{position:relative;display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#22d3ee,#7c5cff);color:#fff;font:700 17px "Space Grotesk",sans-serif;font-style:normal;box-shadow:0 0 0 3px #19192c,0 8px 18px -8px rgba(124,92,255,.9)}\n.dot3{position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-radius:50%;background:#22c55e;border:3px solid #19192c;box-shadow:0 0 0 0 rgba(34,197,94,.55);animation:onl3 2.2s infinite}\n.nm{display:grid}\n.nm b{font:700 16px "Space Grotesk",sans-serif;color:#ececf5}\n.nm span{font:400 12px;color:#9a9ab0}\n.bio3{margin:0;font:400 12.5px;line-height:1.5;color:#b9b9cf}\n.act3{display:flex;gap:8px}\n.act3 button{flex:1;padding:9px 10px;border-radius:11px;font:600 13px "Space Grotesk",sans-serif;cursor:pointer;transition:all .25s}\n.act3 .fol3{border:0;background:#7c5cff;color:#fff}\n.act3 .fol3:hover{filter:brightness(1.15)}\n.act3 .fol3[aria-pressed="true"]{background:rgba(34,197,94,.16);color:#4ade80}\n.act3 .fol3[aria-pressed="true"]::after{content:" \u2713"}\n.act3 .msg3{background:rgba(140,140,190,.13);color:#e8e8f5}\n.act3 .msg3:hover{background:rgba(140,140,190,.24);border-color:#7c5cff}\n.msg3{border:1px solid rgba(160,160,210,.25)}\n@keyframes onl3{70%{box-shadow:0 0 0 8px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}',
   js: 'var f=root.querySelector(".fol3");\nf.addEventListener("click",function(){var on=f.getAttribute("aria-pressed")==="true";f.setAttribute("aria-pressed",String(!on));f.textContent=on?"Follow":"Following";});'
+},
+
+{ id: 'icon-flip', title: 'Icon Flip Card', cat: 'cards', tags: ['css', 'hover'],
+  html: '<div class="flipc4"><div class="fc4"><div class="front4"><svg viewBox="0 0 24 24" fill="none" stroke="#7c5cff" stroke-width="1.6"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></div><div class="back4">&#9733; Layers</div></div></div>',
+  css: '\n.flipc4{width:170px;height:120px;perspective:800px}\n.fc4{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.3,1.1,.3,1);transform-style:preserve-3d}\n.flipc4:hover .fc4{transform:rotateY(180deg)}\n.front4,.back4{position:absolute;inset:0;border-radius:16px;display:grid;place-items:center;backface-visibility:hidden;box-shadow:0 18px 30px -18px #000}\n.front4{background:linear-gradient(150deg,#17172c,#1e1440);border:1px solid rgba(124,92,255,.3)}\n.front4 svg{width:44px;height:44px}\n.back4{background:linear-gradient(150deg,#7c5cff,#a855f7);color:#fff;font:700 15px \'Space Grotesk\',sans-serif;transform:rotateY(180deg)}\n'
+}
+,
+
+{ id: 'card-doors', title: 'Door Reveal', cat: 'cards', tags: ['css', 'hover'],
+  html: '<div class="doors4"><i></i><b></b></div>',
+  css: '\n.doors4{position:relative;width:200px;height:130px;cursor:pointer}\n.doors4 i,.doors4 b{position:absolute;top:0;bottom:0;width:50%;background:linear-gradient(#8a7bff,#5b3fd6);border:3px solid #1a1440;transition:transform .5s cubic-bezier(.6,.05,.3,1)}\n.doors4 i{left:0;border-radius:12px 0 0 12px;transform-origin:left}\n.doors4 b{right:0;border-radius:0 12px 12px 0;transform-origin:right}\n.doors4::after{content:"&#128273;";position:absolute;inset:0;display:grid;place-items:center;font-size:34px;opacity:0;transition:opacity .3s .15s}\n.doors4:hover i{transform:perspective(500px) rotateY(-55deg)}\n.doors4:hover b{transform:perspective(500px) rotateY(55deg)}\n.doors4:hover::after{opacity:1}\n'
+}
+,
+
+{ id: 'card-scan', title: 'Scanline Card', cat: 'cards', tags: ['css', 'scan'],
+  html: '<div class="sc4"><div class="ring4"></div><p>ACCESS</p><b></b></div>',
+  css: '\n.sc4{position:relative;width:200px;height:120px;border-radius:16px;border:1px solid rgba(34,211,238,.3);background:linear-gradient(160deg,#071620,#0a0f1c 60%);overflow:hidden;display:grid;place-items:center;color:#9ae6ff;font:700 14px \'Space Grotesk\',sans-serif;letter-spacing:.3em}\n.sc4 b{position:absolute;left:0;right:0;height:2px;top:-2px;background:linear-gradient(90deg,transparent,#22d3ee,transparent);box-shadow:0 0 14px #22d3ee;animation:sc4 .8s linear infinite}\n.sc4 .ring4{position:absolute;right:12px;top:12px;width:22px;height:22px;border:2px solid #22d3ee;border-top-color:transparent;border-radius:50%;animation:sc4r 1.2s linear infinite}\n.sc4 p{margin:0;text-shadow:0 0 12px rgba(34,211,238,.7)}\n@keyframes sc4{0%{top:-4px;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:120px;opacity:0}}\n@keyframes sc4r{to{transform:rotate(1turn)}}\n'
+}
+,
+
+{ id: 'card-swap', title: 'Swap Info', cat: 'cards', tags: ['js', 'hover'],
+  html: '<div class="sw4"><div class="s4front"><h4>Design</h4><p>&#9998;</p></div><div class="s4back"><p>Wireframe, polish and prototype. Everything spins up fast.</p></div></div>',
+  css: '\n.sw4{position:relative;width:200px;height:150px;perspective:700px}\n.s4front,.s4back{position:absolute;inset:0;border-radius:16px;padding:18px;transition:opacity .45s ease,transform .45s ease}\n.s4front{background:linear-gradient(150deg,#1a1a32,#251b4a);display:grid;place-items:center;border:1px solid rgba(168,85,247,.3);color:#fff;text-align:center}\n.s4front h4{margin:0 0 6px;font:700 16px \'Space Grotesk\',sans-serif}\n.s4front p{margin:0;font-size:20px}\n.s4back{background:linear-gradient(150deg,#7c5cff,#a855f7);color:#fff;display:grid;place-items:center;opacity:0;transform:translateY(20px) scale(.9)}\n.s4back p{margin:0;font:600 13px \'Space Grotesk\',sans-serif;line-height:1.5}\n.sw4:hover .s4front{opacity:0;transform:translateY(-20px) scale(.9)}\n.sw4:hover .s4back{opacity:1;transform:none}\n'
+}
+,
+
+{ id: 'cover-pan', title: 'Panning Cover', cat: 'cards', tags: ['css', 'hover'],
+  html: '<div class="cp4"><h4>Open Studio</h4></div>',
+  css: '\n.cp4{position:relative;width:210px;height:150px;border-radius:16px;overflow:hidden;background:linear-gradient(200deg,rgba(34,211,238,.25),rgba(124,92,255,.35)) ,radial-gradient(circle at 70% 30%,#ff5c8a 0 12px,transparent 13px),radial-gradient(circle at 40% 70%,#7c5cff 0 18px,transparent 19px),#0b0b14;background-size:100% 100%,90px 90px,90px 90px,100% 100%;background-position:0 0,0 0,0 0,0 0;transition:background-position 2s ease}\n.cp4 h4{position:absolute;left:0;right:0;bottom:0;margin:0;padding:34px 14px 12px;background:linear-gradient(transparent,#000 70%);color:#fff;font:700 15px \'Space Grotesk\',sans-serif}\n.cp4:hover{background-position:-20px -30px,-60px -40px,-40px -30px,-20px -30px}\n'
+}
+,
+
+{ id: 'corner-bracket', title: 'Corner Brackets', cat: 'cards', tags: ['css', 'hover'],
+  html: '<div class="cb4"><h4>Hover me</h4></div>',
+  css: '\n.cb4{position:relative;width:190px;height:120px;border-radius:8px;display:grid;place-items:center;background:rgba(140,140,190,.06)}\n.cb4::before,.cb4::after{content:"";position:absolute;width:22px;height:22px;border:2px solid #22d3ee;transition:all .3s}\n.cb4::before{top:8px;left:8px;border-right:0;border-bottom:0}\n.cb4::after{bottom:8px;right:8px;border-left:0;border-top:0}\n.cb4 h4{margin:0;font:700 14px \'Space Grotesk\',sans-serif;color:#e8e8f5}\n.cb4:hover::before{top:-2px;left:-2px;width:34px;height:34px}\n.cb4:hover::after{bottom:-2px;right:-2px;width:34px;height:34px}\n.cb4:hover{background:rgba(34,211,238,.08)}\n'
+}
+,
+
+{ id: 'text-reveal-card', title: 'Caption Wipe', cat: 'cards', tags: ['css', 'hover'],
+  html: '<div class="tc4"><div class="art4"></div><p>Ship the vision &#8599;</p></div>',
+  css: '\n.tc4{position:relative;width:210px;height:130px;overflow:hidden;border-radius:16px;box-shadow:0 18px 34px -20px #000;cursor:pointer}\n.art4{position:absolute;inset:0;background:conic-gradient(from 180deg,#7c5cff,#ff5c8a,#22d3ee,#7c5cff);animation:hue4 6s linear infinite;opacity:.5;filter:saturate(1.4)}\n.art4::after{content:"";position:absolute;inset:0;background:linear-gradient(135deg,#1a1a32 0 42%,transparent 42%)}\n.tc4 p{position:absolute;left:0;right:0;bottom:0;margin:0;padding:8px 12px;color:#fff;font:600 13px \'Space Grotesk\',sans-serif;background:rgba(10,10,20,.55);backdrop-filter:blur(4px);transform:translateY(100%);transition:transform .4s ease}\n.tc4:hover p{transform:translateY(0)}\n@keyframes hue4{to{filter:hue-rotate(360deg) saturate(1.4)}}\n'
 }
 
   );

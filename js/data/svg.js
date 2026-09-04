@@ -61,7 +61,48 @@
 { id: 'bars-live', title: 'Live Bar Chart', cat: 'svg', tags: ['svg', 'chart'],
   html: '<svg class="lb3" viewBox="0 0 240 150"><defs><linearGradient id="bc3g" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#7c5cff"/></linearGradient></defs><g class="guides"><line x1="16" y1="30" x2="16" y2="126"/><line x1="16" y1="30" x2="226" y2="30"/><line x1="16" y1="78" x2="226" y2="78"/><line x1="16" y1="126" x2="226" y2="126"/></g><g class="bwrap"><rect x="34" y="42" width="20" height="84" rx="4"/><rect x="78" y="64" width="20" height="62" rx="4"/><rect x="122" y="30" width="20" height="96" rx="4"/><rect x="166" y="52" width="20" height="74" rx="4"/><rect x="210" y="70" width="20" height="56" rx="4"/></g><g class="xl3"><text x="44" y="140">Mon</text><text x="88" y="140">Tue</text><text x="132" y="140">Wed</text><text x="176" y="140">Thu</text><text x="220" y="140">Fri</text></g></svg>',
   css: '.lb3{width:252px}\n.guides line{stroke:rgba(160,160,210,.14);stroke-width:1;stroke-dasharray:3 6}\n.bwrap rect{fill:url(#bc3g);transform-box:fill-box;transform-origin:50% 100%;animation:bars3 1.5s ease-in-out infinite alternate;filter:drop-shadow(0 0 5px rgba(124,92,255,.45))}\n.bwrap rect:nth-child(1){animation-delay:0s}\n.bwrap rect:nth-child(2){animation-delay:.12s}\n.bwrap rect:nth-child(3){animation-delay:.24s}\n.bwrap rect:nth-child(4){animation-delay:.36s}\n.bwrap rect:nth-child(5){animation-delay:.48s}\n.xl3 text{font:600 10px "JetBrains Mono",monospace;fill:#8f8fa8;text-anchor:middle}\n@keyframes bars3{from{transform:scaleY(.5)}to{transform:scaleY(1)}}'
-}
+},
 
+{ id: 'neon-heart', title: 'Neon Heart', cat: 'svg', tags: ['css', 'stroke'],
+  html: '<svg class="nh6" viewBox="0 0 60 55"><path d="M30 51C15 40 2 30 2 17C2 9 8 3 16 3C22 3 27 6 30 11C33 6 38 3 44 3C52 3 58 9 58 17C58 30 45 40 30 51Z"/></svg>',
+  css: '\n.nh6{width:70px;height:64px;overflow:visible}\n.nh6 path{fill:none;stroke:#ff5c8a;stroke-width:3;stroke-linecap:round;stroke-dasharray:8 220;stroke-dashoffset:228;filter:drop-shadow(0 0 8px #ff5c8a);animation:nh6 3s cubic-bezier(.6,.05,.3,1) infinite}\n.nh6:hover path{animation-play-state:running;animation-duration:.6s}\n@keyframes nh6{0%{stroke-dashoffset:228}45%{stroke-dashoffset:0}70%{transform-origin:30px 30px}85%{transform:scale(1)}92%{transform:scale(1.2)}100%{transform:scale(1)}}\n'
+}
+,
+
+{ id: 'clock-tick', title: 'Analog Clock', cat: 'svg', tags: ['css', 'clock'],
+  html: '<svg class="ck6" viewBox="0 0 100 100"><circle class="face6" cx="50" cy="50" r="46"/><g class="hands6"><line x1="50" y1="50" x2="50" y2="26"/><line class="min6" x1="50" y1="50" x2="50" y2="16"/></g><circle class="hub6" cx="50" cy="50" r="3"/></svg>',
+  css: '\n.ck6{width:90px;height:90px;overflow:visible}\n.face6{fill:#101024;stroke:#7c5cff;stroke-width:2;filter:drop-shadow(0 0 6px rgba(124,92,255,.5))}\n.hands6 line{stroke:#22d3ee;stroke-width:3.5;stroke-linecap:round;transform-origin:50px 50px;animation:ck6h 6s linear infinite}\n.hands6 .min6{stroke:#ff5c8a;stroke-width:2.5;animation:ck6m 0.6s linear infinite}\n.hub6{fill:#fff}\n@keyframes ck6h{to{transform:rotate(360deg)}}\n@keyframes ck6m{to{transform:rotate(360deg)}}\n'
+}
+,
+
+{ id: 'audio-wave', title: 'Pulse Bars', cat: 'svg', tags: ['css', 'wave'],
+  html: '<svg class="aw6" viewBox="0 0 200 60"><rect x="4" y="20" width="6" height="20"/><rect x="16" y="8" width="6" height="44"/><rect x="28" y="16" width="6" height="28"/><rect x="40" y="4" width="6" height="52"/><rect x="52" y="22" width="6" height="16"/><rect x="64" y="10" width="6" height="40"/><rect x="76" y="18" width="6" height="24"/></svg>',
+  css: '\n.aw6{width:140px;height:44px;overflow:visible}\n.aw6 rect{fill:#7c5cff;transform-origin:center bottom;animation:aw6 .9s ease-in-out infinite}\n.aw6 rect:nth-child(1){animation-delay:.1s}.aw6 rect:nth-child(2){animation-delay:.2s}.aw6 rect:nth-child(3){animation-delay:.05s}.aw6 rect:nth-child(4){animation-delay:.3s}.aw6 rect:nth-child(5){animation-delay:.4s}.aw6 rect:nth-child(6){animation-delay:.2s}.aw6 rect:nth-child(7){animation-delay:.3s}\n.aw6 rect:nth-child(2),.aw6 rect:nth-child(4){fill:#22d3ee}\n.aw6 rect:nth-child(6){fill:#ff5c8a}\n@keyframes aw6{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}\n'
+}
+,
+
+{ id: 'dash-race', title: 'Dash Circuit', cat: 'svg', tags: ['css', 'path'],
+  html: '<svg class="dc6" viewBox="0 0 200 60"><path d="M10 50 H70 L90 30 H150 L170 10"/></svg>',
+  css: '\n.dc6{width:170px;height:52px;overflow:visible}\n.dc6 path{fill:none;stroke:#22d3ee;stroke-width:3;stroke-linecap:round;stroke-dasharray:6 6;animation:dc6 1s linear infinite;filter:drop-shadow(0 0 4px #22d3ee)}\n@keyframes dc6{to{stroke-dashoffset:-12}}\n'
+}
+,
+
+{ id: 'orbit-satellite', title: 'Orbit Satellite', cat: 'svg', tags: ['css', 'orbit'],
+  html: '<svg class="os6" viewBox="0 0 100 100"><circle cx="50" cy="50" r="16" class="planet6"/><g class="rings6"><ellipse cx="50" cy="50" rx="40" ry="15"/><ellipse cx="50" cy="50" rx="40" ry="15" transform="rotate(60 50 50)"/><circle class="sat6" cx="50" cy="8" r="4"/></g></svg>',
+  css: '\n.os6{width:96px;height:96px;overflow:visible}\n.planet6{fill:url(#p6);fill:#7c5cff;stroke:#a78bfa;stroke-width:1}\n.rings6 ellipse{fill:none;stroke:#22d3ee;stroke-width:1.6;opacity:.7;stroke-dasharray:4 3;transform-origin:50px 50px;animation:os6r 8s linear infinite}\n.sat6{fill:#ff5c8a;transform-origin:50px 50px;animation:os6 4s linear infinite}\n@keyframes os6{to{transform:rotate(360deg)}}\n@keyframes os6r{to{transform:rotate(360deg)}}\n'
+}
+,
+
+{ id: 'gauge-needle', title: 'Gauge Dial', cat: 'svg', tags: ['js', 'needle'],
+  html: '<svg class="gn6" viewBox="0 0 120 120"><path class="arc6" d="M20 90 A50 50 0 0 1 100 90"/><g class="needle6"><line x1="60" y1="90" x2="60" y2="35"/></g><circle cx="60" cy="90" r="5"/><text x="60" y="112" class="t6">42</text></svg>',
+  css: '\n.gn6{width:110px;height:110px;overflow:visible}\n.arc6{fill:none;stroke:rgba(160,160,210,.25);stroke-width:9;stroke-linecap:round}\n.needle6 line{stroke:#22d3ee;stroke-width:3;stroke-linecap:round;transform-origin:60px 90px;filter:drop-shadow(0 0 4px #22d3ee)}\n.needle6{transform-origin:60px 90px;transition:transform .4s cubic-bezier(.4,0,.2,1)}\ncircle{fill:#7c5cff}\n.t6{fill:#e8e8f5;font:700 13px \'JetBrains Mono\',monospace;text-anchor:middle}\n',
+  js: 'var n=root.querySelector(\'.needle6\'),t=root.querySelector(\'.t6\'),v=0,target=42;setInterval(function(){target=20+Math.floor(Math.random()*70);},1600);api.raf(function(){v+=(target-v)*0.06;if(Math.abs(v-target)<0.4)v=target;n.style.transform=\'rotate(\'+(-40+v*(80/90))+\'deg)\';t.textContent=Math.round(v);});'
+}
+,
+
+{ id: 'pulse-ping', title: 'Radar Ping', cat: 'svg', tags: ['css', 'ping'],
+  html: '<svg class="pp6" viewBox="0 0 120 120"><circle cx="60" cy="60" r="6"/><g class="pings6"><circle class="p1" cx="60" cy="60" r="8"/><circle class="p2" cx="60" cy="60" r="8"/><circle class="p3" cx="60" cy="60" r="8"/></g></svg>',
+  css: '.pp6{width:100px;height:100px;overflow:visible}\n.pp6>circle{fill:#22d3ee;box-shadow:0 0 10px #22d3ee}\n.pings6 circle{fill:none;stroke:#7c5cff;stroke-width:2;transform-box:fill-box;transform-origin:center;animation:pp6 2s ease-out infinite}\n.pings6 .p2{animation-delay:.66s}.pings6 .p3{animation-delay:1.32s}\n@keyframes pp6{0%{transform:scale(.2);opacity:.95}100%{transform:scale(5);opacity:0}}'
+}
   );
 })();
