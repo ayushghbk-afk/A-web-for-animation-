@@ -32,7 +32,9 @@
     }
 
     /* 1 — pinned live background: a real collection effect (bgauro-0) */
-    var bg = document.getElementById('heroBg');
+      var bg = window.matchMedia('(max-width: 900px)').matches ? null : document.getElementById('heroBg');
+    var bgEl = document.getElementById('heroBg');
+    if (!bg && bgEl) { bgEl.remove(); }
     var aurora = byId['bgauro-0'] || byId['bgnb-0'];
     if (bg && aurora && ML.mount) {
       bg.style.setProperty('--h', '100%');
