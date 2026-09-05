@@ -188,9 +188,55 @@
     openCmdk();
   });
 
+  /* ---------------- overlays: one scroll lock for the whole page ----------------
+     app.js owns the real bookkeeping (it knows about every dialog); the drawer
+     just asks for a re-sync and keeps a local fallback for a chrome-less run. */
+  function lockPageScroll(on) {
+    if (on) {                                  // something is opening: lock now
+      document.body.classList.add('no-scroll');
+      document.body.style.overflow = 'hidden';
+      return;
+    }
+    /* releasing asks app.js what else is still open, so stacked dialogs can
+       never strand the page in a locked state */
+    if (window.MLSyncPageLock) { window.MLSyncPageLock(); return; }
+    document.body.classList.remove('no-scroll');
+    document.body.style.overflow = '';
+  }
+
+  /* ---------------- utility toggles: header ⇄ drawer ----------------
+     On a phone the header only has room for search + tune + the hamburger.
+     Favourites / pause / theme are moved into the drawer (the same nodes, so
+     every listener and aria state in app.js keeps working) and moved back as
+     soon as there is room again. */
+  var smallScreen = window.matchMedia('(max-width: 640px)');
+  var prefBtns = ['favFilter', 'motionToggle', 'themeToggle']
+    .map(function (id) { return document.getElementById(id); })
+    .filter(Boolean);
+  var headerTools = $('#headerTools');
+  var prefsSlot = $('#mobilePrefs');
+  var prefsAnchor = headerTools && prefBtns.length ? prefBtns[prefBtns.length - 1].nextElementSibling : null;
+
+  function placePrefs() {
+    if (!headerTools || !prefsSlot || !prefBtns.length) return;
+    var inDrawer = smallScreen.matches;
+    prefBtns.forEach(function (btn) {
+      if (inDrawer && btn.parentNode !== prefsSlot) prefsSlot.appendChild(btn);
+      else if (!inDrawer && btn.parentNode === prefsSlot) headerTools.insertBefore(btn, prefsAnchor);
+    });
+  }
+  placePrefs();
+  if (smallScreen.addEventListener) smallScreen.addEventListener('change', placePrefs);
+  else if (smallScreen.addListener) smallScreen.addListener(placePrefs);
+
   /* ---------------- mobile nav ---------------- */
   var mobile = $('#mobileNav');
   var menuBtn = $('#menuToggle');
+
+  function focusSafely(el) {
+    if (!el || !el.focus) return;
+    try { el.focus({ preventScroll: true }); } catch (e) { el.focus(); }
+  }
 
   function openMobile() {
     if (!mobile) return;
@@ -198,16 +244,27 @@
     mobile.hidden = false;
     header.classList.add('menu-open');
     menuBtn && menuBtn.setAttribute('aria-expanded', 'true');
-    requestAnimationFrame(function () { mobile.classList.add('open'); });
-    document.body.style.overflow = 'hidden';
+    menuBtn && menuBtn.setAttribute('aria-label', 'Close menu');
+    requestAnimationFrame(function () {
+      mobile.classList.add('open');
+      focusSafely($('.mobile-nav-head .icon-btn', mobile) || mobile);
+    });
+    lockPageScroll(true);
   }
   function closeMobile() {
     if (!mobile) return;
+    var wasOpen = !mobile.hidden && mobile.classList.contains('open');
     mobile.classList.remove('open');
     header.classList.remove('menu-open');
     menuBtn && menuBtn.setAttribute('aria-expanded', 'false');
-    setTimeout(function () { if (!mobile.classList.contains('open')) mobile.hidden = true; }, 380);
-    if ($('#cmdk').hidden && $('#modal').hidden) document.body.style.overflow = '';
+    menuBtn && menuBtn.setAttribute('aria-label', 'Open menu');
+    lockPageScroll(false);
+    setTimeout(function () {
+      if (mobile.classList.contains('open')) return;
+      mobile.hidden = true;
+      lockPageScroll(false);          // in case the drawer was the last thing open
+    }, 380);
+    if (wasOpen) focusSafely(menuBtn);
   }
   if (menuBtn) menuBtn.addEventListener('click', function () {
     if (mobile && !mobile.hidden && mobile.classList.contains('open')) closeMobile();
@@ -215,6 +272,11 @@
   });
   $$('[data-close-menu]').forEach(function (el) {
     el.addEventListener('click', closeMobile);
+  });
+  var mobileSearch = $('#mobileSearch');
+  if (mobileSearch) mobileSearch.addEventListener('click', function () {
+    closeMobile();
+    openCmdk();
   });
 
   function fillMobile() {
@@ -238,6 +300,18 @@
     });
   }
 
+  /* the drawer is only reachable through the hamburger, which itself only
+     exists under 1100px — so past that width it must close, or it sits over
+     the page with no way out */
+  var wideScreen = window.matchMedia('(min-width: 1101px)');
+  function retireOverlays() {
+    if (!wideScreen.matches) return;
+    closeMobile();
+    closeMegas();
+  }
+  if (wideScreen.addEventListener) wideScreen.addEventListener('change', retireOverlays);
+  else if (wideScreen.addListener) wideScreen.addListener(retireOverlays);
+
   /* ---------------- command palette ---------------- */
   var cmdk = $('#cmdk');
   var search = $('#search');
@@ -252,7 +326,7 @@
     cmdk.hidden = false;
     document.body.classList.add('cmdk-open');
     header.classList.remove('hide');
-    document.body.style.overflow = 'hidden';
+    lockPageScroll(true);
     paintCmdk();
     requestAnimationFrame(function () { if (search) search.focus(); search && search.select(); });
   }
@@ -260,7 +334,7 @@
     if (!cmdk) return;
     cmdk.hidden = true;
     document.body.classList.remove('cmdk-open');
-    if ($('#modal').hidden) document.body.style.overflow = '';
+    lockPageScroll(false);
   }
   function toggleCmdk() { if (cmdk.hidden) openCmdk(); else closeCmdk(); }
 
@@ -334,6 +408,16 @@
   }
   window.addEventListener('ml:chips', placeChipInk);
   window.addEventListener('resize', placeChipInk);
+
+  function centerActiveChip() {
+    var box = $('#chips');
+    var active = $('.chip.active');
+    if (!box || !active || box.scrollWidth <= box.clientWidth + 2) return;
+    var left = Math.max(0, active.offsetLeft - (box.clientWidth - active.offsetWidth) / 2);
+    if (box.scrollTo) box.scrollTo({ left: left, behavior: reduce ? 'auto' : 'smooth' });
+    else box.scrollLeft = left;
+  }
+  window.addEventListener('ml:chips', centerActiveChip);
 
   /* ---------------- footer cat links ---------------- */
   $$('a[data-cat]').forEach(function (a) {

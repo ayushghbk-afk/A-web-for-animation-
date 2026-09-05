@@ -115,7 +115,8 @@
     preview(item);
     modal.hidden = false;
     document.body.classList.add('ae-open');
-    document.body.style.overflow = 'hidden';
+    if (window.MLSyncPageLock) window.MLSyncPageLock();
+    else document.body.style.overflow = 'hidden';
     requestAnimationFrame(function () {
       modal.classList.add('open');
       var first = $('#aeDownload');
@@ -129,10 +130,8 @@
       destroyPreview();
       current = null; currentProfile = null;
       document.body.classList.remove('ae-open');
-      var codeOpen = $('#modal') && !$('#modal').hidden;
-      var tunerOpen = $('#tuner') && !$('#tuner').hidden;
-      var tplOpen = document.body.classList.contains('tpl-open');
-      if (!codeOpen && !tunerOpen && !tplOpen) document.body.style.overflow = '';
+      if (window.MLSyncPageLock) window.MLSyncPageLock();
+      else document.body.style.overflow = '';
       if (lastFocus && document.contains(lastFocus) && lastFocus.focus) {
         try { lastFocus.focus(); } catch (e) {}
       }

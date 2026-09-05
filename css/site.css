@@ -21,6 +21,14 @@
   --shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.85);
   --header-h: 72px;
   --sticky-top: 72px;
+  /* touch ergonomics + the parts of a phone viewport you must not draw under */
+  --tap: 44px;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  /* anchor targets must clear the sticky header *and* the filter rail */
+  --anchor-offset: calc(var(--header-h) + 104px);
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --ease: cubic-bezier(.22, 1, .36, 1);
@@ -46,6 +54,9 @@ html[data-theme="light"] {
 html {
   scroll-behavior: smooth;
   color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: var(--anchor-offset);
 }
 html[data-theme="light"] { color-scheme: light; }
 
@@ -58,6 +69,10 @@ body {
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
 }
+/* edge-to-edge phones: each full-bleed layer adds its own inset (see the
+   responsive block), so nothing important hides under a notch or a home bar. */
+/* body scroll lock, used by the drawer / palette / dialogs */
+body.no-scroll { overflow: hidden; overscroll-behavior: none; }
 
 h1, h2, h3, h4 { line-height: 1.08; margin: 0; letter-spacing: -0.035em; text-wrap: balance; }
 a { color: inherit; }
@@ -130,9 +145,10 @@ html[data-theme="light"] .pointer-glow { mix-blend-mode: multiply; opacity: 0; }
 /* ---------- header ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 80;
-  height: var(--header-h);
+  min-height: var(--header-h);
   display: flex; align-items: center; justify-content: space-between; gap: 18px;
-  padding: 0 clamp(16px, 3vw, 36px);
+  padding: 8px clamp(16px, 3vw, 36px);
+  padding-top: max(8px, var(--safe-t));
   backdrop-filter: blur(22px) saturate(1.4);
   background: color-mix(in srgb, var(--bg) 72%, transparent);
   border-bottom: 1px solid transparent;
@@ -381,7 +397,10 @@ html[data-theme="light"] #themeToggle .i-sun { display: block; }
   display: flex; align-items: center; justify-content: space-between;
   padding: 18px 18px 12px; border-bottom: 1px solid var(--border);
 }
-.mobile-nav-body { flex: 1; overflow: auto; padding: 18px; }
+.mobile-nav-body {
+  flex: 1; overflow: auto; padding: 18px;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+}
 .mobile-kicker {
   font-family: var(--mono); font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
   color: var(--muted); margin: 18px 0 10px;
@@ -434,7 +453,10 @@ html[data-theme="light"] #themeToggle .i-sun { display: block; }
   margin: 0; padding: 8px 16px 0;
   font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
 }
-.cmdk-results { max-height: 380px; overflow: auto; padding: 8px; }
+.cmdk-results {
+  max-height: min(380px, 46svh); overflow: auto; padding: 8px;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+}
 .cmdk-item {
   display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center;
   width: 100%; padding: 10px 12px; border: 0; border-radius: 12px;
@@ -514,7 +536,7 @@ main { position: relative; z-index: 2; }
 @keyframes livePulse { 70% { box-shadow: 0 0 0 8px rgba(52,211,153,0); } 100% { box-shadow: 0 0 0 0 rgba(52,211,153,0); } }
 
 .hero-title { font-size: clamp(2.4rem, 6.2vw, 4.6rem); font-weight: 800; margin-bottom: 20px; }
-.hero-title .line { display: block; overflow: hidden; }
+.hero-title .line { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
 .hero-title .line > span { display: block; animation: lineUp .95s var(--ease) both; }
 .hero-title .line:nth-child(2) > span { animation-delay: .1s; }
 .hero-title .line:nth-child(3) > span { animation-delay: .2s; }
@@ -699,6 +721,8 @@ html.nav-away { --sticky-top: 0px; }
 .filters-inner {
   position: relative; display: flex; gap: 8px;
   overflow-x: auto; scrollbar-width: none; padding: 4px 0 6px;
+  -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
 }
 .filters-inner::-webkit-scrollbar { display: none; }
 .chip-ink {
@@ -714,6 +738,7 @@ html.nav-away { --sticky-top: 0px; }
   padding: 8px 14px; border-radius: 999px; font-size: .84rem; font-weight: 560;
   border: 1px solid var(--border); background: var(--panel); color: var(--muted);
   font-family: var(--sans); transition: color .2s, border-color .2s, transform .2s, background .2s;
+  scroll-snap-align: center;
 }
 .chip svg { width: 14px; height: 14px; }
 .chip:hover { color: var(--text); border-color: var(--border-strong); transform: translateY(-1px); }
@@ -729,6 +754,8 @@ html[data-theme="light"] .chip-ink { background: #12121c; }
   display: flex; gap: 6px;
   overflow-x: auto; scrollbar-width: none;
   padding: 0 0 4px;
+  -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
 }
 .kind-bar::-webkit-scrollbar { display: none; }
 .kind-chip {
@@ -756,7 +783,9 @@ html[data-theme="light"] .chip-ink { background: #12121c; }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  /* `min(…, 100%)` keeps a 320px phone from getting a 300px track that
+     overflows its own container */
+  grid-template-columns: repeat(auto-fill, minmax(min(288px, 100%), 1fr));
   gap: 18px;
 }
 
@@ -1209,7 +1238,7 @@ body.tpl-open { overflow: hidden; }
 .outro { max-width: 1100px; margin: 0 auto; padding: 0 clamp(14px, 3vw, 34px) 100px; text-align: center; }
 .outro h2 { font-size: clamp(1.7rem, 4vw, 2.6rem); margin-bottom: 14px; }
 .outro > p { color: var(--muted); max-width: 700px; margin: 0 auto 40px; }
-.outro-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; text-align: left; }
+.outro-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 16px; text-align: left; }
 .outro-cards article {
   border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; background: var(--panel);
   transition: transform .3s var(--ease), border-color .3s;
@@ -1254,7 +1283,7 @@ body.tpl-open { overflow: hidden; }
 .modal-backdrop { position: absolute; inset: 0; background: rgba(3, 3, 10, .74); backdrop-filter: blur(8px); animation: fade .25s both; }
 @keyframes fade { from { opacity: 0; } }
 .modal-panel {
-  position: relative; width: min(1050px, 100%); max-height: 90vh; overflow: hidden;
+  position: relative; width: min(1050px, 100%); max-height: min(90vh, 100%); overflow: hidden;
   display: flex; flex-direction: column;
   background: var(--panel-solid); border: 1px solid var(--border-strong);
   border-radius: 22px; box-shadow: 0 40px 90px -30px #000;
@@ -1262,18 +1291,45 @@ body.tpl-open { overflow: hidden; }
 }
 @keyframes pop { from { opacity: 0; transform: translateY(20px) scale(.96); } }
 .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 16px 18px; border-bottom: 1px solid var(--border); }
+.modal-head > div { min-width: 0; }
 .modal-head h3 { font-size: 1.15rem; }
-.modal-head p { margin: 2px 0 0; font-size: .78rem; font-family: var(--mono); }
-.modal-body { display: grid; grid-template-columns: 1fr 1fr; min-height: 0; flex: 1; }
+.modal-head p { margin: 2px 0 0; font-size: .78rem; font-family: var(--mono); overflow-wrap: anywhere; }
+.modal-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 0; flex: 1; }
 @media (max-width: 860px) { .modal-body { grid-template-columns: 1fr; } }
+/* the preview column holds the stage *and* the "similar in …" rail */
+.modal-side {
+  display: grid; grid-template-rows: minmax(200px, 1fr) auto;
+  min-width: 0; min-height: 0; border-right: 1px solid var(--border);
+}
 .modal-preview {
   display: grid; place-items: center; overflow: hidden; min-height: 260px;
-  border-right: 1px solid var(--border);
   background:
     radial-gradient(circle at 50% 110%, rgba(139, 125, 255, .2), transparent 60%),
     repeating-conic-gradient(from 0deg, rgba(255,255,255,.045) 0% 25%, transparent 0% 50%) 0 0 / 18px 18px,
     #0b0b14;
 }
+.modal-preview[hidden] { display: none; }
+.similar { padding: 10px 12px 12px; border-top: 1px solid var(--border); min-width: 0; }
+.similar[hidden] { display: none; }
+.similar-label {
+  margin: 0 0 7px; font-family: var(--mono); font-size: .62rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted);
+}
+.similar-row {
+  display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.similar-row::-webkit-scrollbar { display: none; }
+.similar-item {
+  flex: none; cursor: pointer; text-align: left; font: inherit; color: inherit;
+  display: grid; gap: 1px; max-width: 190px;
+  padding: 7px 11px; border-radius: 11px; border: 1px solid var(--border);
+  background: var(--panel);
+  transition: border-color .2s, background .2s, transform .2s var(--ease);
+}
+.similar-item:hover { border-color: var(--border-strong); background: var(--panel-hover); transform: translateY(-1px); }
+.similar-item b { font-size: .8rem; font-weight: 600; letter-spacing: -.015em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.similar-item small { font-family: var(--mono); font-size: .6rem; color: var(--muted); }
 .modal-code { display: flex; flex-direction: column; min-height: 0; min-width: 0; }
 .code-tabs { display: flex; gap: 4px; padding: 10px 12px 0; }
 .code-tabs button {
@@ -1283,7 +1339,11 @@ body.tpl-open { overflow: hidden; }
 }
 .code-tabs button:hover { color: var(--text); }
 .code-tabs button.active { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); border-color: var(--border); }
-.code-block { margin: 0; flex: 1; overflow: auto; padding: 14px 16px; background: color-mix(in srgb, var(--text) 4%, transparent); }
+.code-block {
+  margin: 0; flex: 1; overflow: auto; padding: 14px 16px;
+  background: color-mix(in srgb, var(--text) 4%, transparent);
+  -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+}
 .code-block code { font-family: var(--mono); font-size: .78rem; line-height: 1.65; white-space: pre; color: var(--text); }
 .tok-tag { color: #ff7b9c; } .tok-attr { color: #ffd479; } .tok-str { color: #7ee787; }
 .tok-sel { color: #79c0ff; } .tok-prop { color: #d2a8ff; } .tok-com { color: #6b6b85; font-style: italic; } .tok-kw { color: #ff9d5c; }
@@ -1390,7 +1450,8 @@ html[data-theme="light"] .ae-format b { color: #5432a8; }
 
 /* ---------- toast ---------- */
 .toast {
-  position: fixed; bottom: 26px; left: 50%; z-index: 300;
+  position: fixed; bottom: calc(26px + var(--safe-b)); left: 50%; z-index: 300;
+  width: max-content; max-width: min(92vw, 560px); text-align: center;
   transform: translate(-50%, 130%);
   background: var(--panel-solid); border: 1px solid var(--border-strong);
   color: var(--text); padding: 12px 22px; border-radius: 999px;
@@ -1422,7 +1483,10 @@ html[data-theme="light"] .ae-format b { color: #5432a8; }
 .tuner-scope output { font-family: var(--mono); font-size: .7rem; color: var(--muted); }
 .tuner.is-global .tuner-scope output { color: var(--accent); }
 .tuner-mini { display: flex; gap: 6px; flex-wrap: wrap; }
-.tuner-body { flex: 1; min-height: 0; overflow: auto; padding: 6px 18px 22px; scrollbar-width: thin; }
+.tuner-body {
+  flex: 1; min-height: 0; overflow: auto; padding: 6px 18px 22px; scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+}
 .tuner-foot { padding: 12px 18px 16px; border-top: 1px solid var(--border); }
 .tuner-foot p { margin: 0; font-size: .72rem; line-height: 1.5; }
 
@@ -1486,3 +1550,367 @@ body.paused .orb, body.paused .bm-ring, body.paused .bm-dot, body.paused .stage-
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; border: 3px solid var(--bg); }
+
+/* ============================================================
+   Mobile · touch · small screens
+   ------------------------------------------------------------
+   The rules above are desktop-first; this block is what a phone
+   actually gets. Breakpoints: 1100 (nav folds into the drawer),
+   900 / 860 (labels drop, sheets open), 760 (phones in portrait),
+   640 (bottom sheets + 44px targets), 520 (one column), 380 (a
+   Galaxy-Fold cover screen or an iPhone SE 1). Pointer behaviour is
+   handled by `(hover: none) / (pointer: coarse)`, so a small window
+   on a desktop never loses its hover feedback and a tablet in
+   landscape never keeps it.
+   ============================================================ */
+
+/* ---------- tap ergonomics everywhere ---------- */
+a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
+.btn-ghost, .tz, .tz-preset, .tz-x, .similar-item, .mobile-cat, .mobile-link,
+.mega-card, .mega-row, .bento-card, .card-menu-pop button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;        /* no 300ms "am I double-tapping?" delay */
+  text-decoration-skip-ink: auto;
+}
+/* iOS zooms the whole page when a focused control is under 16px */
+@media (max-width: 640px) {
+  #search, .tz-select select { font-size: 1rem; }
+}
+
+/* ---------- ≤1100px · the nav lives in a drawer ---------- */
+@media (max-width: 1100px) {
+  /* the mega panels are hover-driven; on touch they must never stay open */
+  .mega { display: none; }
+  .tpl-grid { grid-template-columns: 1fr; }
+  .hero-stage { height: 320px; min-height: 300px; }
+}
+
+/* ---------- ≤900px · narrow desktops, big phones in landscape ---------- */
+@media (max-width: 900px) {
+  :root { --anchor-offset: calc(var(--header-h) + 96px); }
+  .site-header { gap: 10px; }
+  .header-tools { gap: 6px; }
+  .brand { font-size: 1rem; }
+  .grid { gap: 14px; }
+  .gallery-section { padding-inline: clamp(12px, 3vw, 22px); }
+  .filters { padding: 8px clamp(10px, 3vw, 20px) 6px; }
+  .chip { padding: 10px 14px; min-height: var(--tap); }
+  .kind-chip { padding: 8px 12px; min-height: 34px; }
+  .icon-btn, .icon-btn:not(.wide), .menu-toggle, .search-trigger { width: 42px; height: 42px; }
+  .search-trigger { min-width: 42px; }
+  .menu-toggle span { left: 12px; right: 12px; }
+  .menu-toggle span:nth-child(1) { top: 15px; }
+  .menu-toggle span:nth-child(2) { top: 21px; }
+  .menu-toggle span:nth-child(3) { top: 27px; }
+  .menu-toggle[aria-expanded="true"] span:nth-child(1) { top: 21px; }
+  .menu-toggle[aria-expanded="true"] span:nth-child(3) { top: 21px; }
+}
+
+/* ---------- ≤760px · portrait phones ---------- */
+@media (max-width: 760px) {
+  .explore { padding: 14px 14px 34px; }
+  .steps { padding: 6px 14px 44px; }
+  .steps article { padding: 18px; }
+  .gallery-section { padding: 26px 12px 64px; }
+  .ae-workflow { padding: 22px 12px 60px; }
+  .templates { padding: 26px 12px 60px; }
+  .outro { padding: 0 14px 72px; }
+  .site-footer { padding: 32px 16px calc(22px + var(--safe-b)); }
+  .section-head { margin-bottom: 16px; }
+  .section-head p { font-size: .72rem; }
+  .hero { padding: 24px 16px 52px; }
+  .hero-stage { overflow: hidden; border-radius: 24px; }
+  .bento { gap: 10px; }
+  .empty { padding: 40px 0; }
+}
+
+/* ---------- ≤640px · the phone layout ---------- */
+@media (max-width: 640px) {
+  :root {
+    --header-h: calc(56px + var(--safe-t));
+    --sticky-top: calc(56px + var(--safe-t));
+    --anchor-offset: calc(var(--header-h) + 88px);
+    --radius: 16px;
+  }
+  .hero { padding: 20px 14px 44px; }
+  .hero-title { font-size: clamp(1.95rem, 8.4vw, 2.6rem); margin-bottom: 14px; }
+  .hero-sub { font-size: .95rem; margin-bottom: 20px; }
+  .eyebrow { font-size: .6rem; letter-spacing: .1em; padding: 6px 11px; margin-bottom: 16px; }
+  .hero-stats { gap: 12px 20px; margin-top: 26px; }
+  .hero-stats b { font-size: 1.3rem; }
+  .hero-stats span { font-size: .6rem; letter-spacing: .08em; }
+  .hero-cta { gap: 8px; }
+  .hero-cta > .btn-primary, .hero-cta > .btn-ghost {
+    flex: 1 1 auto; justify-content: center; min-height: var(--tap); padding: 12px 14px;
+  }
+  .hero-stage { height: 246px; min-height: 226px; }
+  .float-card { scale: .58; }
+  .fc-3, .fc-4 { display: none; }
+  .scroll-cue { display: none; }
+
+  /* the header only keeps what cannot live anywhere else; the utility
+     toggles are moved into the drawer by js/nav.js (and hidden here as a
+     no-JS fallback so the hamburger can never be pushed off-screen) */
+  .site-header { padding: var(--safe-t) clamp(10px, 3.4vw, 16px) 0; }
+  .header-tools > #favFilter,
+  .header-tools > #motionToggle,
+  .header-tools > #themeToggle { display: none; }
+  .header-tools { gap: 6px; }
+  .icon-btn.wide { width: 42px; height: 42px; padding: 0; }
+
+  /* filter rail */
+  .filters { padding: 6px 10px 4px; gap: 4px; }
+  .filters-inner { gap: 6px; }
+  .chip { font-size: .8rem; padding: 9px 12px; }
+  .kind-bar { padding-bottom: 2px; }
+
+  /* cards */
+  .grid { grid-template-columns: repeat(auto-fill, minmax(min(232px, 100%), 1fr)); gap: 10px; }
+  .card-stage { height: 168px; }
+  .card-stage > .demo-host { transform: scale(.9); transform-origin: 50% 50%; }
+  .card-body { padding: 11px 12px 12px; gap: 7px; }
+  /* keep the scroll position honest: the placeholder height now matches a
+     short card, so lazy rows do not shove the page while you flick */
+  .card { contain-intrinsic-size: auto 276px; }
+  .card-title { font-size: .93rem; }
+  .mini { min-height: 42px; font-size: .76rem; padding: 8px 6px; gap: 4px; min-width: 0; white-space: nowrap; }
+  .mini.flex-none { width: 42px; }
+  .knob-n { font-size: .58rem; padding: 2px 5px; }
+  /* on touch the "more" list becomes an in-flow action row: the card clips
+     its own overflow, so a floating popover would be cut in half */
+  .card-menu-pop {
+    position: static; inset: auto; width: 100%; min-width: 0;
+    display: flex; flex-wrap: wrap; gap: 6px;
+    padding: 6px 0 0; border: 0; border-radius: 0; background: none; box-shadow: none;
+  }
+  .card-menu-pop button {
+    flex: 1 1 46%; width: auto; min-height: 42px; padding: 8px 7px; text-align: center;
+    border: 1px solid var(--border); border-radius: 10px; background: var(--panel);
+    font-size: .74rem; line-height: 1.25; white-space: normal;
+  }
+  .card-menu-pop button:active { background: var(--panel-hover); }
+  .more { padding-top: 20px; }
+  #moreBtn { min-height: var(--tap); width: min(100%, 340px); justify-content: center; }
+
+  /* dialogs become bottom sheets so the thumbs reach everything */
+  .modal { padding: 0; align-items: end; }
+  .modal-panel {
+    width: 100%; max-height: 93vh; max-height: min(93svh, 100%);
+    border-radius: 20px 20px 0 0; border-left: 0; border-right: 0; border-bottom: 0;
+    animation: sheetIn .36s var(--ease) both;
+  }
+  @keyframes sheetIn { from { opacity: 0; transform: translateY(24px); } }
+  .modal-body { overflow: auto; overscroll-behavior: contain; }
+  .modal-side { border-right: 0; border-bottom: 1px solid var(--border); grid-template-rows: auto auto; }
+  .modal-preview { min-height: 208px; }
+  .modal-head { padding: 14px 14px 12px; flex-wrap: wrap; }
+  .tpl-head-tools { width: 100%; justify-content: flex-end; }
+  .tpl-head-tools > * { min-height: 40px; }
+  .code-tabs { padding: 8px 10px 0; overflow-x: auto; scrollbar-width: none; }
+  .code-tabs::-webkit-scrollbar { display: none; }
+  .filters-inner, .kind-bar { padding-bottom: 6px; }
+  .code-tabs button { flex: none; padding: 8px 12px; min-height: 38px; }
+  .code-block { max-height: 54svh; padding: 12px; }
+  .code-block code { font-size: .74rem; }
+  .modal-actions {
+    position: sticky; bottom: 0; z-index: 3;
+    gap: 6px; padding: 10px 10px calc(10px + var(--safe-b));
+    background: color-mix(in srgb, var(--panel-solid) 92%, transparent);
+  }
+  .modal-actions > * { flex: 1 1 46%; min-height: var(--tap); justify-content: center; }
+
+  /* the After Effects sheet */
+  .ae-export-body { overflow: auto; }
+  .ae-export-preview { padding: 12px 12px 0; }
+  .ae-preview { height: 168px; }
+  .ae-profile-stats { gap: 6px; }
+  .ae-primary-actions { flex-direction: column; }
+  .ae-primary-actions .btn-primary, .ae-primary-actions .btn-ghost {
+    flex: 1 1 auto; width: 100%; min-height: var(--tap);
+  }
+  .ae-format { padding: 12px; }
+  .ae-format input { width: 22px; height: 22px; }
+
+  /* the tuner sheet */
+  .tuner-panel {
+    height: 93vh; height: min(93svh, 900px); border-radius: 22px 22px 0 0;
+  }
+  .tuner-panel::before {
+    content: ""; position: absolute; z-index: 2; top: 7px; left: 50%;
+    width: 46px; height: 4px; margin-left: -23px; border-radius: 999px;
+    background: var(--border-strong);
+  }
+  .tuner-head { padding: 18px 14px 12px; }
+  .tuner-scope, .tuner-body { padding-inline: 14px; }
+  .tuner-body { padding-bottom: 18px; }
+  .tuner-foot { padding: 10px 14px calc(14px + var(--safe-b)); }
+  .tz { padding: 10px 12px; }
+  .tz-l { font-size: .85rem; }
+  .tz input[type="range"] { height: 32px; }
+  .tz-select select { min-height: 40px; }
+  .tz-sw, .tz-sw::before, .tz-sw input[type="color"] { min-height: 38px; }
+  .tz-sw::before, .tz-sw input[type="color"] { width: 38px; height: 38px; }
+  .tz-x { width: 32px; height: 32px; font-size: .95rem; }
+  .tuner-mini > * { flex: 1 1 auto; min-height: 42px; justify-content: center; }
+  .tz-foot .btn-ghost.sm { min-height: var(--tap); }
+
+  /* search: a full-screen sheet beats a floating box above a soft keyboard */
+  .cmdk { padding: 0; place-items: stretch; }
+  .cmdk-panel {
+    width: 100%; height: 100%; max-height: none; border: 0; border-radius: 0;
+    display: flex; flex-direction: column; animation: cmdInM .26s var(--ease) both;
+  }
+  @keyframes cmdInM { from { opacity: 0; transform: translateY(14px); } }
+  .cmdk-bar { padding: calc(12px + var(--safe-t)) 14px 12px; }
+  .cmdk-results { flex: 1; max-height: none; }
+  .cmdk-item { min-height: var(--tap); padding: 10px 12px; }
+  .cmdk-bar kbd, .cmdk-foot { display: none; }
+  .cmdk-label { padding-top: 10px; }
+
+  /* the toast spans the phone instead of floating over it */
+  .toast {
+    left: 12px; right: 12px; bottom: calc(14px + var(--safe-b));
+    width: auto; max-width: none; padding: 12px 16px; border-radius: 16px;
+    transform: translateY(180%);
+  }
+  .toast.show { transform: none; }
+
+  /* drawer */
+  .mobile-nav-panel { width: min(400px, 100%); }
+  .mobile-nav-head { padding: calc(14px + var(--safe-t)) 14px 12px; }
+  .mobile-nav-body { padding: 14px 14px 20px; }
+  .mobile-nav-foot { padding: 14px 14px calc(18px + var(--safe-b)); }
+  .mobile-cat { min-height: var(--tap); font-size: .85rem; padding: 10px 12px; }
+  .mobile-link { min-height: var(--tap); font-size: 1.08rem; padding: 12px 4px; }
+  .mobile-nav-foot .btn-primary { min-height: var(--tap); }
+  .mobile-search {
+    display: flex; align-items: center; gap: 10px; text-align: left;
+    width: 100%; min-height: var(--tap); padding: 10px 13px; border-radius: 13px;
+    font-size: .92rem; font-weight: 600; color: var(--muted); font-family: var(--sans);
+    background: var(--panel); border: 1px solid var(--border);
+  }
+  .mobile-search span { min-width: 0; }
+  .mobile-search:hover { color: var(--text); border-color: var(--border-strong); }
+  .mobile-search svg { width: 17px; height: 17px; flex: none; }
+  .mobile-prefs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .mobile-prefs:empty { display: none; }
+  .mobile-prefs .icon-btn {
+    width: auto; height: auto; min-height: 62px; padding: 10px 6px; gap: 6px;
+    border-radius: 14px; color: var(--muted);
+  }
+  .mobile-prefs .icon-btn svg { width: 20px; height: 20px; }
+  .mobile-prefs .icon-btn::after {
+    content: attr(data-label); font-size: .66rem; font-weight: 650;
+    letter-spacing: -.005em; color: var(--text);
+  }
+  .mobile-prefs .icon-btn[aria-pressed="true"]::after { color: currentColor; }
+}
+
+/* ---------- ≤430px · the last-resort safety net ---------- */
+@media (max-width: 430px) {
+  /* If js/nav.js never ran (script blocked, offline, JS off) the utility
+     toggles are still in the header, and 360px of width cannot hold them.
+     Wrapping costs a second row; clipping would cost the hamburger. */
+  .site-header { flex-wrap: wrap; row-gap: 4px; padding-bottom: 6px; min-height: 0; }
+  .header-tools { margin-left: auto; }
+}
+
+/* ---------- ≤520px · one column, always ---------- */
+@media (max-width: 520px) {
+  .tpl-stats { grid-template-columns: repeat(2, 1fr); }
+  .tpl-stage { height: clamp(178px, 52vw, 236px); }
+  .tpl-body { padding: 14px 14px 16px; gap: 10px; }
+  .tpl-actions > * { flex: 1 1 46%; justify-content: center; min-height: var(--tap); }
+  .tpl-hint { white-space: normal; max-width: calc(100% - 26px); text-align: center; line-height: 1.3; }
+  .tpl-foot { padding: 15px 15px; }
+  .tpl-foot-links { width: 100%; }
+  .tpl-foot-links a { min-height: 40px; }
+  .tpl-play-body { min-height: 42svh; }
+  .tpl-play-foot { padding-bottom: calc(12px + var(--safe-b)); }
+  .tpl-foot-tools > * { flex: 1 1 auto; justify-content: center; min-height: 42px; }
+  .footer-grid { gap: 18px 14px; }
+  .site-footer a, .site-footer button { min-height: var(--tap); padding: 9px 0; }
+  .footer-bar { font-size: .76rem; }
+  .outro-cards article { padding: 18px; }
+}
+
+/* ---------- ≤380px · fold-cover screens, iPhone SE 1, small Androids ---------- */
+@media (max-width: 380px) {
+  /* the wordmark is the first thing to go — the drawer keeps its own copy */
+  .site-header .brand .brand-text { display: none; }
+  .hero-title { font-size: clamp(1.75rem, 9.2vw, 2.1rem); }
+  .section-head h2, .outro h2, .ae-export-options h4 { font-size: 1.42rem; }
+  .kicker, .mobile-kicker { font-size: .62rem; letter-spacing: .12em; }
+  .grid { grid-template-columns: 1fr; }
+  .card-stage > .demo-host { transform: scale(.8); }
+  .bento { grid-auto-rows: 126px; }
+  .mobile-cats { grid-template-columns: 1fr; }
+  .steps-inner, .hero-stats { gap: 10px; }
+  .ae-steps li { grid-template-columns: 1fr; gap: 6px; }
+  .ae-format-head { flex-direction: column; align-items: flex-start; gap: 2px; }
+  .hero { padding: 16px 12px 40px; }
+  .gallery-section, .explore, .templates, .ae-workflow { padding-inline: 10px; }
+  .float-card { scale: .5; }
+  .fc-2 { display: none; }
+}
+
+/* ---------- landscape phones: don't spend the whole screen on the hero ---------- */
+@media (orientation: landscape) and (max-height: 500px) {
+  .hero { min-height: 0; padding-block: 18px 30px; }
+  .hero-grid { gap: 18px; }
+  .hero-stage { height: 190px; min-height: 170px; }
+  .float-card { scale: .52; }
+  .scroll-cue { display: none; }
+  .modal { padding: 8px; align-items: center; }
+  .modal-panel { max-height: 92svh; border-radius: 18px; }
+  .cmdk { padding: 8px; place-items: center; }
+  .cmdk-panel { width: min(640px, 100%); height: auto; max-height: 92svh; border-radius: 18px; border: 1px solid var(--border-strong); }
+  .cmdk-results { max-height: 40svh; }
+  .cmdk-bar { padding-top: 10px; }
+  .tuner-panel { height: min(96svh, 100%); width: min(380px, 100%); top: 0; bottom: auto; border-radius: 0 0 0 20px; transform: translateX(102%); }
+  .tuner-panel::before { display: none; }
+  .tuner.open .tuner-panel { transform: translateX(0); }
+  .mobile-nav-panel { width: min(340px, 100%); }
+  .site-footer { padding-block: 22px calc(16px + var(--safe-b)); }
+}
+
+/* ---------- touch devices: no stuck hover, cheaper paint ---------- */
+@media (hover: none), (pointer: coarse) {
+  .pointer-glow { display: none; }
+  .orb { filter: blur(56px); }
+  .noise-overlay { display: none; }
+  .card, .tpl-card, .float-card { backdrop-filter: none; }
+  .float-card { background: color-mix(in srgb, var(--panel-solid) 88%, transparent); }
+  .card:hover, .tpl-card:hover, .bento-card:hover, .steps article:hover,
+  .outro-cards article:hover, .icon-btn:hover, .mini:hover, .chip:hover,
+  .kind-chip:hover, .btn-primary:hover, .btn-ghost:hover, .search-trigger:hover,
+  .mega-card:hover, .similar-item:hover, .tz-preset:hover {
+    transform: none;
+  }
+  .card:hover::after, .tpl-card:hover::after { opacity: 0; }
+  .bento-card:active, .mega-card:active, .similar-item:active { transform: scale(.99); }
+  .grid-overlay { display: none; }
+}
+/* four 50vw blurred layers is a lot for a phone GPU; two is plenty */
+@media (max-width: 700px), (pointer: coarse) {
+  .orb-3, .orb-4 { display: none; }
+  .site-header { backdrop-filter: blur(14px) saturate(1.2); }
+  .card-stage { contain: paint; }
+}
+
+/* ---------- people who ask for less translucency get solid chrome ---------- */
+@media (prefers-reduced-transparency: reduce) {
+  .site-header, .filters, .card, .tpl-card, .float-card, .mega-panel {
+    backdrop-filter: none;
+    background: var(--panel-solid);
+  }
+  .modal-backdrop, .cmdk-backdrop, .tuner-backdrop, .mobile-nav-backdrop { backdrop-filter: none; }
+  .bg-orbs { display: none; }
+}
+
+/* ---------- make sure nothing is ever horizontally cut off ---------- */
+@media (max-width: 640px) {
+  .ae-format-board article, .tpl-knob-row, .cmdk-item, .ae-profile-stats dd,
+  .modal-head h3, .card-title, .tpl-heading h3 { overflow-wrap: anywhere; }
+  .ae-format-board article > span { overflow-wrap: normal; }
+}

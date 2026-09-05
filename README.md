@@ -157,7 +157,8 @@ them, which keeps the output compatible and structurally valid.
 * `js/app.js` renders a card per effect and mounts each demo inside its **own Shadow DOM**, so
   900 independent stylesheets coexist without a single class-name collision.
 * Demos follow a real lifecycle — **unmounted → active → paused → destroyed**. They mount as they
-  scroll in (60 cards at a time), JS work shares one `requestAnimationFrame` pump, CSS animations
+  scroll in (60 cards at a time, 24 on a phone), JS work shares one `requestAnimationFrame` pump, CSS
+  animations
   pause from inside the shadow root (`:host(.is-offscreen)`), and far-away instances are torn down
   so exploring all 900 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
   mobile) is the backstop.
@@ -168,17 +169,38 @@ them, which keeps the output compatible and structurally valid.
   `node tools/build-seo.mjs --pages` to emit crawlable `effects/<id>.html` files.
 * `prefers-reduced-motion` is respected, and the header has a global pause button.
 
+## 📱 Mobile, touch and small screens
+
+The layout is desktop-first with one dedicated responsive block at the end of `css/site.css`
+(`Mobile · touch · small screens`). Breakpoints: **1100** folds the nav into a drawer, **900 / 860 /
+760** tighten the rails, **640** switches to the phone layout, **520** goes single-column, **380**
+covers fold-cover screens.
+
+| What a phone gets | Where |
+| --- | --- |
+| Header that cannot overflow: search, tune, hamburger only — favourites / pause / theme move into the drawer (same nodes, so state and listeners survive) | `js/nav.js` → `placePrefs()` |
+| `viewport-fit=cover` plus `env(safe-area-inset-*)` on the header, dialogs, sheets, toast and footer — nothing hides under a notch or a home bar | `--safe-t/r/b/l` tokens |
+| Dialogs and the tuner open as **bottom sheets** (`svh`-clamped, safe-area padded, 44px controls, sticky action row); search goes full-screen so a soft keyboard can't bury it | `@media (max-width: 640px)` |
+| The in-card **⋯** menu unfolds in flow instead of being clipped by the card, and carries the actions the small row drops (replay, favourite, share, standalone HTML, AE builder) | `.card-menu-pop` |
+| No stuck hover: on `(hover: none)` lift/glow transforms are neutralised; tap highlight and the 300ms double-tap delay are removed; grid tracks use `minmax(min(…, 100%))` so a 320px screen cannot overflow | end of `css/site.css` |
+| Cheaper paint: per-card `backdrop-filter`, the noise/grid overlays, the cursor glow and two of four blurred orbs drop out on coarse pointers; the first gallery page is 24 cards, and the 100k-point template thumbnails are not auto-run (tap to launch instead) | `@media (hover: none), (pointer: coarse)` |
+| Anchors land *below* the sticky header + filter rail (`scroll-padding-top`), `prefers-reduced-transparency` swaps translucent chrome for solid panels, `theme-color` follows the light/dark switch | `--anchor-offset`, `#themeColorMeta` |
+
 ## ✅ Verify it
 
 ```bash
-node tools/check.mjs     # 100 per category, unique ids, honest knobs, 900 stylesheets compiled,
-                         # all AE profiles / rig builders, plus the template catalogue vs disk
-node tools/stats.mjs     # the table above, and the template shelf
-node tools/build-seo.mjs # catalog.html + sitemap.xml (add --pages for effects/*.html)
+node tools/check.mjs        # 100 per category, unique ids, honest knobs, 900 stylesheets compiled,
+                            # all AE profiles / rig builders, plus the template catalogue vs disk
+node tools/responsive.mjs   # mobile/touch invariants: viewport + safe areas, viewport-proof grid
+                            # tracks, 44px targets, sheet geometry, hover-free behaviour
+node tools/stats.mjs        # the table above, and the template shelf
+node tools/build-seo.mjs    # catalog.html + sitemap.xml (add --pages for effects/*.html)
 
 # deeper QA (needs two dev-only packages, the site itself has none):
 npm i --no-save --prefix /tmp/qa jsdom css-tree
 QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 900 demos, fires 330 interactions
+QA_DIR=/tmp/qa node tools/touch.mjs   # boots the whole page at phone + desktop width and drives
+                                      # the drawer, relocated toggles, dialog stacking, scroll locks
 ```
 
 `check.mjs` refuses duplicate ids/titles, `@keyframes` that no longer exist, knobs a demo never

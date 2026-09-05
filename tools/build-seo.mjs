@@ -66,33 +66,47 @@ ITEMS.forEach((it) => { (byCat[it.cat] = byCat[it.cat] || []).push(it); });
 
 /* ---------------- catalog.html ---------------- */
 const catalogCss = `
-:root{--bg:#05050a;--text:#f4f4f8;--muted:#8b8b9f;--accent:#8b7dff;--border:rgba(255,255,255,.08);--panel:rgba(255,255,255,.035)}
+:root{--bg:#05050a;--text:#f4f4f8;--muted:#8b8b9f;--accent:#8b7dff;--border:rgba(255,255,255,.08);--panel:rgba(255,255,255,.035);--safe-b:env(safe-area-inset-bottom,0px);--safe-t:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif}
-a{color:var(--accent)}
-header{padding:48px 20px 24px;max-width:1100px;margin:0 auto}
-header p{color:var(--muted);max-width:62ch}
-h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.04em}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-padding-top:12px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden}
+a{color:var(--accent);-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+header{padding:48px 20px 24px;max-width:1100px;margin:0 auto;padding-top:calc(48px + var(--safe-t))}
+header p{color:var(--muted);max-width:62ch;overflow-wrap:anywhere}
+h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,2.8rem);letter-spacing:-.04em;text-wrap:balance}
 .kicker{font:600 .72rem/1 ui-monospace,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
 nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0}
-nav.toc a{display:inline-flex;gap:6px;align-items:center;padding:6px 12px;border:1px solid var(--border);border-radius:999px;text-decoration:none;color:var(--text);font-size:.85rem}
+nav.toc a{display:inline-flex;gap:6px;align-items:center;min-height:40px;padding:6px 13px;border:1px solid var(--border);border-radius:999px;text-decoration:none;color:var(--text);font-size:.85rem}
 nav.toc a:hover{border-color:var(--accent)}
 nav.toc span{font:500 .7rem ui-monospace,monospace;color:var(--muted)}
-section{max-width:1100px;margin:0 auto;padding:12px 20px 28px}
+section{max-width:1100px;margin:0 auto;padding:12px 20px 28px;scroll-margin-top:12px}
 section h2{margin:0 0 12px;font-size:1.35rem;letter-spacing:-.03em}
-ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px}
-li a{display:block;padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--panel);text-decoration:none;color:inherit}
+ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(240px,100%),1fr));gap:8px}
+li a{display:block;padding:12px 12px;border:1px solid var(--border);border-radius:12px;background:var(--panel);text-decoration:none;color:inherit;min-height:44px}
 li a:hover{border-color:rgba(139,125,255,.5)}
 li b{display:block;font-size:.92rem;letter-spacing:-.02em}
-li small{display:block;color:var(--muted);font:500 .68rem ui-monospace,monospace;margin-top:2px}
-footer{max-width:1100px;margin:0 auto;padding:8px 20px 48px;color:var(--muted);font-size:.85rem}
+li small{display:block;color:var(--muted);font:500 .68rem ui-monospace,monospace;margin-top:2px;overflow-wrap:anywhere}
+footer{max-width:1100px;margin:0 auto;padding:8px 20px calc(48px + var(--safe-b));color:var(--muted);font-size:.85rem}
+@media (max-width:640px){
+header{padding:30px 16px 18px;padding-top:calc(30px + var(--safe-t))}
+section{padding:10px 16px 22px}
+footer{padding:8px 16px calc(40px + var(--safe-b));font-size:.8rem}
+nav.toc a{font-size:.8rem;padding:8px 12px}
+li a{padding:11px 12px}
+}
+@media (max-width:380px){
+h1{font-size:1.55rem}
+ol{grid-template-columns:1fr}
+nav.toc{gap:6px}
+}
 `;
 
 let catalog = `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Motion Lab catalog — 900 web animations</title>
 <meta name="description" content="A crawlable index of all 900 Motion Lab animations across nine categories. Open any effect in the live lab, or read this page with JavaScript disabled.">
 <link rel="canonical" href="${SITE}/catalog.html">
@@ -179,7 +193,7 @@ if (WRITE_PAGES) {
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(it.title)} — ${engineOf(it)} ${esc(LABEL[it.cat] || it.cat)} | Motion Lab</title>
 <meta name="description" content="${esc(descOf(it))}">
 <link rel="canonical" href="${SITE}/effects/${esc(it.id)}.html">
@@ -188,10 +202,13 @@ if (WRITE_PAGES) {
 <meta property="og:type" content="article">
 <script type="application/ld+json">${jsonLd}</script>
 <style>
-  html,body{margin:0;background:#05050a;color:#f4f4f8;font:16px/1.5 system-ui,sans-serif}
-  main{max-width:720px;margin:0 auto;padding:32px 18px 64px}
+  html,body{margin:0;background:#05050a;color:#f4f4f8;font:16px/1.5 system-ui,sans-serif;-webkit-text-size-adjust:100%}
+  body{overflow-x:hidden}
+  main{max-width:720px;margin:0 auto;padding:32px 18px calc(64px + env(safe-area-inset-bottom,0px))}
   a{color:#8b7dff}
-  .preview{display:grid;place-items:center;min-height:240px;margin:18px 0 22px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:#0b0b14;overflow:hidden}
+  .preview{display:grid;place-items:center;min-height:240px;margin:18px 0 22px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:#0b0b14;overflow:hidden;padding:10px}
+  h1,p{overflow-wrap:anywhere}
+  @media (max-width:640px){main{padding:20px 14px calc(48px + env(safe-area-inset-bottom,0px))}.preview{min-height:200px;border-radius:14px}h1{font-size:1.5rem}}
   .meta{color:#8b8b9f;font:500 .78rem ui-monospace,monospace}
   h1{margin:8px 0 6px;letter-spacing:-.03em}
 </style>

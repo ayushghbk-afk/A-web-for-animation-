@@ -335,7 +335,10 @@
   var kindBox = $('#kinds');
   var resultCount = $('#resultCount');
   var emptyMsg = $('#empty');
-  var PAGE = 60;
+  /* 60 live cards at a time on a desktop; a phone gets a shorter first page
+     (the rail is one column wide, so 60 is four screens of work up front) */
+  var NARROW = window.matchMedia && window.matchMedia('(max-width: 700px)').matches;
+  var PAGE = NARROW ? 24 : 60;
   var list = [];
   var shown = 0;
 
@@ -490,7 +493,10 @@
         extraTags +
       '</div>' +
       '<div class="card-actions">' +
-        '<button class="mini tune"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>Customise</button>' +
+        '<button class="mini tune"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>' +
+          /* two labelled buttons share one row on a phone: a shorter word
+             there beats a clipped or wrapped one */
+          (NARROW ? 'Tune' : 'Customise') + '</button>' +
         '<button class="mini code">' +
           '<svg viewBox="0 0 24 24"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>Code</button>' +
         '<button class="mini replay flex-none" title="Replay">' +
@@ -565,6 +571,32 @@
   }
 
   document.addEventListener('click', function () { closeMenus(); });
+
+  /* ---------------- page scroll lock ----------------
+     Every overlay (drawer, palette, code dialog, tuner, AE dialog, template
+     sheets) hides the page behind it. The lock is derived from "is anything
+     open", never toggled by hand, so closing one dialog on top of another
+     can never leave the page frozen — a phone with a stuck page is a bug you
+     cannot dismiss. */
+  var OVERLAYS = ['#cmdk', '#modal', '#tuner', '#aeExport', '#tplPlay', '#tplCode', '#mobileNav'];
+  function overlayOpen() {
+    return OVERLAYS.some(function (sel) {
+      var el = $(sel);
+      if (!el) return false;
+      /* the drawer slides out first and unmounts ~380ms later, so its real
+         state is the `open` class — reading `hidden` there could keep the
+         page locked by a drawer that is already gone */
+      if (el.id === 'mobileNav') return el.classList.contains('open');
+      return !el.hidden;
+    });
+  }
+  function syncPageLock() {
+    var on = overlayOpen();
+    document.body.classList.toggle('no-scroll', on);
+    document.body.style.overflow = on ? 'hidden' : '';
+    return on;
+  }
+  window.MLSyncPageLock = syncPageLock;
 
   /* ---------------- rendering ---------------- */
   function matches(item) {
@@ -789,7 +821,7 @@
     paintSimilar(item);
 
     modal.hidden = false;
-    document.body.style.overflow = 'hidden';
+    syncPageLock();
     if (!opts || !opts.fromPop) setRoute(item.id);
   }
 
@@ -798,7 +830,7 @@
     if (h && h.__inst) h.__inst.destroy();
     modalPreview.innerHTML = '';
     modal.hidden = true;
-    document.body.style.overflow = '';
+    syncPageLock();
     if (!opts || !opts.keepHash) clearRoute();
   }
   $$('[data-close]').forEach(function (b) { b.addEventListener('click', function () { closeModal(); }); });
@@ -863,6 +895,7 @@
     } });
     $('#tunerScope').textContent = $('#tunerAllMode').checked ? 'every effect' : 'this effect only';
     tuner.hidden = false;
+    syncPageLock();
     requestAnimationFrame(function () { tuner.classList.add('open'); });
     $('#tunerFav').textContent = favs[item.id] ? '★ Favourited' : '☆ Favourite';
     $('#tunerFav').onclick = function () {
@@ -877,7 +910,7 @@
   }
   function closeTuner() {
     tuner.classList.remove('open');
-    setTimeout(function () { tuner.hidden = true; }, 320);
+    setTimeout(function () { tuner.hidden = true; syncPageLock(); }, 320);
   }
   $('#tunerClose').addEventListener('click', closeTuner);
   $('#tunerBackdrop').addEventListener('click', closeTuner);
@@ -933,12 +966,20 @@
   });
 
   var themeBtn = $('#themeToggle');
+  var themeColor = $('#themeColorMeta');
+  function syncThemeColor() {
+    if (!themeColor) return;
+    themeColor.setAttribute('content',
+      document.documentElement.dataset.theme === 'light' ? '#f5f5f8' : '#05050a');
+  }
   var saved = localStorage.getItem('ml-theme');
   if (saved) document.documentElement.dataset.theme = saved;
+  syncThemeColor();
   themeBtn.addEventListener('click', function () {
     var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;
     localStorage.setItem('ml-theme', next);
+    syncThemeColor();
   });
 
   $('#randomBtn').addEventListener('click', function () {
@@ -986,7 +1027,8 @@
   /* ---------------- go ---------------- */
   var heroCount = $('#counterHero');
   if (heroCount) heroCount.textContent = ITEMS.length;
-  search.placeholder = 'Search ' + ITEMS.length + ' effects & templates…  (press /)';
+  var FINE_POINTER = window.matchMedia && window.matchMedia('(pointer:fine)').matches;
+  search.placeholder = 'Search ' + ITEMS.length + ' effects & templates…' + (FINE_POINTER ? '  (press /)' : '');
   $$('.hero-stats b')[0].dataset.count = ITEMS.length;
   $$('.hero-stats b')[1].dataset.count = CATS.length - 1;
   var tunedCount = $('#tunedCount');
