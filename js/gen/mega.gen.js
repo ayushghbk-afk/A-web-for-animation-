@@ -1,7 +1,7 @@
 /* ============================================================
-   Motion Lab — mega collection (the second 100 per category)
+   Motion Lab — mega collection (the second 200-per-category wave)
    ----------------------------------------------------------
-   The original generators fill 100 effects per family-set. This
+   The original generators fill the first family-set. This
    file adds a second wave of distinct mechanics so every category
    reaches 200. The standouts are the BIG ones — full-stage 3D
    scenes, wide UI compositions and cinematic backgrounds, all
@@ -194,7 +194,7 @@
       ['mago', 'Orbit Capture', 8, 'mago'],
       ['magsw', 'Swarm Magnet', 12, 'magsw']
     ].forEach(function (v, vi) {
-      var n = v[1];
+      var n = v[2];
       pool.push({
         family: 'mbmag', id: 'mbmag-' + v[0], title: v[1].replace(' Magnet', '') + ' Magnet Cluster',
         tags: ['js', 'magnetic', 'pointer'],
@@ -224,18 +224,18 @@
       pool.push({
         family: 'mbflap', id: 'mbflap-' + wi, title: w[1] + ' Flap Board',
         tags: ['css', 'flip', 'board', 'big'],
-        html: '<div class="mb"><div class="fl">' + (function () { var s = ''; for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) s += '<b style="--i:' + (r * cols + c) + '"></b>'; return s; })() + '</div></div>',
+        html: '<div class="mb"><div class="fl">' + (function () { var s = '', row0 = w[0], row1 = (w[1].replace(/ /g, '') + w[0]).slice(0, cols); for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) s += '<b style="--i:' + (r * cols + c) + '">' + (r ? row1[c] : row0[c]) + '</b>'; return s; })() + '</div></div>',
         css: join([
           '.mb{display:grid;place-items:center}',
           '.fl{display:grid;grid-template-columns:repeat(' + cols + ',var(--cw,58px));grid-auto-rows:var(--ch,42px);gap:6px;perspective:700px}',
-          '.fl b{position:relative;background:#171725;border-radius:8px;box-shadow:inset 0 -14px 18px rgba(0,0,0,.5);display:grid;place-items:center;overflow:hidden;animation:mb-flap var(--dur,2.6s) ease-in-out infinite;animation-delay:calc(var(--i) * -.13s)}',
+          '.fl b{position:relative;background:#171725;border-radius:8px;box-shadow:inset 0 -14px 18px rgba(0,0,0,.5);display:grid;place-items:center;overflow:hidden;color:var(--c4,' + C4 + ');font:800 calc(var(--ch,42px) * .48) \"JetBrains Mono\",monospace;animation:mb-flap var(--dur,2.6s) ease-in-out infinite;animation-delay:calc(var(--i) * -.13s)}',
           '.fl b::before{content:"" ;position:absolute;left:0;right:0;top:0;bottom:50%;background:linear-gradient(180deg,#23233a,#151522);border-radius:8px 8px 0 0;transform-origin:bottom;animation:mb-flapc var(--dur,2.6s) ease-in-out infinite;animation-delay:calc(var(--i) * -.13s)}',
           '.fl b::after{content:"";position:absolute;left:8%;right:8%;top:50%;height:2px;background:rgba(0,0,0,.55)}',
           kf('mb-flap', '0%,100%{transform:rotateX(0)}45%,55%{transform:rotateX(-6deg)}'),
           kf('mb-flapc', '0%,44%{transform:rotateX(0)}50%,94%{transform:rotateX(-180deg)}100%{transform:rotateX(-360deg)}')
         ]),
         cfg: [range('Cell', '--cw', 34, 90, 2, 58, 'px'), range('Height', '--ch', 26, 70, 2, 42, 'px'),
-          range('Cycle', '--dur', 1, 6, .1, 2.6, 's')]
+          range('Cycle', '--dur', 1, 6, .1, 2.6, 's'), col('Ink', '--c4', C4)]
       });
     });
 
@@ -311,20 +311,26 @@
     });
 
     /* ---- 8. echo ripple buttons (8) ---- */
-    var echoCols = [[C1, C2], [C2, C3], [C3, C4], [C4, C5], [C5, C1], [C1, C3], [C2, C4], [C3, C5]];
-    echoCols.forEach(function (c, vi) {
+    var echoSpecs = [
+      ['Soft Echo', 1.4, 'solid', 3], ['Halo Echo', 1.85, 'solid', 4],
+      ['Dash Echo', 1.55, 'dashed', 3], ['Glow Echo', 1.7, 'solid', 5],
+      ['Offset Echo', 1.35, 'solid', 3], ['Hard Pulse Echo', 2.1, 'solid', 3],
+      ['Inset Echo', 1.25, 'double', 3], ['Triple Halo Echo', 1.95, 'dotted', 4]
+    ];
+    echoSpecs.forEach(function (spec, vi) {
+      var c = [[C1, C2], [C2, C3], [C3, C4], [C4, C5], [C5, C1], [C1, C3], [C2, C4], [C3, C5]][vi];
       pool.push({
-        family: 'mbecho', id: 'mbecho-' + vi, title: 'Echo Ripple ' + (vi + 1),
+        family: 'mbecho', id: 'mbecho-' + vi, title: spec[0],
         tags: ['css', 'ripple', 'hover'],
-        html: '<div class="mb"><button class="b"><span>Echo</span></button><i></i><i></i><i></i></div>',
+        html: '<div class="mb"><button class="b"><span>' + spec[0].split(' ')[0] + '</span></button>' + cells(spec[3], 'i') + '</div>',
         css: join([
           btnBase,
           '.mb .b{border-radius:16px}',
-          '.mb i{position:absolute;inset:0;border-radius:16px;border:2px solid ' + c[0] + ';opacity:0;pointer-events:none;transition:none}',
-          '.mb:hover i{animation:mb-echo var(--dur,1.2s) ease-out infinite}',
-          '.mb i:nth-child(3){border-color:' + c[1] + ';animation-delay:calc(var(--dur,1.2s) / -2)}',
-          '.mb:hover i:nth-child(3){animation-delay:calc(var(--dur,1.2s) / -2)}',
-          kf('mb-echo', '0%{transform:scale(1);opacity:.7}100%{transform:scale(1.45);opacity:0}')
+          '.mb i{position:absolute;inset:' + (-4 - vi) + 'px;border-radius:' + (12 + vi) + 'px;border:2px ' + spec[2] + ' ' + c[0] + ';opacity:0;pointer-events:none;box-shadow:' + (vi === 3 ? '0 0 14px ' + c[0] : 'none') + '}',
+          '.mb:hover i{animation:mb-echo' + vi + ' var(--dur,1.2s) ease-out infinite}',
+          '.mb i:nth-child(3){border-color:' + c[1] + ';animation-delay:calc(var(--dur,1.2s) / -3)}',
+          '.mb i:nth-child(4){animation-delay:calc(var(--dur,1.2s) / -2)}',
+          kf('mb-echo' + vi, '0%{transform:scale(1);opacity:.7}100%{transform:scale(' + spec[1] + ');opacity:0}')
         ]),
         cfg: [range('Cycle', '--dur', .5, 3, .1, 1.2, 's'), col('Colour', '--c1', C1), col('Colour B', '--c2', C2)]
       });
@@ -370,15 +376,22 @@
           '.mb em i{position:absolute;left:50%;top:0;font-style:normal;color:var(--c4,' + C4 + ');animation:mb-fly var(--dur,.9s) ease-out forwards;pointer-events:none}',
           kf('mb-fly', '0%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translate(var(--fx,0px),-38px)}')
         ]),
-        js: 'var b=root.querySelector(".b"),em=b.querySelector("em"),n=0;\nb.addEventListener("click",function(){n++;em.textContent=n;\n  var i=document.createElement("i");i.textContent="+1";em.appendChild(i);\n  if(' + vi + '===1)i.style.transform="translateY(-4px)";\n  if(' + vi + '===2){i.style.setProperty("--fx",((Math.random()*80-40)).toFixed(0)+"px");}\n  setTimeout(function(){i.remove()},950);});',
+        js: [
+          'var b=root.querySelector(".b"),em=b.querySelector("em"),n=0;\nb.addEventListener("click",function(){n++;em.textContent=n;var i=document.createElement("i");i.textContent="+1";em.appendChild(i);setTimeout(function(){i.remove()},950);});',
+          'var b=root.querySelector(".b"),em=b.querySelector("em"),n=0;\nb.addEventListener("click",function(){n++;em.textContent=n;var i=document.createElement("i");i.textContent="+"+n;i.style.transform="translateY(-6px) scale(1.15)";em.appendChild(i);setTimeout(function(){i.remove()},950);});',
+          'var b=root.querySelector(".b"),em=b.querySelector("em"),n=0;\nb.addEventListener("click",function(){n++;em.textContent=n;for(var k=0;k<5;k++){(function(k){var i=document.createElement("i");i.textContent="+1";i.style.setProperty("--fx",((k-2)*18)+"px");em.appendChild(i);setTimeout(function(){i.remove()},950);})(k);}});',
+          'var b=root.querySelector(".b"),em=b.querySelector("em"),n=0;\nb.addEventListener("click",function(){n++;em.textContent=n;var i=document.createElement("i");i.textContent="+1";i.style.animation="mb-fly var(--dur,.9s) ease-out forwards";i.style.transform="rotate("+((n%8)*45)+"deg) translateY(-28px)";em.appendChild(i);setTimeout(function(){i.remove()},950);});',
+          'var b=root.querySelector(".b"),em=b.querySelector("em"),n=0;\nb.addEventListener("click",function(){n++;em.textContent=n;var i=document.createElement("i");i.textContent="+1";i.style.setProperty("--fx",(Math.random()*70-35).toFixed(0)+"px");i.style.filter="blur(0.4px)";em.appendChild(i);setTimeout(function(){i.remove()},950);});',
+          'var b=root.querySelector(".b"),em=b.querySelector("em"),n=0;\nb.addEventListener("click",function(){n++;em.textContent=n;var i=document.createElement("i");i.textContent="+"+n;i.style.setProperty("--fx",(Math.sin(n)*36).toFixed(0)+"px");em.appendChild(i);setTimeout(function(){i.remove()},950);});'
+        ][vi],
         cfg: [range('Font size', '--fs', 14, 32, 1, 22, 'px'), range('Cycle', '--dur', .4, 2, .1, .9, 's'), col('Accent', '--c4', C4), col('Colour', '--c1', C1)]
       });
     });
 
     /* ---- 11. crossing beams (6) ---- */
     [
-      ['b1', 'Crossing Beams A'], ['b2', 'Crossing Beams B'], ['b3', 'Crossing Beams C'],
-      ['b4', 'Crossing Beams D'], ['b5', 'Crossing Beams E'], ['b6', 'Crossing Beams F']
+      ['b1', 'X-Beam Cross'], ['b2', 'X-Beam Slash'], ['b3', 'X-Beam Lattice'],
+      ['b4', 'X-Beam Shear'], ['b5', 'X-Beam Scissor'], ['b6', 'X-Beam Grid']
     ].forEach(function (v, vi) {
       pool.push({
         family: 'mbbeam', id: 'mbbeam-' + v[0], title: v[1],
@@ -401,8 +414,8 @@
 
     /* ---- 12. stamp slams (6) ---- */
     [
-      ['stampA', 'Stamp Slam A'], ['stampB', 'Stamp Slam B'], ['stampC', 'Stamp Slam C'],
-      ['stampD', 'Stamp Slam D'], ['stampE', 'Stamp Slam E'], ['stampF', 'Stamp Slam F']
+      ['stampA', 'Approved Stamp'], ['stampB', 'Shipped Stamp'], ['stampC', 'Paid Stamp'],
+      ['stampD', 'Done Stamp'], ['stampE', 'Yes Stamp'], ['stampF', 'Go Stamp']
     ].forEach(function (v, vi) {
       pool.push({
         family: 'mbstamp', id: 'mbstamp-' + v[0], title: v[1],
@@ -420,8 +433,8 @@
 
     /* ---- 13. orbit gate (6) ---- */
     [
-      ['og1', 'Orbit Gate A'], ['og2', 'Orbit Gate B'], ['og3', 'Orbit Gate C'],
-      ['og4', 'Orbit Gate D'], ['og5', 'Orbit Gate E'], ['og6', 'Orbit Gate F']
+      ['og1', 'Orbit Gate Tight'], ['og2', 'Orbit Gate Wide'], ['og3', 'Orbit Gate Fast'],
+      ['og4', 'Orbit Gate Slow'], ['og5', 'Orbit Gate Amber'], ['og6', 'Orbit Gate Cyan']
     ].forEach(function (v, vi) {
       pool.push({
         family: 'mbgate', id: 'mbgate-' + v[0], title: v[1],
@@ -439,7 +452,7 @@
 
     /* ---- 14. JS liquid fill (4) ---- */
     [
-      ['liq1', 'Hold-to-Fill A'], ['liq2', 'Hold-to-Fill B'], ['liq3', 'Hold-to-Fill C'], ['liq4', 'Hold-to-Fill D']
+      ['liq1', 'Hold-to-Fill Horizontal'], ['liq2', 'Hold-to-Fill Vertical'], ['liq3', 'Hold-to-Fill Left'], ['liq4', 'Hold-to-Fill Down']
     ].forEach(function (v, vi) {
       pool.push({
         family: 'mbfill', id: 'mbfill-' + v[0], title: v[1],
@@ -463,8 +476,8 @@
 
     /* ---- 15. gradient border wave (6) ---- */
     [
-      ['gw1', 'Gradient Border Wave A'], ['gw2', 'Gradient Border Wave B'], ['gw3', 'Gradient Border Wave C'],
-      ['gw4', 'Gradient Border Wave D'], ['gw5', 'Gradient Border Wave E'], ['gw6', 'Gradient Border Wave F']
+      ['gw1', 'Conic Border Wave'], ['gw2', 'Cyan Border Wave'], ['gw3', 'Rose Border Wave'],
+      ['gw4', 'Amber Border Wave'], ['gw5', 'Mint Border Wave'], ['gw6', 'Violet Border Wave']
     ].forEach(function (v, vi) {
       pool.push({
         family: 'mbwave2', id: 'mbwave2-' + v[0], title: v[1],
@@ -472,8 +485,8 @@
         html: '<div class="mb"><button class="b"><span>Wave</span></button></div>',
         css: join([
           btnBase,
-          '.mb .b{border-radius:16px;background:#131320 padding-box,conic-gradient(from ' + vi * 30 + 'deg,' + [C1, C2, C3, C4, C5, C1][vi] + ',' + [C2, C3, C4, C5, C1, C2][vi] + ',' + [C3, C4, C5, C1, C2, C3][vi] + ',' + [C1, C2, C3, C4, C5, C1][vi] + ') border-box;border:3px solid transparent}',
-          kf('mb-gw', '0%{filter:hue-rotate(0deg) saturate(1)}50%{filter:hue-rotate(' + (180 + vi * 20) + 'deg) saturate(1.3)}100%{filter:hue-rotate(360deg) saturate(1)}')
+          '.mb .b{border-radius:16px;background:#131320 padding-box,conic-gradient(from ' + vi * 30 + 'deg,' + [C1, C2, C3, C4, C5, C1][vi] + ',' + [C2, C3, C4, C5, C1, C2][vi] + ',' + [C3, C4, C5, C1, C2, C3][vi] + ',' + [C1, C2, C3, C4, C5, C1][vi] + ') border-box;border:3px solid transparent;animation:mb-gw' + vi + ' var(--dur,4s) linear infinite}',
+          kf('mb-gw' + vi, '0%{filter:hue-rotate(0deg) saturate(1)}50%{filter:hue-rotate(' + (180 + vi * 20) + 'deg) saturate(1.3)}100%{filter:hue-rotate(360deg) saturate(1)}')
         ]),
         cfg: [range('Cycle', '--dur', 1, 9, .1, 4, 's'), range('Font size', '--fs', 14, 30, 1, 22, 'px')]
       });
@@ -499,7 +512,7 @@
     ];
     wallSets.forEach(function (rows, wi) {
       pool.push({
-        family: 'ktwall', id: 'ktwall-' + wi, title: 'Kinetic Word Wall ' + (wi + 1),
+        family: 'ktwall', id: 'ktwall-' + wi, title: ['Motion Kinetic Wall', 'Shine Kinetic Wall', 'Space Kinetic Wall', 'Type Kinetic Wall', 'Press Kinetic Wall', 'Path Kinetic Wall', 'Field Kinetic Wall', 'Cube Kinetic Wall'][wi],
         tags: ['css', 'marquee', 'wall', 'big'],
         html: '<div class="mb tw">' + rows.map(function (r, ri) { return '<div class="row' + (ri % 2 ? ' rev' : '') + '"><span>' + r + r + '</span></div>'; }).join('') + '</div>',
         css: join([
@@ -609,7 +622,7 @@
     /* ---- 5. terminal typing (6, JS) ---- */
     ['LOADING MOTION LAB…', 'RENDERING SCENE…', 'PARSING KEYFRAMES…', 'BUILDING GALLERY…', 'TUNING EFFECTS…', 'EXPORTING SNIPPET…'].forEach(function (line, wi) {
       pool.push({
-        family: 'kttype', id: 'kttype-' + wi, title: 'Terminal Type ' + (wi + 1),
+        family: 'kttype', id: 'kttype-' + wi, title: ['Loading Terminal', 'Rendering Terminal', 'Parsing Terminal', 'Gallery Terminal', 'Tuning Terminal', 'Export Terminal'][wi],
         tags: ['js', 'terminal', 'typing'],
         html: '<div class="mb tt"><i></i><b></b></div>',
         css: join([
@@ -885,7 +898,7 @@
       ).replace('var(--h,40%)', 'var(--h,' + hs + '%)').replace('var(--hs,1)', 'var(--hs,' + (hs / 100).toFixed(2) + ')');
       pool.push({
         family: 'ckdash', id: 'ckdash-' + v[0], title: v[1],
-        tags: ['css', 'dashboard', 'ui', 'stat'],
+        tags: ['css', 'dashboard', 'ui', 'stat', 'big'],
         html: '<div class="ck"><h4>' + ['Revenue', 'Sessions', 'Uptime', 'Latency', 'Storage', 'Jobs', 'Traffic', 'Signal', 'Velocity'][vi] + ' <em>live</em></h4><b class="num">' + ['$24.8k', '12,940', '99.98%', '42 ms', '72 GB', '1,204', '8.4k', 'A+', '$96.2k'][vi] + '</b><div class="chart">' + cells(7) + '</div><p class="dlt">' + ['+12.4%', '+3.1%', '+0.2%', '-8.9%', '+6.7%', '+21.0%', '-1.4%', '+9.8%', '+2.1%'][vi] + ' vs last week</p></div>',
         css: css,
         cfg: [range('Width', '--w', 180, 320, 2, 250, 'px'), range('Cycle', '--dur', .6, 4, .1, 1.8, 's'),
@@ -906,7 +919,7 @@
     ].forEach(function (v, vi) {
       pool.push({
         family: 'ckplayer', id: 'ckplayer-' + v[0], title: v[1],
-        tags: ['css', 'player', 'ui', 'music'],
+        tags: ['css', 'player', 'ui', 'music', 'big'],
         html: '<div class="ck"><h4>Now playing <em>' + (vi % 2 ? '0:42' : '1:57') + '</em></h4>' +
           (v[0] === 'vinyl'
             ? '<div class="disc"><b></b></div>'
@@ -1370,9 +1383,9 @@
 
     /* ---- 3. aurora veils CSS (8) ---- */
     [
-      ['Aurora Veils A', '180deg'], ['Aurora Veils B', '200deg'], ['Aurora Veils C', '160deg'],
-      ['Aurora Veils D', '220deg'], ['Aurora Veils E', '190deg'], ['Aurora Veils F', '240deg'],
-      ['Aurora Veils G', '170deg'], ['Aurora Veils H', '210deg']
+      ['Boreal Curtain', '180deg'], ['Polar Veil', '200deg'], ['Ion Stream', '160deg'],
+      ['Night Lights', '220deg'], ['Green Ribbon Sky', '190deg'], ['Magenta Sky Veil', '240deg'],
+      ['Cyan Drift Veil', '170deg'], ['Violet Drape', '210deg']
     ].forEach(function (v, vi) {
       var hue = vi * 45;
       pool.push({
@@ -1470,7 +1483,7 @@
 
     /* ---- 7. warp tunnel canvas (8) ---- */
     [
-      ['Warp Tunnel A', 90], ['Warp Tunnel B', 140], ['Hyper Lane', 120], ['Speed Ring', 100],
+      ['Warp Tunnel Tight', 90], ['Warp Tunnel Wide', 140], ['Hyper Lane', 120], ['Speed Ring', 100],
       ['Dive Beam', 80], ['Slipstream', 150], ['Event Horizon', 110], ['Boost Gate', 130]
     ].forEach(function (v, vi) {
       pool.push({
@@ -1495,8 +1508,8 @@
 
     /* ---- 8. 3D wave floor CSS (8) ---- */
     [
-      ['Wave Floor A', 0], ['Wave Floor B', 60], ['Wave Floor C', 120], ['Wave Floor D', 180],
-      ['Wave Floor E', 240], ['Wave Floor F', 300], ['Wave Floor G', 30], ['Wave Floor H', 150]
+      ['Synth Floor Grid', 0], ['Deep Grid Floor', 60], ['Cyan Floor Sweep', 120], ['Magenta Floor Sweep', 180],
+      ['Amber Floor Sweep', 240], ['Mint Floor Sweep', 300], ['Indigo Floor Sweep', 30], ['Rose Floor Sweep', 150]
     ].forEach(function (v, vi) {
       pool.push({
         family: 'bgwave3d', id: 'bgwave3d-' + vi, title: v[0],
@@ -1572,7 +1585,7 @@
           'for(var i=0;i<n;i++){var x=i%ow,y=(i/ow)|0;' +
           'var v=Math.sin(x*.35+t+off*.01)+Math.sin(y*.4-t*.8)+Math.sin((x+y)*.25+t*.5)+Math.sin(Math.sqrt((x-ow/2)*(x-ow/2)+(y-oh/2)*(y-oh/2))*.6-t*1.2);' +
           'var hue=(' + (180 + vi * 30) + '+v*40+t*20)%360,hue2=hue<0?hue+360:hue,lit=42+v*9;' +
-          'var rgb=hsl2rgb(hue2/360,0.85,Math.max(.08,Math.min(.8,lit/100)));' +
+          'var rgb=hsl2rgb(hue2,0.85,Math.max(.08,Math.min(.8,lit/100)));' +
           'img.data[i*4]=rgb[0];img.data[i*4+1]=rgb[1];img.data[i*4+2]=rgb[2];img.data[i*4+3]=255;}' +
           'og.putImageData(img,0,0);g.imageSmoothingEnabled=true;g.clearRect(0,0,w,h);g.drawImage(oc,0,0,w,h);\n' +
           'function hsl2rgb(hh,s,l){var c=(1-Math.abs(2*l-1))*s,x=c*(1-Math.abs((hh/60)%2-1)),m=l-c/2,tv;if(hh<60)tv=[c,x,0];else if(hh<120)tv=[x,c,0];else if(hh<180)tv=[0,c,x];else if(hh<240)tv=[0,x,c];else if(hh<300)tv=[x,0,c];else tv=[c,0,x];return[(tv[0]+m)*255|0,(tv[1]+m)*255|0,(tv[2]+m)*255|0];}\n});',
@@ -1582,7 +1595,7 @@
 
     /* ---- 12. sunset scenes CSS (6) ---- */
     [
-      ['Sunset A', 15], ['Sunset B', 335], ['Sunset C', 20], ['Sunset D', 315], ['Sunset E', 45], ['Sunset F', 355]
+      ['Amber Sunset', 15], ['Rose Sunset', 335], ['Coral Sunset', 20], ['Magenta Sunset', 315], ['Gold Sunset', 45], ['Crimson Sunset', 355]
     ].forEach(function (v, vi) {
       pool.push({
         family: 'bgsuns', id: 'bgsuns-' + vi, title: v[0],
@@ -1645,8 +1658,8 @@
 
     /* ---- 15. light beams CSS (6) ---- */
     [
-      ['Beam Storm A', 25], ['Beam Storm B', 200], ['Beam Storm C', 130],
-      ['Beam Storm D', 300], ['Beam Storm E', 330], ['Beam Storm F', 90]
+      ['Amber Beam Storm', 25], ['Cyan Beam Storm', 200], ['Green Beam Storm', 130],
+      ['Magenta Beam Storm', 300], ['Rose Beam Storm', 330], ['Blue Beam Storm', 90]
     ].forEach(function (v, vi) {
       pool.push({
         family: 'bgbeam', id: 'bgbeam-' + vi, title: v[0],
@@ -1670,7 +1683,7 @@
     var ctlBase = '.ct{position:relative;width:var(--w,240px);background:var(--panel,#15151f);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:16px;font-family:system-ui,sans-serif;color:#e8e8f2}';
 
     /* ---- 1. fader banks (8) ---- */
-    var faderNames = ['Mix Desk A', 'Mix Desk B', 'Echo Console', 'Reverb Bank', 'Compressor Rack', 'EQ Strip A', 'EQ Strip B', 'Master Fader'];
+    var faderNames = ['Mix Desk Left', 'Mix Desk Right', 'Echo Console', 'Reverb Bank', 'Compressor Rack', 'EQ Strip A', 'EQ Strip B', 'Master Fader'];
     faderNames.forEach(function (name, vi) {
       var n = 4 + (vi % 3) * 2;
       pool.push({
@@ -2106,7 +2119,7 @@
     var waveCols = [[C1, C2], [C2, C3], [C3, C4], [C4, C5], [C5, C1], [C1, C3], [C2, C4], [C3, C5]];
     waveCols.forEach(function (c, vi) {
       pool.push({
-        family: 'svwavel', id: 'svwavel-' + vi, title: 'Tide Lines ' + (vi + 1),
+        family: 'svwavel', id: 'svwavel-' + vi, title: ['Tide Lines Violet', 'Tide Lines Cyan', 'Tide Lines Rose', 'Tide Lines Amber', 'Tide Lines Mint', 'Tide Lines Magenta', 'Tide Lines Dual', 'Tide Lines Hot'][vi],
         tags: ['css', 'svg', 'wave'],
         html: '<div class="sv"><svg viewBox="0 0 200 90">' +
           [0, 1, 2, 3, 4].map(function (r) {
@@ -2234,7 +2247,7 @@
     });
 
     /* ---- 6. topography (6) ---- */
-    var topoNames = ['Contour A', 'Contour B', 'Island Topo', 'Valley Topo', 'Peak Topo', 'Plateau Topo'];
+    var topoNames = ['Contour Ridge', 'Contour Valley', 'Island Topo', 'Valley Topo', 'Peak Topo', 'Plateau Topo'];
     topoNames.forEach(function (name, vi) {
       var rings = 5;
       var cxs = [100, 95, 105, 92, 108][vi % 5];
@@ -2665,7 +2678,7 @@
     });
 
     /* ---- 7. prism fields (8) ---- */
-    var prismNames = ['Prism Field A', 'Prism Field B', 'Shard Cluster', 'Crystal Cave', 'Light Shards', 'Gem Field', 'Refraction', 'Facet Storm'];
+    var prismNames = ['Prism Field Cool', 'Prism Field Warm', 'Shard Cluster', 'Crystal Cave', 'Light Shards', 'Gem Field', 'Refraction', 'Facet Storm'];
     prismNames.forEach(function (name, vi) {
       var shards = vi < 4 ? 3 : 4;
       pool.push({
@@ -2755,7 +2768,7 @@
     });
 
     /* ---- 10. cube matrices (6) ---- */
-    var matNames = ['Cube Matrix A', 'Cube Matrix B', 'Wave Matrix', 'Pulse Matrix', 'Spin Matrix', 'Breath Matrix'];
+    var matNames = ['Cube Matrix Cool', 'Cube Matrix Warm', 'Wave Matrix', 'Pulse Matrix', 'Spin Matrix', 'Breath Matrix'];
     matNames.forEach(function (name, vi) {
       var cubes = '';
       for (var i = 0; i < 4; i++) for (var j = 0; j < 3; j++) cubes += '<i class="cub" style="--i:' + i + ';--j:' + j + '"></i>';
@@ -2788,7 +2801,7 @@
     });
 
     /* ---- 11. gyroscopes (6) ---- */
-    var gyroNames = ['Gyro A', 'Gyro B', 'Triple Gyro', 'Quad Gyro', 'Slow Gyro', 'Storm Gyro'];
+    var gyroNames = ['Gyro Slow', 'Gyro Fast', 'Triple Gyro', 'Quad Gyro', 'Slow Gyro', 'Storm Gyro'];
     gyroNames.forEach(function (name, vi) {
       var rings = 3 + (vi % 2);
       pool.push({
@@ -3113,7 +3126,7 @@
     });
 
     /* ---- 7. odometers (8) ---- */
-    var odoNames = ['Odometer A', 'Mile Counter', 'Score Tally', 'Revenue Odo', 'Count-Up Wall', 'Ticker Odo', 'Pace Counter', 'Level Odo'];
+    var odoNames = ['Odometer Classic', 'Mile Counter', 'Score Tally', 'Revenue Odo', 'Count-Up Wall', 'Ticker Odo', 'Pace Counter', 'Level Odo'];
     odoNames.forEach(function (name, vi) {
       pool.push({
         family: 'moodo', id: 'moodo-' + vi, title: name,
@@ -3138,7 +3151,7 @@
     });
 
     /* ---- 8. departure boards (8, JS) ---- */
-    var depNames = ['Dep Board A', 'Arr Board', 'Gate Board', 'Platform Board', 'Terminal Board', 'Night Board', 'Cargo Board', 'Orbit Board'];
+    var depNames = ['Departure Board', 'Arr Board', 'Gate Board', 'Platform Board', 'Terminal Board', 'Night Board', 'Cargo Board', 'Orbit Board'];
     depNames.forEach(function (name, vi) {
       var rows = [['LIS', '14:20', 'GATE B'], ['OSL', '15:05', 'GATE A'], ['JFK', '16:40', 'GATE C']];
       pool.push({
@@ -3174,7 +3187,7 @@
     });
 
     /* ---- 9. card decks (8, JS) ---- */
-    var deckNames = ['Deck A', 'Poker Deck', 'Oracle Deck', 'Star Deck', 'Runes Deck', 'Signal Deck', 'Gem Deck', 'Wave Deck'];
+    var deckNames = ['Classic Deck', 'Poker Deck', 'Oracle Deck', 'Star Deck', 'Runes Deck', 'Signal Deck', 'Gem Deck', 'Wave Deck'];
     deckNames.forEach(function (name, vi) {
       pool.push({
         family: 'modeck', id: 'modeck-' + vi, title: name,
@@ -3198,7 +3211,7 @@
     });
 
     /* ---- 10. zoom tunnels (6) ---- */
-    ['Zoom Tunnel A', 'Zoom Tunnel B', 'Ring Tunnel', 'Gate Tunnel', 'Depth Tunnel', 'Warp Tunnel'].forEach(function (name, vi) {
+    ['Zoom Tunnel Square', 'Zoom Tunnel Round', 'Ring Tunnel', 'Gate Tunnel', 'Depth Tunnel', 'Warp Tunnel'].forEach(function (name, vi) {
       pool.push({
         family: 'mozoom', id: 'mozoom-' + vi, title: name,
         tags: ['css', 'tunnel', 'zoom', 'big'],
@@ -3258,7 +3271,7 @@
     });
 
     /* ---- 13. flip grids (5) ---- */
-    ['Flip Grid A', 'Flip Grid B', 'Coin Grid', 'Door Grid', 'Panel Grid'].forEach(function (name, vi) {
+    ['Flip Grid X', 'Flip Grid Y', 'Coin Grid', 'Door Grid', 'Panel Grid'].forEach(function (name, vi) {
       pool.push({
         family: 'moflip', id: 'moflip-' + vi, title: name,
         tags: ['css', 'flip', 'grid', '3d'],
@@ -3288,7 +3301,7 @@
   /* ══════════════════════════════ LOADERS (+12 buffer) ══════════════════════════════ */
   (function () {
     var pool = [];
-    var ringNames = ['Mega Ring A', 'Mega Ring B', 'Mega Ring C', 'Mega Ring D', 'Mega Ring E', 'Mega Ring F', 'Mega Ring G', 'Mega Ring H', 'Mega Ring I', 'Mega Ring J', 'Mega Ring K', 'Mega Ring L'];
+    var ringNames = ['Triple Orbit Ring', 'Counter Spiral Ring', 'Stepped Halo Ring', 'Ease Bloom Ring', 'Inset Chase Ring', 'Reverse Halo Ring', 'Scale Pulse Ring', 'Backspin Ring', 'Conic Triple Ring', 'Staggered Orbit Ring', 'Cubic Ease Ring', 'Mirrored Halo Ring'];
     ringNames.forEach(function (name, vi) {
       pool.push({
         family: 'ldmgra', id: 'ldmgra-' + vi, title: name,

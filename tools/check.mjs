@@ -2,7 +2,7 @@
    Motion Lab — collection checker
    Usage: node tools/check.mjs
    Loads every data + generator file the way the browser does and asserts
-   the invariants the site relies on: 100 effects per category, unique ids,
+   the invariants the site relies on: 200 effects per category, unique ids,
    valid demo sources, honest controls. Zero dependencies.
    ============================================================ */
 import fs from 'node:fs';

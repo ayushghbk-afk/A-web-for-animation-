@@ -2,7 +2,7 @@
 
 A zero-dependency, static showcase of **1,800 live web animations**: exactly **200 in each of nine
 categories** — loaders, buttons, text effects, cards & hover, backgrounds, controls, SVG line art,
-3D scenes and interaction patterns. 204 are hand-written, 696 were generated as distinct mechanics
+3D scenes and interaction patterns. 204 are hand-written, 1,596 were generated as distinct mechanics
 (not colour swaps) through the same pipeline. Two **full-page starter templates** ship alongside
 them: a Three.js galaxy and a neon particle geometry engine — preview them inline, launch them,
 copy them out, fork them.
@@ -29,21 +29,21 @@ Built to be dropped straight onto **GitHub Pages** — no build step, no bundler
 | SVG & Lines | 200 | self-drawing path, progress ring, marching ants, radar blips, morphing blob, compass |
 | 3D | 200 | rotating cube, isometric city, DNA helix, torus rings, planet systems, casino card fans |
 | Interaction | 200 | parallax layers, marquee walls, cursor trails, drag boards, physics balls, flip grids |
-| **Total** | **1,800** | *236 distinct mechanic families* |
+| **Total** | **1,800** | *269 distinct mechanic families* |
 
 ```
   category           hand   gen  total  knobs
-  Loaders              27   173    200    992
-  Buttons              26   174    200    790
-  Text FX              23   177    200    866
-  Cards & Hover        23   177    200    948
-  Backgrounds          26   174    200    517
-  Controls             22   178    200    706
-  SVG & Lines          19   181    200    475
-  3D                   18   182    200    592
-  Interaction          20   180    200    487
+  Loaders              27   173    200    966
+  Buttons              26   174    200    793
+  Text FX              23   177    200    858
+  Cards & Hover        23   177    200    925
+  Backgrounds          26   174    200    509
+  Controls             22   178    200    705
+  SVG & Lines          19   181    200    484
+  3D                   18   182    200    605
+  Interaction          20   180    200    494
   ────────────────────────────────────────────────────────
-  TOTAL               204  1596   1800   6373
+  TOTAL               204  1596   1800   6339
 ```
 
 Run `node tools/stats.mjs` to reprint that table — it prints the template shelf too.
@@ -91,7 +91,7 @@ Every card has a **tune** button; the modal has one too. The drawer that opens h
 * **Look** — hue, saturation, glow, blur, opacity.
 * **Colours** — per-effect colour pickers plus one-click palette presets.
 * **Parameters** — whatever makes that effect *itself* (spoke count on a loader, FOV on a carousel,
-  squash on a flip, particle density on rain …). **3 004 of them in total**, ~3.3 per effect.
+  squash on a flip, particle density on rain …). **6 339 of them in total**, ~3.5 per effect.
 
 Plus three buttons: **Randomise**, **Apply to all** (stores a global default that every untuned
 effect inherits) and **Reset**.
@@ -152,7 +152,7 @@ them, which keeps the output compatible and structurally valid.
   in `js/data/*.js`.
 * A generated family lives in `js/gen/<category>.gen.js` and uses `js/gen/kit.js` (colour maths,
   `cells()`, `letters()`, `keyframes()`, `range()` / `color()` / `select()` knob builders, seeded
-  `rng()`). `js/gen/expand.js` pads or prunes every category to exactly 100 and keeps ids unique
+  `rng()`). `js/gen/expand.js` pads or prunes every category to exactly 200 and keeps ids unique
   against the hand-written set.
 * `js/app.js` renders a card per effect and mounts each demo inside its **own Shadow DOM**, so
   1,800 independent stylesheets coexist without a single class-name collision.

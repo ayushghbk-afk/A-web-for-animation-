@@ -21,7 +21,7 @@
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://ayushghbk-afk.github.io/A-web-for-animation-/" />
 <meta property="og:title" content="Motion Lab — 1,800 customisable Web Animations" />
-<meta property="og:description" content="100 animations in each of 9 categories, a tuner on every one, full-page starter templates, and a native After Effects builder for every effect." />
+<meta property="og:description" content="200 animations in each of 9 categories, a tuner on every one, full-page starter templates, and a native After Effects builder for every effect." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://ayushghbk-afk.github.io/A-web-for-animation-/" />
 <script type="application/ld+json">
@@ -68,6 +68,7 @@
       <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
     </button>
     <a class="nav-link" href="#gallery" data-nav>Gallery</a>
+    <a class="nav-link" href="#inventory" data-nav>Inventory</a>
     <a class="nav-link" href="#templates" data-nav>Templates <span class="nav-pill" id="navTplPill">2</span></a>
     <a class="nav-link" href="#how" data-nav>How it works</a>
     <button class="nav-link has-menu" id="navResources" type="button" aria-expanded="false" aria-controls="megaResources" data-menu="resources">
@@ -109,7 +110,7 @@
   <div class="mega-panel" role="menu" aria-label="Product">
     <div class="mega-grid" id="megaGrid"></div>
     <footer class="mega-foot">
-      <p>Nine families. One hundred of each. Every demo is live, isolated, and copy-ready.</p>
+      <p>Nine families. Two hundred of each. Every demo is live, isolated, and copy-ready.</p>
       <a href="#gallery" class="mega-cta">Browse the full collection <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
     </footer>
   </div>
@@ -119,16 +120,20 @@
 <div class="mega mega-sm" id="megaResources" hidden>
   <div class="mega-panel" role="menu" aria-label="Resources">
     <div class="mega-list">
-      <a href="#how" class="mega-row">
+      <a href="#inventory" class="mega-row">
         <span class="mega-ico" aria-hidden="true">01</span>
+        <span><b>Inventory</b><small>Every animation and UI element on this site, mapped.</small></span>
+      </a>
+      <a href="#how" class="mega-row">
+        <span class="mega-ico" aria-hidden="true">02</span>
         <span><b>How it works</b><small>Shadow DOM, lazy mounting, zero build step.</small></span>
       </a>
       <a href="#gallery" class="mega-row" data-open-tune>
-        <span class="mega-ico" aria-hidden="true">02</span>
+        <span class="mega-ico" aria-hidden="true">03</span>
         <span><b>Customise anything</b><small>Speed, colour, glow — then copy the snippet.</small></span>
       </a>
       <a href="#templates" class="mega-row">
-        <span class="mega-ico" aria-hidden="true">03</span>
+        <span class="mega-ico" aria-hidden="true">04</span>
         <span><b>Starter templates</b><small>Two full-page scenes: a 3D galaxy and a neon particle heart.</small></span>
       </a>
       <a href="#after-effects" class="mega-row">
@@ -172,6 +177,7 @@
       <div class="mobile-cats" id="mobileCats"></div>
       <p class="mobile-kicker">Navigate</p>
       <a href="#gallery" class="mobile-link" data-close-menu>Gallery</a>
+      <a href="#inventory" class="mobile-link" data-close-menu>Inventory</a>
       <a href="#after-effects" class="mobile-link" data-close-menu>After Effects export</a>
       <a href="#templates" class="mobile-link" data-close-menu>Templates</a>
       <a href="./catalog.html" class="mobile-link">Text catalog</a>
@@ -231,7 +237,7 @@
         <ul class="hero-stats">
           <li><b data-count="1800">1,800</b><span>effects</span></li>
           <li><b data-count="9">9</b><span>categories</span></li>
-          <li><b data-count="100">100</b><span>per category</span></li>
+          <li><b data-count="200">200</b><span>per category</span></li>
           <li><b data-count="2" id="tplHeroStat">2</b><span>templates</span></li>
           <li><b data-count="100">100</b><span>% with a tuner</span></li>
           <li><b data-count="0">0</b><span>dependencies</span></li>
@@ -254,16 +260,19 @@
   <section class="steps" id="how">
     <div class="steps-inner">
       <article style="--i:0">
+        <div class="step-live" id="howLive0" aria-hidden="true"></div>
         <span class="step-n">01</span>
         <h3>Browse live</h3>
-        <p>Nine families, one hundred of each. Every card is a real animation — not a screenshot — isolated so nothing collides.</p>
+        <p>Nine families, two hundred of each. Every card is a real animation — not a screenshot — isolated so nothing collides.</p>
       </article>
       <article style="--i:1">
+        <div class="step-live" id="howLive1" aria-hidden="true"></div>
         <span class="step-n">02</span>
         <h3>Tune it</h3>
         <p>Open Customise: speed, colour, size, glow, easing, plus the knobs that demo exposes. Settings persist in this browser.</p>
       </article>
       <article style="--i:2">
+        <div class="step-live" id="howLive2" aria-hidden="true"></div>
         <span class="step-n">03</span>
         <h3>Copy or export</h3>
         <p>Ship the tuned web snippet, or download an After Effects builder for editable layers, controls, expressions and project files.</p>
@@ -313,6 +322,8 @@
       </div>
       <p>What this site itself animates — section by section — plus the complete index of all 1,800 effects in the collection, linked straight into the live lab.</p>
     </div>
+    <h3 class="inv-h">Live on this page</h3>
+    <div class="inv-live" id="invLive"></div>
     <h3 class="inv-h">On this site</h3>
     <div class="inv-site" id="invSite"></div>
     <h3 class="inv-h">The collection, by section</h3>
@@ -341,6 +352,7 @@
           <button class="btn-ghost sm" id="aeFullBundle" type="button">Build all 1,800</button>
         </div>
       </div>
+      <div class="ae-live-stage" id="aeLive" aria-hidden="true"></div>
       <div class="ae-format-board" aria-label="After Effects output formats">
         <div class="ae-format-head">
           <span>Builder output</span>
@@ -390,21 +402,25 @@
     <p>Every card is rendered inside a Shadow DOM, so no two demos can ever fight over a class name. Read the exact web source, retune it, or send its mechanism to a native After Effects rig — every export carries your current settings.</p>
     <div class="outro-cards">
       <article>
+        <div class="outro-live" id="outroLive0" aria-hidden="true"></div>
         <span class="outro-ico" aria-hidden="true">🎛️</span>
         <h3>Tune every effect</h3>
         <p>Open the Customise panel on any card: speed, colours, size, glow, direction, easing plus that demo's own parameters. Settings persist per effect, can be pushed to all 1,800 at once, and are baked into the snippet you copy.</p>
       </article>
       <article>
+        <div class="outro-live" id="outroLive1" aria-hidden="true"></div>
         <span class="outro-ico" aria-hidden="true">⚡</span>
         <h3>Static &amp; fast</h3>
         <p>No framework, no bundler, no build step. It is HTML, CSS and a few kilobytes of JavaScript, served straight from GitHub Pages.</p>
       </article>
       <article>
+        <div class="outro-live" id="outroLive2" aria-hidden="true"></div>
         <span class="outro-ico" aria-hidden="true">🧪</span>
         <h3>Isolated demos</h3>
         <p>Shadow roots, a shared rAF pump, off-screen CSS pause and destroying far-away demos mean 1,800 cards without keeping hundreds of live instances.</p>
       </article>
       <article>
+        <div class="outro-live" id="outroLive3" aria-hidden="true"></div>
         <span class="outro-ico" aria-hidden="true">♿</span>
         <h3>Respectful motion</h3>
         <p>Honours <code>prefers-reduced-motion</code>, and there is a global pause button in the header for everyone else.</p>
@@ -432,6 +448,7 @@
     <div>
       <h4>Product</h4>
       <a href="#gallery">Gallery</a>
+      <a href="#inventory">Inventory</a>
       <a href="#product">Categories</a>
       <a href="#after-effects">After Effects export</a>
       <a href="#templates">Starter templates</a>
@@ -665,6 +682,7 @@
 <script src="./js/gen/three-d.gen.js"></script>
 <script src="./js/gen/motion.gen.js"></script>
 <script src="./js/gen/mega.gen.js"></script>
+<script src="./js/gen/showcase.gen.js"></script>
 <script src="./js/gen/expand.js"></script>
 <script src="./js/tune.js"></script>
 <script src="./js/ae-core.js"></script>

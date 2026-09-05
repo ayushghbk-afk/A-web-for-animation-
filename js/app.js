@@ -38,7 +38,7 @@
     { id: 'backgrounds', label: 'Backgrounds',   desc: 'Particles, aurora, fields',           demo: 'aurora' },
     { id: 'controls',    label: 'Controls',      desc: 'Toggles, knobs, inputs',              demo: 'day-night' },
     { id: 'svg',         label: 'SVG & Lines',   desc: 'Draw, morph, marching ants',          demo: 'stroke-draw' },
-    { id: '3d',          label: '3D',            desc: 'Cubes, helix, isometric scenes',      demo: 'cube-rotate' },
+    { id: '3d',          label: '3D',            desc: 'Cubes, helix, isometric scenes',      demo: 'd3meca-0' },
     { id: 'motion',      label: 'Interaction',   desc: 'Scroll, drag, spring, confetti',      demo: 'logo-marquee' }
   ];
 
@@ -1067,7 +1067,7 @@
   (function heroStage() {
     var stage = $('#heroStage');
     if (!stage) return;
-    var ids = ['ring-spinner', 'equalizer', 'atom-loader', 'conic-spinner', 'heartbeat', 'btn-neon', 'd3meca-0'];
+    var ids = ['ring-spinner', 'equalizer', 'atom-loader', 'conic-spinner', 'd3plnt-0', 'btn-neon', 'd3meca-0'];
     ids.forEach(function (id, i) {
       var item = itemById(id) || ITEMS[i];
       if (!item) return;
@@ -1075,7 +1075,7 @@
       card.className = 'float-card fc-' + (i + 1);
       var host = document.createElement('div');
       host.className = 'demo-host';
-      if (id === 'd3meca-0') card.style.setProperty('--h', '100%');
+      if (/^d3/.test(id)) card.style.setProperty('--h', '100%');
       card.appendChild(host);
       stage.appendChild(card);
       watchHost(host, item, stage, true);
@@ -1097,6 +1097,15 @@
       b.querySelector('h3').textContent = c.label;
       b.querySelector('p').textContent = c.desc;
       b.addEventListener('click', function () { setCat(c.id, true); });
+      if (FINE_POINTER) {
+        b.addEventListener('pointermove', function (e) {
+          var r = b.getBoundingClientRect();
+          var x = (e.clientX - r.left) / r.width - 0.5;
+          var y = (e.clientY - r.top) / r.height - 0.5;
+          b.style.transform = 'perspective(800px) rotateY(' + (x * 9).toFixed(2) + 'deg) rotateX(' + (-y * 9).toFixed(2) + 'deg) translateY(-5px)';
+        });
+        b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+      }
       box.appendChild(b);
       if (item) watchHost($('.demo-host', b), item, b, true);
     });
