@@ -89,6 +89,11 @@
 
   var L = window.MotionLab || {};
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Phones and tablets never auto-run the thumbnail: each one is a second
+     WebGL context pulling Three.js off a CDN, and iOS caps how many can be
+     alive at once. The poster shows, and tapping it launches the real scene. */
+  var touchish = window.matchMedia &&
+    (window.matchMedia('(pointer:coarse)').matches || window.matchMedia('(max-width: 860px)').matches);
   var toast = function (m) { if (window.MotionLabToast) window.MotionLabToast(m); };
   /* thumbnails render the whole page into a fixed 960x540 viewport and are
      scaled to *cover* the stage: a small framebuffer (cheap for WebGL) that
@@ -199,6 +204,10 @@
     stage.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPlay(t); }
     });
+    if (touchish) {
+      var openNote = $('.tpl-open small', stage);
+      if (openNote) openNote.textContent = 'tap to run the live scene';
+    }
     stage.setAttribute('role', 'button');
     stage.setAttribute('tabindex', '0');
     stage.setAttribute('aria-label', 'Open a live, interactive preview of ' + t.title);
@@ -257,7 +266,7 @@
       var rec = recs[e.target.dataset.tpl];
       if (!rec) return;
       rec.wanted = e.isIntersecting;
-      if (e.isIntersecting) { sizeFrame(rec); if (!reduce) loadPreview(rec); }
+      if (e.isIntersecting) { sizeFrame(rec); if (!reduce && !touchish) loadPreview(rec); }
       else unloadPreview(rec);
     });
   }, { rootMargin: '260px 0px' });
@@ -283,7 +292,7 @@
       Object.keys(recs).forEach(function (k) {
         var rec = recs[k];
         if (off) unloadPreview(rec);
-        else if (rec.wanted && !reduce) loadPreview(rec);
+        else if (rec.wanted && !reduce && !touchish) loadPreview(rec);
       });
       if (off && !play.hidden) closePlay();
     }, 0);

@@ -2,10 +2,22 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Motion Lab — 900 Web Animations, every one customisable</title>
 <meta name="description" content="An open gallery of 900 CSS and JavaScript animations across 9 categories. Retune every effect, copy the web code, share a deep link, or generate an After Effects JSX builder that recreates its motion with native editable layers." />
-<meta name="theme-color" content="#05050a" />
+<meta name="theme-color" id="themeColorMeta" content="#05050a" />
+<script>
+/* Apply the saved theme — and the matching mobile browser chrome colour —
+   before the first paint, so a phone never flashes dark under a light UI. */
+(function () {
+  try {
+    if (localStorage.getItem('ml-theme') === 'light') {
+      document.documentElement.dataset.theme = 'light';
+      document.getElementById('themeColorMeta').setAttribute('content', '#f5f5f8');
+    }
+  } catch (e) {}
+})();
+</script>
 <meta name="robots" content="index,follow" />
 <link rel="canonical" href="https://ayushghbk-afk.github.io/A-web-for-animation-/" />
 <meta property="og:title" content="Motion Lab — 900 customisable Web Animations" />
@@ -64,7 +76,7 @@
     </button>
   </nav>
 
-  <div class="header-tools">
+  <div class="header-tools" id="headerTools">
     <button class="search-trigger" id="searchTrigger" type="button" title="Search (⌘K)">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
       <span>Search effects…</span>
@@ -74,14 +86,14 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2.2"/><circle cx="9" cy="17" r="2.2"/></svg>
       <span>Tune</span>
     </button>
-    <button class="icon-btn" id="favFilter" title="Show favourites only" aria-pressed="false">
+    <button class="icon-btn" id="favFilter" title="Show favourites only" aria-pressed="false" data-label="Favourites">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.7-9.5-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.5 6c-2 4.3-9.5 9-9.5 9z"/></svg>
     </button>
-    <button class="icon-btn" id="motionToggle" title="Pause / play all animations" aria-pressed="false">
+    <button class="icon-btn" id="motionToggle" title="Pause / play all animations" aria-pressed="false" data-label="Pause motion">
       <svg viewBox="0 0 24 24" aria-hidden="true" class="i-pause"><path d="M9 5v14M15 5v14"/></svg>
       <svg viewBox="0 0 24 24" aria-hidden="true" class="i-play"><path d="M7 4l13 8-13 8z"/></svg>
     </button>
-    <button class="icon-btn" id="themeToggle" title="Toggle light / dark">
+    <button class="icon-btn" id="themeToggle" title="Toggle light / dark" data-label="Theme">
       <svg viewBox="0 0 24 24" aria-hidden="true" class="i-moon"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg>
       <svg viewBox="0 0 24 24" aria-hidden="true" class="i-sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1"/></svg>
     </button>
@@ -152,6 +164,10 @@
       </button>
     </header>
     <div class="mobile-nav-body">
+      <button class="mobile-search" type="button" id="mobileSearch" title="Search all 900 effects">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span>Search 900 effects…</span>
+      </button>
       <p class="mobile-kicker">Product</p>
       <div class="mobile-cats" id="mobileCats"></div>
       <p class="mobile-kicker">Navigate</p>
@@ -161,6 +177,8 @@
       <a href="./catalog.html" class="mobile-link">Text catalog</a>
       <a href="#how" class="mobile-link" data-close-menu>How it works</a>
       <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
+      <p class="mobile-kicker">This device</p>
+      <div class="mobile-prefs" id="mobilePrefs"></div>
     </div>
     <footer class="mobile-nav-foot">
       <a href="#gallery" class="btn-primary" data-close-menu>Open the lab</a>
@@ -174,7 +192,8 @@
   <div class="cmdk-panel" role="dialog" aria-modal="true" aria-labelledby="cmdkLabel">
     <div class="cmdk-bar">
       <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="search" type="search" placeholder="Search 900 effects &amp; templates…" aria-label="Search animations" autocomplete="off" />
+      <input id="search" type="search" placeholder="Search 900 effects &amp; templates…" aria-label="Search animations"
+           autocomplete="off" spellcheck="false" autocapitalize="off" enterkeyhint="search" />
       <kbd>esc</kbd>
     </div>
     <p class="cmdk-label" id="cmdkLabel">Jump to an effect or a template, or filter the gallery</p>

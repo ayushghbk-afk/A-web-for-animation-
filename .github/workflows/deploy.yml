@@ -27,6 +27,8 @@ jobs:
           node-version: "20"
       - name: Verify collection
         run: node tools/check.mjs
+      - name: Verify mobile & touch layout
+        run: node tools/responsive.mjs
       - name: Build crawlable effect pages
         run: node tools/build-seo.mjs --pages
       - uses: actions/configure-pages@v5
