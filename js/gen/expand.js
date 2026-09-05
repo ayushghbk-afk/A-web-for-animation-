@@ -2,7 +2,7 @@
    Motion Lab — expander
    The hand written set (js/data) is the seed. js/gen/*.gen.js each fill a
    pool with far more variants than the category needs; this file tops every
-   category up to exactly 100, so the collection stays complete and the
+   category up to exactly 200, so the collection stays complete and the
    generators can never over- or under-shoot the count.
    ============================================================ */
 (function (global) {
@@ -10,7 +10,7 @@
 
   var LAB = (global.MOTION_LAB = global.MOTION_LAB || []);
   var KIT = global.MLKit;
-  var TARGET = KIT ? KIT.TARGET : 100;
+  var TARGET = KIT ? KIT.TARGET : 200;
   var CATS = KIT ? KIT.CATS : Object.keys(global.ML_GEN || {});
 
   var have = {}, report = { target: TARGET, added: {}, short: {}, pruned: {}, byCat: {} };
