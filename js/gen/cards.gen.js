@@ -472,7 +472,7 @@
     if (v.list) cap = '<ul>' + v.list.map(function (x) { return '<li><em></em>' + x + '</li>'; }).join('') + '</ul>';
     else if (v.stars) cap = '<span class="stars">' + cells(5, 'i') + '</span><b class="rate">tap a star</b>';
     else if (v.tabs) cap = '<div class="tabs">' + v.tabs.map(function (t, i) { return '<button' + (i ? '' : ' class="on"') + '>' + t + '</button>'; }).join('') + '</div>' +
-      ['900 effects, 9 categories, one shadow root each.', 'Tune colours, speed and size from any card.', 'MIT licensed — no attribution needed.'].map(function (p, i) { return '<p class="pane' + (i ? '' : ' on') + '">' + p + '</p>'; }).join('');
+      ['1,800 effects, 9 categories, one shadow root each.', 'Tune colours, speed and size from any card.', 'MIT licensed — no attribution needed.'].map(function (p, i) { return '<p class="pane' + (i ? '' : ' on') + '">' + p + '</p>'; }).join('');
     else if (v.code) cap = null;
     else cap = '<h4>' + (v.head || v.title) + '</h4><p>' + (v.body || 'Hover or click the card.') + '</p>' + (v.extraHtml || '');
 

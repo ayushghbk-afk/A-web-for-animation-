@@ -1,6 +1,6 @@
 /* ============================================================
    Motion Lab — After Effects export UI
-   Generates a tuned, standalone JSX builder for any of the 900 effects.
+   Generates a tuned, standalone JSX builder for any of the 1,800 effects.
    The builder runs in After Effects, where Adobe itself writes the binary
    .aep, XML .aepx and optional .mogrt outputs.
    ============================================================ */
@@ -190,7 +190,7 @@
     setTimeout(function () {
       var list = items(), profiles = [];
       for (var i = 0; i < list.length; i++) profiles.push(makeProfile(list[i], i + 1));
-      download(Core.generate(profiles, { aep: true, aepx: true, mogrt: false, baseName: 'motion-lab-900-effect-bundle' }), 'motion-lab-900-effect-bundle.jsx', 'text/javascript;charset=utf-8');
+      download(Core.generate(profiles, { aep: true, aepx: true, mogrt: false, baseName: 'motion-lab-1800-effect-bundle' }), 'motion-lab-1800-effect-bundle.jsx', 'text/javascript;charset=utf-8');
       toast(profiles.length + '-effect AE builder downloaded');
     }, 40);
   }

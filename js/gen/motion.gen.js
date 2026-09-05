@@ -987,7 +987,7 @@
   mk({
     g: 'view', name: 'accordion-spring', title: 'Spring Accordion',
     html: '<div class="mo ac5">' + mapJoin(3, function (i) {
-      return '<b class="q"><span>' + ['What is this?', 'Does it cost anything?', 'Can I copy the code?'][i] + '</span><i>+</i></b><div class="a2"><p>' + ['A gallery of 900 hand-tuned CSS and JS effects.', 'No. Everything is MIT, copy and paste freely.', 'Yes — the modal shows a standalone snippet.'][i] + '</p></div>';
+      return '<b class="q"><span>' + ['What is this?', 'Does it cost anything?', 'Can I copy the code?'][i] + '</span><i>+</i></b><div class="a2"><p>' + ['A gallery of 1,800 hand-tuned CSS and JS effects.', 'No. Everything is MIT, copy and paste freely.', 'Yes — the modal shows a standalone snippet.'][i] + '</p></div>';
     }, '') + '</div>',
     css: `.mo.ac5{display:grid;gap:6px;width:min(230px,96%);align-content:center}
 .mo .q{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 11px;border-radius:9px;background:#191926;border:1px solid rgba(255,255,255,.12);cursor:pointer;font:600 11.5px/1.2 "Plus Jakarta Sans",system-ui;color:#e4e4f0;transition:background .25s}

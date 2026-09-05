@@ -110,17 +110,23 @@ const problems = [];
 let parsed = 0, booted = 0, animsChecked = 0, keyframesSeen = 0;
 
 const animNames = (css) => {
-  /* every identifier that appears in an animation / animation-name value */
+  /* every identifier that appears in an animation / animation-name value.
+     Paren-aware: tokens inside var()/calc()/steps()/cubic-bezier() — and the
+     bare * / + operator tokens between them — are not animation names. */
   const out = [];
   const re = /(?:^|[;{])\s*(?:-\w+-)?animation(?:-name)?\s*:\s*([^;}]+)/g;
   let m;
   while ((m = re.exec(css))) {
-    m[1].split(',').forEach((part) => {
-      part.trim().split(/\s+/).forEach((tok) => {
-        if (!tok || KEYWORD.test(tok) || /[()]/.test(tok)) return;
-        if (/^[-+]?\d/.test(tok)) return;
-        out.push(tok.replace(/["']/g, ''));
-      });
+    let depth = 0;
+    m[1].split(/[\s,]+/).forEach((tok) => {
+      const opens = (tok.match(/\(/g) || []).length;
+      const closes = (tok.match(/\)/g) || []).length;
+      const inside = depth > 0;
+      depth = Math.max(0, depth + opens - closes);
+      if (inside) return;
+      if (!tok || KEYWORD.test(tok) || /[()]/.test(tok)) return;
+      if (/^[-+]?[\d.]/.test(tok)) return;
+      out.push(tok.replace(/["']/g, ''));
     });
   }
   return [...new Set(out)].filter(Boolean);

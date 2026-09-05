@@ -1,6 +1,6 @@
 # Starter templates
 
-Full-page interactive scenes that ship alongside the 900 effects. Each one is a **vendored copy**
+Full-page interactive scenes that ship alongside the 1,800 effects. Each one is a **vendored copy**
 of a sibling repository — pulled file-for-file from its `main` branch and left untouched, so what
 you read here is byte-for-byte what the author wrote.
 
@@ -20,7 +20,7 @@ lil-gui) from public CDNs — so a preview needs a network connection the first 
   *Copy every file* and *Download* hand you the actual template — no scraping, no hard-coded
   duplicates drifting out of sync.
 * They live in their own directory and run inside sandboxed iframes, so nothing they do can
-  collide with the gallery's 900 shadow-DOM demos.
+  collide with the gallery's 1,800 shadow-DOM demos.
 
 ## Adding a template
 

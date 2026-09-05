@@ -1914,3 +1914,134 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   .modal-head h3, .card-title, .tpl-heading h3 { overflow-wrap: anywhere; }
   .ae-format-board article > span { overflow-wrap: normal; }
 }
+
+/* ============================================================
+   Hero live background, marquee band, big 3D card, inventory
+   (the collection animating the site itself — v2 additions)
+   ============================================================ */
+
+/* --- pinned collection background behind the hero --- */
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden; pointer-events: none;
+  opacity: .5;
+  -webkit-mask-image: radial-gradient(120% 100% at 50% 0%, #000 30%, transparent 82%);
+  mask-image: radial-gradient(120% 100% at 50% 0%, #000 30%, transparent 82%);
+}
+.hero > .hero-grid, .hero > .scroll-cue { position: relative; z-index: 1; }
+
+/* --- marquee band under the hero --- */
+.hero-band {
+  position: relative; z-index: 2;
+  display: grid; gap: 8px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--panel-solid) 55%, transparent);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+.band-track {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.band-track > span {
+  display: inline-flex; align-items: center; gap: 26px;
+  white-space: nowrap; will-change: transform;
+  animation: bandX 34s linear infinite;
+  font: 800 clamp(.8rem, 1.4vw, 1.05rem) system-ui, sans-serif;
+  letter-spacing: .22em;
+}
+.band-track b { color: var(--muted); }
+.band-track i { font-style: normal; color: var(--accent); }
+.band-track.rev > span { animation-direction: reverse; animation-duration: 44s; }
+.band-track.rev b { color: var(--ink); opacity: .85; }
+.band-track.rev i { color: var(--accent-2); }
+@keyframes bandX { to { transform: translateX(-50%); } }
+
+/* --- seventh float card: the big 3D cube scene --- */
+.fc-7 {
+  top: 32%; left: 51%; width: 196px; height: 158px;
+  animation-delay: -2.7s; animation-duration: 7.6s; z-index: 3;
+}
+.fc-7 .demo-host { padding: 6px; }
+
+/* --- inventory ("All") section --- */
+.inventory { padding: clamp(56px, 9vw, 96px) 0; }
+.inv-h {
+  font: 800 .8rem system-ui, sans-serif; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); margin: 40px 0 16px;
+}
+.inv-site {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+  gap: 14px;
+}
+.inv-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 18px;
+  transition: border-color .25s, transform .25s;
+}
+.inv-card:hover { border-color: var(--border-strong); transform: translateY(-2px); }
+.inv-card h4 {
+  margin: 0 0 10px; font: 800 .95rem system-ui, sans-serif;
+  display: flex; align-items: center; gap: 8px;
+}
+.inv-card h4::before {
+  content: ""; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 10px var(--accent);
+}
+.inv-card ul { margin: 0; padding: 0; list-style: none; }
+.inv-card li {
+  font-size: .84rem; color: var(--muted);
+  padding: 4px 0 4px 14px; position: relative; line-height: 1.45;
+}
+.inv-card li::before { content: "·"; position: absolute; left: 2px; color: var(--accent); }
+.inv-card a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted var(--border-strong); }
+.inv-card a:hover { color: var(--accent); border-color: var(--accent); }
+
+.inv-cats { display: grid; gap: 10px; }
+.inv-cat {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.inv-cat summary {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 18px; cursor: pointer; list-style: none;
+  font: 700 1rem system-ui, sans-serif;
+  user-select: none;
+}
+.inv-cat summary::-webkit-details-marker { display: none; }
+.inv-cat summary::before {
+  content: "+"; font: 800 1.2rem var(--mono); color: var(--accent);
+  width: 20px; text-align: center;
+}
+.inv-cat[open] summary::before { content: "−"; }
+.inv-cat summary small { margin-left: auto; color: var(--muted); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+.inv-list {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(170px, 100%), 1fr));
+  gap: 2px 18px;
+  padding: 4px 18px 16px;
+}
+.inv-list a {
+  display: block; text-decoration: none;
+  font-size: .82rem; color: var(--muted);
+  padding: 3px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.inv-list a:hover { color: var(--accent); }
+.inv-list a.big::after { content: " ◯"; color: var(--accent-2); font-size: .7em; }
+
+/* --- reduced motion: still band, still hero bg --- */
+@media (prefers-reduced-motion: reduce) {
+  .band-track > span, .fc-7 { animation: none !important; }
+}
+body.paused .band-track > span { animation-play-state: paused !important; }
+
+@media (max-width: 900px) {
+  .fc-7 { display: none; }
+  .hero-bg { opacity: .35; }
+}

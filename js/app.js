@@ -1,7 +1,7 @@
 /* ============================================================
    Motion Lab — gallery engine
    Mounts every demo inside its own Shadow DOM, lazily, and pipes the
-   Tune layer (js/tune.js) through it so all 900 effects are customisable.
+   Tune layer (js/tune.js) through it so all 1,800 effects are customisable.
 
    Lifecycle (per demo host):
      unmounted  →  mounted+ACTIVE (in / near viewport)
@@ -51,7 +51,8 @@
     { id: 'interactive',  label: 'Interactive' },
     { id: '3d',           label: '3D' },
     { id: 'svg',          label: 'SVG' },
-    { id: 'canvas',       label: 'Canvas' }
+    { id: 'canvas',       label: 'Canvas' },
+    { id: 'big',          label: 'Big stage' }
   ];
 
   var $  = function (s, c) { return (c || document).querySelector(s); };
@@ -74,6 +75,7 @@
       d3: item.cat === '3d' || /(^|\s)3d(\s|$)/.test(tags) || /preserve-3d|perspective\s*\(/i.test(blob),
       canvas: /<canvas[\s>]|getContext\s*\(|webgl/i.test(blob),
       svg: item.cat === 'svg' || /<svg[\s>]/i.test(html),
+      big: /(^|\s)big(\s|$)/.test(tags),
       custom: !!(item.cfg && item.cfg.length)
     };
     return item._flags;
@@ -94,6 +96,7 @@
       (f.d3 ? '3d perspective' : '') + ' ' +
       (f.canvas ? 'canvas webgl' : '') + ' ' +
       (f.svg ? 'svg vector' : '') + ' ' +
+      (f.big ? 'big large full-stage wide cinematic' : '') + ' ' +
       (f.custom ? 'customisable knobs' : 'basic tuning')
     ).toLowerCase().replace(/\s+/g, ' ').trim();
   });
@@ -112,6 +115,7 @@
     if (kind === '3d') return f.d3;
     if (kind === 'svg') return f.svg;
     if (kind === 'canvas') return f.canvas;
+    if (kind === 'big') return f.big;
     return true;
   }
 
@@ -1063,7 +1067,7 @@
   (function heroStage() {
     var stage = $('#heroStage');
     if (!stage) return;
-    var ids = ['ring-spinner', 'equalizer', 'atom-loader', 'conic-spinner', 'heartbeat', 'btn-neon'];
+    var ids = ['ring-spinner', 'equalizer', 'atom-loader', 'conic-spinner', 'heartbeat', 'btn-neon', 'd3meca-0'];
     ids.forEach(function (id, i) {
       var item = itemById(id) || ITEMS[i];
       if (!item) return;
@@ -1071,6 +1075,7 @@
       card.className = 'float-card fc-' + (i + 1);
       var host = document.createElement('div');
       host.className = 'demo-host';
+      if (id === 'd3meca-0') card.style.setProperty('--h', '100%');
       card.appendChild(host);
       stage.appendChild(card);
       watchHost(host, item, stage, true);
