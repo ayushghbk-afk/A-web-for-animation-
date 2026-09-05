@@ -35,6 +35,7 @@ run('js/gen/kit.js');
 genFiles.filter((f) => f.endsWith('.gen.js')).sort().forEach((f) => run('js/gen/' + f));
 run('js/gen/expand.js');
 run('js/tune.js');
+run('js/templates.js');
 
 const ITEMS = win.MOTION_LAB;
 const KIT = win.MLKit;
@@ -80,4 +81,19 @@ const byCat = new Map();
   const c = k.split(' · ')[0];
   byCat.set(c, (byCat.get(c) || 0) + 1);
 });
-console.log(`  ${families.size} mechanic families — ${CATS.map((c) => (LABEL[c] || c) + ' ' + (byCat.get(c) || 1)).join(', ')}\n`);
+console.log(`  ${families.size} mechanic families — ${CATS.map((c) => (LABEL[c] || c) + ' ' + (byCat.get(c) || 1)).join(', ')}`);
+
+/* the template shelf lives outside the nine categories: whole pages, not effects */
+const TPL = win.ML_TEMPLATES || [];
+if (TPL.length) {
+  const tLines = (t) => t.files.reduce((n, f) => n + f.lines, 0);
+  const tKnobs = (t) => t.folders.reduce((n, f) => n + f.k.length, 0);
+  console.log(`\n  starter templates\n  ${'─'.repeat(56)}`);
+  console.log(`  ${'template'.padEnd(30)}${'files'.padStart(6)}${'lines'.padStart(7)}${'controls'.padStart(10)}`);
+  TPL.forEach((t) => {
+    console.log(`  ${t.title.padEnd(30)}${String(t.files.length).padStart(6)}${String(tLines(t)).padStart(7)}${String(tKnobs(t)).padStart(10)}`);
+    console.log(`  ${'\u001b[2m' + t.dir + ' ← ' + t.repo + '\u001b[0m'}`);
+  });
+  console.log(`  ${'─'.repeat(56)}`);
+  console.log(`  ${'TOTAL'.padEnd(30)}${String(TPL.reduce((n, t) => n + t.files.length, 0)).padStart(6)}${String(TPL.reduce((n, t) => n + tLines(t), 0)).padStart(7)}${String(TPL.reduce((n, t) => n + tKnobs(t), 0)).padStart(10)}\n`);
+}

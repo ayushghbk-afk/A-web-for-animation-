@@ -573,7 +573,7 @@
   /* ---------------- go ---------------- */
   var heroCount = $('#counterHero');
   if (heroCount) heroCount.textContent = ITEMS.length;
-  search.placeholder = 'Search ' + ITEMS.length + ' effects\u2026  (press /)';
+  search.placeholder = 'Search ' + ITEMS.length + ' effects & templates\u2026  (press /)';
   $$('.hero-stats b')[0].dataset.count = ITEMS.length;
   $$('.hero-stats b')[1].dataset.count = CATS.length - 1;
   var tunedCount = $('#tunedCount');
@@ -648,6 +648,10 @@
   window.MotionLab = {
     items: ITEMS,
     cats: CATS,
+    /* shared with js/templates.js so the template source viewer highlights
+       code exactly the way the effect modal does */
+    hl: { html: hlHtml, css: hlCss, js: hlJs },
+    copy: copy,
     filter: function (cat) { setCat(cat, true); },
     search: function (q) { state.q = q || ''; if (search) search.value = q || ''; render(true); },
     open: function (id) {

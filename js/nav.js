@@ -270,22 +270,32 @@
   var footerSearch = $('#footerSearch');
   if (footerSearch) footerSearch.addEventListener('click', openCmdk);
 
+  /* ---------------- starter templates in the palette ---------------- */
+  function tpls() { return window.MotionLabTemplates || null; }
+  function tplResults(q) {
+    var TM = tpls();
+    if (!TM) return [];
+    return TM.query(q).slice(0, q ? 4 : TM.list.length).map(function (t) {
+      return { __tpl: t.id, id: t.id, title: t.title, cat: 'template', tags: t.stack.slice(0, 3) };
+    });
+  }
+
   function paintCmdk() {
     var L = lab();
     if (!L || !results) return;
     var q = (search && search.value || '').trim();
-    var list = L.query(q).slice(0, 12);
+    var list = tplResults(q).concat(L.query(q).slice(0, 12));
     cmdItems = list;
     cmdIndex = 0;
     if (!list.length) {
-      results.innerHTML = '<p class="cmdk-empty">No matches. Try a category — loaders, buttons, 3d…</p>';
+      results.innerHTML = '<p class="cmdk-empty">No matches. Try a category — loaders, buttons, 3d — or a template: galaxy, heart.</p>';
       return;
     }
     results.innerHTML = '';
     list.forEach(function (item, i) {
       var b = document.createElement('button');
       b.type = 'button';
-      b.className = 'cmdk-item' + (i === 0 ? ' active' : '');
+      b.className = 'cmdk-item' + (i === 0 ? ' active' : '') + (item.__tpl ? ' is-tpl' : '');
       b.setAttribute('role', 'option');
       b.innerHTML =
         '<span class="cat">' + item.cat + '</span>' +
@@ -305,6 +315,11 @@
     var L = lab();
     if (!L) return;
     closeCmdk();
+    if (item.__tpl) {
+      var TM = tpls();
+      if (TM) TM.open(item.__tpl);
+      return;
+    }
     L.open(item.id);
   }
   if (search) search.addEventListener('input', paintCmdk);
@@ -370,9 +385,19 @@
   }
 
   /* ---------------- boot ---------------- */
+  function fillTplPill() {
+    var pill = $('#navTplPill');
+    var TM = tpls();
+    if (!pill) return;
+    var n = TM ? TM.list.length : (window.ML_TEMPLATES ? window.ML_TEMPLATES.length : 0);
+    pill.textContent = n;
+    pill.hidden = !n;
+  }
+
   function boot() {
     fillMega();
     fillMobile();
+    fillTplPill();
     placeChipInk();
     window.ML_ICONS = ICONS;
   }

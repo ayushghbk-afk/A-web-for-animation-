@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Motion Lab — 900 Web Animations, every one customisable</title>
-<meta name="description" content="An open gallery of 900 hand-crafted CSS &amp; JavaScript animations — 100 loaders, 100 buttons, 100 text effects and more. Every single one is customisable: retune its speed, colours, size, glow and built-in parameters, then copy the code with your settings baked in." />
+<meta name="description" content="An open gallery of 900 hand-crafted CSS &amp; JavaScript animations — 100 loaders, 100 buttons, 100 text effects and more. Every single one is customisable: retune its speed, colours, size, glow and built-in parameters, then copy the code with your settings baked in. Plus full-page starter templates you can preview live, read and fork." />
 <meta name="theme-color" content="#05050a" />
 <meta property="og:title" content="Motion Lab — 900 customisable Web Animations" />
-<meta property="og:description" content="100 animations in each of 9 categories, and a tuner on every one. Copy the code with your settings baked in." />
+<meta property="og:description" content="100 animations in each of 9 categories, a tuner on every one, and full-page starter templates you can launch. Copy the code with your settings baked in." />
 <meta property="og:type" content="website" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2305050a'/><circle cx='16' cy='16' r='10' fill='none' stroke='%238b7dff' stroke-width='2'/><circle cx='16' cy='6' r='2.4' fill='%2322d3ee'/><circle cx='16' cy='16' r='3.2' fill='%238b7dff'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -50,6 +50,7 @@
       <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>
     </button>
     <a class="nav-link" href="#gallery" data-nav>Gallery</a>
+    <a class="nav-link" href="#templates" data-nav>Templates <span class="nav-pill" id="navTplPill">2</span></a>
     <a class="nav-link" href="#how" data-nav>How it works</a>
     <button class="nav-link has-menu" id="navResources" type="button" aria-expanded="false" aria-controls="megaResources" data-menu="resources">
       Resources
@@ -108,6 +109,10 @@
         <span class="mega-ico" aria-hidden="true">02</span>
         <span><b>Customise anything</b><small>Speed, colour, glow — then copy the snippet.</small></span>
       </a>
+      <a href="#templates" class="mega-row">
+        <span class="mega-ico" aria-hidden="true">03</span>
+        <span><b>Starter templates</b><small>Two full-page scenes: a 3D galaxy and a neon particle heart.</small></span>
+      </a>
       <button type="button" class="mega-row" id="openShortcuts">
         <span class="mega-ico" aria-hidden="true">⌘</span>
         <span><b>Keyboard shortcuts</b><small>⌘K search · / focus · Esc close.</small></span>
@@ -137,6 +142,7 @@
       <div class="mobile-cats" id="mobileCats"></div>
       <p class="mobile-kicker">Navigate</p>
       <a href="#gallery" class="mobile-link" data-close-menu>Gallery</a>
+      <a href="#templates" class="mobile-link" data-close-menu>Templates</a>
       <a href="#how" class="mobile-link" data-close-menu>How it works</a>
       <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
     </div>
@@ -152,10 +158,10 @@
   <div class="cmdk-panel" role="dialog" aria-modal="true" aria-labelledby="cmdkLabel">
     <div class="cmdk-bar">
       <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-      <input id="search" type="search" placeholder="Search 900 effects…" aria-label="Search animations" autocomplete="off" />
+      <input id="search" type="search" placeholder="Search 900 effects &amp; templates…" aria-label="Search animations" autocomplete="off" />
       <kbd>esc</kbd>
     </div>
-    <p class="cmdk-label" id="cmdkLabel">Jump to an effect, or filter the gallery</p>
+    <p class="cmdk-label" id="cmdkLabel">Jump to an effect or a template, or filter the gallery</p>
     <div class="cmdk-results" id="cmdkResults" role="listbox"></div>
     <footer class="cmdk-foot">
       <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
@@ -176,7 +182,7 @@
           <span class="line"><span>behind a thousand</span></span>
           <span class="line"><span><em id="counterHero">900</em> interfaces.</span></span>
         </h1>
-        <p class="hero-sub">A product-grade gallery of loaders, buttons, type, cards, backgrounds, controls, SVG, 3D and interaction — each one live in its own shadow root, tunable from a panel, and one click from your clipboard.</p>
+        <p class="hero-sub">A product-grade gallery of loaders, buttons, type, cards, backgrounds, controls, SVG, 3D and interaction — each one live in its own shadow root, tunable from a panel, and one click from your clipboard. Plus a shelf of full-page starter templates you can preview and fork.</p>
         <div class="hero-cta">
           <a href="#gallery" class="btn-primary mag-btn">Browse the lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <button class="btn-ghost mag-btn" id="randomBtn" type="button">Surprise me <span class="spark">✦</span></button>
@@ -185,6 +191,7 @@
           <li><b data-count="900">0</b><span>effects</span></li>
           <li><b data-count="9">0</b><span>categories</span></li>
           <li><b data-count="100">0</b><span>per category</span></li>
+          <li><b data-count="2" id="tplHeroStat">0</b><span>templates</span></li>
           <li><b data-count="100">0</b><span>% customisable</span></li>
           <li><b data-count="0">0</b><span>dependencies</span></li>
         </ul>
@@ -251,6 +258,36 @@
     </div>
   </section>
 
+  <section class="templates" id="templates">
+    <div class="section-head">
+      <div>
+        <p class="kicker">Starter templates</p>
+        <h2>Whole scenes, ready to fork.</h2>
+      </div>
+      <p id="tplCount">Loading templates…</p>
+    </div>
+    <p class="tpl-lede">
+      Effects are building blocks; templates are finished rooms. Two full-page interactive scenes
+      live here, vendored file-for-file from sibling repos into <code>./templates/</code> — preview
+      them inline, launch them full screen, read or copy every line, then fork the repo and make it
+      yours. No build step, no bundler, nothing to install.
+    </p>
+    <div class="tpl-grid" id="templateGrid"></div>
+    <div class="tpl-foot">
+      <p>
+        Both templates ship exactly as their authors wrote them — <b>MIT-licensed</b>, zero build
+        step, CDN dependencies only. They are separate pages, so nothing they do can collide with
+        the 900 effects above.
+      </p>
+      <div class="tpl-foot-links">
+        <a href="https://github.com/ayushghbk-afk" target="_blank" rel="noopener">More from @ayushghbk-afk
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+        <a href="#how">How this site works
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+    </div>
+  </section>
+
   <section class="outro">
     <h2>Built to be taken apart</h2>
     <p>Every card is rendered inside a Shadow DOM, so no two demos can ever fight over a class name. Hit <b>Code</b> to read the exact HTML, CSS and JS that produces it, or <b>Customise</b> to retune it — the snippet you copy out already carries your settings.</p>
@@ -299,6 +336,7 @@
       <h4>Product</h4>
       <a href="#gallery">Gallery</a>
       <a href="#product">Categories</a>
+      <a href="#templates">Starter templates</a>
       <a href="#how">How it works</a>
     </div>
     <div>
@@ -312,6 +350,8 @@
       <h4>Open source</h4>
       <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener">GitHub</a>
       <a href="https://github.com/ayushghbk-afk/A-web-for-animation-/blob/main/LICENSE" target="_blank" rel="noopener">MIT licence</a>
+      <a href="https://github.com/ayushghbk-afk/Hi-this-is-time-pass" target="_blank" rel="noopener">Template · 3D galaxy</a>
+      <a href="https://github.com/ayushghbk-afk/Hart-for-html" target="_blank" rel="noopener">Template · particle heart</a>
       <button type="button" id="footerSearch">Search ⌘K</button>
     </div>
   </div>
@@ -381,6 +421,64 @@
   </section>
 </aside>
 
+<!-- Template: live preview -->
+<div class="modal tpl-modal" id="tplPlay" hidden>
+  <div class="modal-backdrop" data-tpl-close></div>
+  <div class="modal-panel tpl-play-panel" role="dialog" aria-modal="true" aria-labelledby="tplPlayTitle">
+    <header class="modal-head">
+      <div>
+        <h3 id="tplPlayTitle">Template</h3>
+        <p id="tplPlayMeta" class="muted"></p>
+      </div>
+      <div class="tpl-head-tools">
+        <a class="btn-ghost sm" id="tplPlayLive" href="#" target="_blank" rel="noopener" title="Open the version hosted on github.io">github.io ↗</a>
+        <a class="btn-ghost sm" id="tplPlayNew" href="#" target="_blank" rel="noopener">Open full page ↗</a>
+        <button class="btn-ghost sm" id="tplPlayReload" type="button" title="Reload this preview">⟳</button>
+        <button class="icon-btn" data-tpl-close title="Close (Esc)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </header>
+    <div class="tpl-play-body">
+      <iframe id="tplPlayFrame" title="Interactive template preview" sandbox="allow-scripts allow-pointer-lock"></iframe>
+    </div>
+    <footer class="tpl-play-foot">
+      <p class="muted" id="tplPlayNote"></p>
+      <div class="tpl-foot-tools">
+        <button class="btn-ghost sm" id="tplPlaySrc" type="button">View source</button>
+        <a class="btn-ghost sm" id="tplPlayRepo" href="#" target="_blank" rel="noopener">Repository</a>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- Template: source viewer -->
+<div class="modal tpl-modal" id="tplCode" hidden>
+  <div class="modal-backdrop" data-tpl-close></div>
+  <div class="modal-panel tpl-code-panel" role="dialog" aria-modal="true" aria-labelledby="tplCodeTitle">
+    <header class="modal-head">
+      <div>
+        <h3 id="tplCodeTitle">Source</h3>
+        <p id="tplCodeMeta" class="muted"></p>
+      </div>
+      <button class="icon-btn" data-tpl-close title="Close (Esc)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+    <div class="code-tabs" id="tplTabs"></div>
+    <p class="tpl-file-note muted" id="tplFileNote"></p>
+    <pre class="code-block tpl-code-block"><code id="tplCodeOut"></code></pre>
+    <div class="modal-actions">
+      <button class="btn-primary sm" id="tplPlayThis" type="button">▶ Live preview</button>
+      <button class="btn-ghost sm" id="tplCopyFile" type="button">Copy this file</button>
+      <button class="btn-ghost sm" id="tplDownload" type="button">Download</button>
+      <button class="btn-ghost sm" id="tplCopyAll" type="button">Copy every file</button>
+      <a class="btn-ghost sm" id="tplCodeGit" href="#" target="_blank" rel="noopener">This file on GitHub ↗</a>
+      <a class="btn-ghost sm" id="tplCodeAll" href="#" target="_blank" rel="noopener">Repository ↗</a>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="./js/data/loaders.js"></script>
@@ -405,6 +503,7 @@
 <script src="./js/gen/expand.js"></script>
 <script src="./js/tune.js"></script>
 <script src="./js/app.js"></script>
+<script src="./js/templates.js"></script>
 <script src="./js/nav.js"></script>
 </body>
 </html>
