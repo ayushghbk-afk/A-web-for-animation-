@@ -7,9 +7,10 @@ categories** — loaders, buttons, text effects, cards & hover, backgrounds, con
 them: a Three.js galaxy and a neon particle geometry engine — preview them inline, launch them,
 copy them out, fork them.
 
-**Every single one is customisable.** Each demo ships a tuner — speed, size, glow, hue, easing and
-direction plus per-effect parameters — that animates live and bakes your numbers into the web
-snippet or the downloadable **After Effects builder**.
+**Every single one has a tuner.** Shared speed, size, glow, hue, easing and direction controls
+drive the whole library; effects that expose their own parameters get a **customisable** badge and
+dedicated knobs. Settings animate live and bake into the web snippet or the downloadable
+**After Effects JSX builder** (After Effects itself then writes `.aep` / `.aepx` / `.mogrt`).
 
 Built to be dropped straight onto **GitHub Pages** — no build step, no bundler, no npm install.
 
@@ -155,9 +156,16 @@ them, which keeps the output compatible and structurally valid.
   against the hand-written set.
 * `js/app.js` renders a card per effect and mounts each demo inside its **own Shadow DOM**, so
   900 independent stylesheets coexist without a single class-name collision.
-* Demos are **lazily mounted** as they scroll in (60 at a time, with a "load more" sentinel), and
-  JS-driven demos share one global `requestAnimationFrame` pump that rate-steps and pauses
-  off-screen demos — which is also what makes the Speed knob work on scripted animations.
+* Demos follow a real lifecycle — **unmounted → active → paused → destroyed**. They mount as they
+  scroll in (60 cards at a time), JS work shares one `requestAnimationFrame` pump, CSS animations
+  pause from inside the shadow root (`:host(.is-offscreen)`), and far-away instances are torn down
+  so exploring all 900 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
+  mobile) is the backstop.
+* Search and category filters use a **precomputed index** (`item._search`, `BY_CAT`) instead of
+  rebuilding haystacks on every keypress.
+* Deep links (`#effect/ring-spinner`), a **share** button, **download standalone HTML**, and a
+  no-JS [`catalog.html`](catalog.html) make effects addressable. Deploy runs
+  `node tools/build-seo.mjs --pages` to emit crawlable `effects/<id>.html` files.
 * `prefers-reduced-motion` is respected, and the header has a global pause button.
 
 ## ✅ Verify it
@@ -166,6 +174,7 @@ them, which keeps the output compatible and structurally valid.
 node tools/check.mjs     # 100 per category, unique ids, honest knobs, 900 stylesheets compiled,
                          # all AE profiles / rig builders, plus the template catalogue vs disk
 node tools/stats.mjs     # the table above, and the template shelf
+node tools/build-seo.mjs # catalog.html + sitemap.xml (add --pages for effects/*.html)
 
 # deeper QA (needs two dev-only packages, the site itself has none):
 npm i --no-save --prefix /tmp/qa jsdom css-tree
@@ -244,7 +253,10 @@ The card, tag chips, search index, tuner and counters all update automatically.
 | Key | Action |
 | --- | --- |
 | `/` | focus search |
+| `⌘K` / `Ctrl+K` | command palette |
 | `Esc` | close the tuner, then the code viewer |
+
+Shareable URL for any effect: `index.html#effect/<id>` (also `?e=<id>`).
 
 ## 📄 Licence
 

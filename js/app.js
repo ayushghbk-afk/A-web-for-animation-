@@ -2,6 +2,12 @@
    Motion Lab — gallery engine
    Mounts every demo inside its own Shadow DOM, lazily, and pipes the
    Tune layer (js/tune.js) through it so all 900 effects are customisable.
+
+   Lifecycle (per demo host):
+     unmounted  →  mounted+ACTIVE (in / near viewport)
+                →  PAUSED         (just off-screen; CSS + rAF frozen)
+                →  DESTROYED      (far away, or over the mounted cap)
+   CSS animations are paused from *inside* the shadow root via :host(.is-offscreen).
    ============================================================ */
 (function () {
   'use strict';
@@ -36,9 +42,87 @@
     { id: 'motion',      label: 'Interaction',   desc: 'Scroll, drag, spring, confetti',      demo: 'logo-marquee' }
   ];
 
+  var KINDS = [
+    { id: 'all',          label: 'All types' },
+    { id: 'original',     label: 'Original' },
+    { id: 'generated',    label: 'Generated' },
+    { id: 'css',          label: 'CSS only' },
+    { id: 'js',           label: 'JavaScript' },
+    { id: 'interactive',  label: 'Interactive' },
+    { id: '3d',           label: '3D' },
+    { id: 'svg',          label: 'SVG' },
+    { id: 'canvas',       label: 'Canvas' }
+  ];
+
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
   var src = function (item, k) { return T ? T.srcOf(item)[k] : (item[k] || ''); };
+
+  /* ---------------- classification + indexes ---------------- */
+  function flags(item) {
+    if (item._flags) return item._flags;
+    var tags = (item.tags || []).join(' ').toLowerCase();
+    var html = item.html || '';
+    var css = item.css || '';
+    var js = item.js || '';
+    var blob = html + '\n' + css + '\n' + js;
+    item._flags = {
+      gen: !!item.gen,
+      js: !!js,
+      css: !js,
+      interactive: !!js || /hover|click|drag|press|input|pointer/.test(tags),
+      d3: item.cat === '3d' || /(^|\s)3d(\s|$)/.test(tags) || /preserve-3d|perspective\s*\(/i.test(blob),
+      canvas: /<canvas[\s>]|getContext\s*\(|webgl/i.test(blob),
+      svg: item.cat === 'svg' || /<svg[\s>]/i.test(html),
+      custom: !!(item.cfg && item.cfg.length)
+    };
+    return item._flags;
+  }
+
+  var IDX = {};
+  var BY_CAT = { all: ITEMS };
+  var KIND_COUNT = {};
+  ITEMS.forEach(function (it, i) {
+    IDX[it.id] = i;
+    (BY_CAT[it.cat] = BY_CAT[it.cat] || []).push(it);
+    var f = flags(it);
+    it._search = (
+      it.title + ' ' + it.cat + ' ' + (it.tags || []).join(' ') + ' ' + it.id + ' ' +
+      (it.cfg ? it.cfg.map(function (c) { return c.label; }).join(' ') : '') + ' ' +
+      (f.gen ? 'generated procedural' : 'original handmade authored') + ' ' +
+      (f.js ? 'javascript js interactive' : 'css-only pure-css') + ' ' +
+      (f.d3 ? '3d perspective' : '') + ' ' +
+      (f.canvas ? 'canvas webgl' : '') + ' ' +
+      (f.svg ? 'svg vector' : '') + ' ' +
+      (f.custom ? 'customisable knobs' : 'basic tuning')
+    ).toLowerCase().replace(/\s+/g, ' ').trim();
+  });
+  KINDS.forEach(function (k) {
+    KIND_COUNT[k.id] = k.id === 'all' ? ITEMS.length : ITEMS.filter(function (it) { return matchKind(it, k.id); }).length;
+  });
+
+  function matchKind(item, kind) {
+    if (!kind || kind === 'all') return true;
+    var f = flags(item);
+    if (kind === 'original') return !f.gen;
+    if (kind === 'generated') return f.gen;
+    if (kind === 'css') return f.css;
+    if (kind === 'js') return f.js;
+    if (kind === 'interactive') return f.interactive;
+    if (kind === '3d') return f.d3;
+    if (kind === 'svg') return f.svg;
+    if (kind === 'canvas') return f.canvas;
+    return true;
+  }
+
+  function itemById(id) {
+    var i = IDX[id];
+    return i == null ? null : ITEMS[i];
+  }
+  function firstIn(cat) {
+    var list = BY_CAT[cat];
+    return list && list[0] ? list[0] : null;
+  }
 
   /* ---------------- global animation frame pump ----------------
      One rAF loop for every JS-driven demo. Each task can be frame-stepped
@@ -65,8 +149,64 @@
   })();
   function run(t) { try { t.fn(); } catch (e) { t.alive = false; } }
 
-  /* ---------------- mounting ---------------- */
-  function mount(item, host) {
+  /* ---------------- mounting + lifecycle ---------------- */
+  var MAX_MOUNTED = (window.matchMedia && window.matchMedia('(max-width: 700px)').matches) ? 48 : 96;
+  var mounted = [];
+
+  function isPinned(host) {
+    if (!host) return false;
+    if (host.__pinned) return true;
+    try {
+      return !!(host.closest && host.closest('#modal, #aeExport, #aePreview'));
+    } catch (e) { return false; }
+  }
+
+  function remember(host) {
+    if (!host || isPinned(host)) return;
+    var i = mounted.indexOf(host);
+    if (i >= 0) mounted.splice(i, 1);
+    mounted.push(host);
+    trimMounted();
+  }
+
+  function forget(host) {
+    var i = mounted.indexOf(host);
+    if (i >= 0) mounted.splice(i, 1);
+  }
+
+  function trimMounted() {
+    if (mounted.length <= MAX_MOUNTED) return;
+    var pinned = [], live = [], rest = [], i, h;
+    for (i = 0; i < mounted.length; i++) {
+      h = mounted[i];
+      if (!h || !h.__inst) continue;
+      if (isPinned(h)) pinned.push(h);
+      else if (h.__inst.visible) live.push(h);
+      else rest.push(h);
+    }
+    var keep = pinned.concat(live);
+    while (keep.length < MAX_MOUNTED && rest.length) keep.push(rest.pop());
+    for (i = 0; i < rest.length; i++) destroyHost(rest[i]);
+    while (keep.length > MAX_MOUNTED) {
+      var dropAt = -1;
+      for (i = 0; i < keep.length; i++) {
+        if (!isPinned(keep[i])) { dropAt = i; break; }
+      }
+      if (dropAt < 0) break;
+      destroyHost(keep.splice(dropAt, 1)[0]);
+    }
+    mounted = keep;
+  }
+
+  function destroyHost(host) {
+    if (!host) return;
+    if (host.__inst) host.__inst.destroy();
+    forget(host);
+  }
+
+  function mount(item, host, opts) {
+    if (opts && opts.pin) host.__pinned = true;
+    else if (isPinned(host)) host.__pinned = true;
     if (host.__inst) return host.__inst;
     host.__item = item;
     return remount(item, host);
@@ -100,6 +240,8 @@
         onCleanup: function (fn) { inst.cleanups.push(fn); }
       };
       try {
+        /* First-party bundled demo source only. Never eval remote or
+           user-submitted code through this path without a sandbox. */
         new Function('root', 'api', code)(root, api);
       } catch (e) {
         console.warn('[motion-lab] demo failed:', item.id, e);
@@ -111,15 +253,21 @@
     inst.setVisible = function (v) {
       inst.visible = v;
       inst.tasks.forEach(function (t) { t.visible = v; });
+      host.classList.toggle('is-offscreen', !v);
     };
     inst.destroy = function () {
       inst.tasks.forEach(function (t) { t.alive = false; });
       inst.cleanups.forEach(function (f) { try { f(); } catch (e) {} });
+      try { root.innerHTML = ''; } catch (e) {}
       host.__inst = null;
+      host.classList.remove('is-offscreen');
     };
 
     if (paused) host.classList.add('is-paused');
+    else host.classList.remove('is-paused');
+    host.classList.remove('is-offscreen');
     host.__inst = inst;
+    remember(host);
     return inst;
   }
 
@@ -148,14 +296,14 @@
     return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
   function hlHtml(s) {
-    return esc(s).replace(/(&lt;\/?[\w-]+)|([\w-]+)(?==")|("[^"]*")/g, function (m, tag, attr, str) {
+    return esc(s).replace(/(&lt;\/?[\w-]+)|([\w-]+)(?==\")|(\"[^\"]*\")/g, function (m, tag, attr, str) {
       if (tag) return '<span class="tok-tag">' + tag + '</span>';
       if (attr) return '<span class="tok-attr">' + attr + '</span>';
       return '<span class="tok-str">' + str + '</span>';
     });
   }
   function hlCss(s) {
-    return esc(s).replace(/(\/\*[\s\S]*?\*\/)|(@[\w-]+)|([\w-]+)(?=\s*:)|(#[0-9a-fA-F]{3,8})\b|("[^"]*")/g,
+    return esc(s).replace(/(\/\*[\s\S]*?\*\/)|(@[\w-]+)|([\w-]+)(?=\s*:)|(#[0-9a-fA-F]{3,8})\b|(\"[^\"]*\")/g,
       function (m, com, at, prop, hex, str) {
         if (com) return '<span class="tok-com">' + com + '</span>';
         if (at) return '<span class="tok-kw">' + at + '</span>';
@@ -165,10 +313,12 @@
       });
   }
   function hlJs(s) {
-    return esc(s).replace(/(\/\/[^\n]*)|("[^"]*"|'[^']*')|\b(var|let|const|function|return|if|else|for|new|this|true|false)\b/g,
-      function (m, com, str, kw) {
-        if (com) return '<span class="tok-com">' + com + '</span>';
+    /* strings first so `//` inside a string is not treated as a comment */
+    return esc(s).replace(/("[^"\\]*(?:\\.[^"\\]*)*"|'[^'\\]*(?:\\.[^'\\]*)*'|`[^`\\]*(?:\\.[^`\\]*)*`)|(\/\/[^\n]*)|(\/\*[\s\S]*?\*\/)|\b(var|let|const|function|return|if|else|for|new|this|true|false)\b/g,
+      function (m, str, com, block, kw) {
         if (str) return '<span class="tok-str">' + str + '</span>';
+        if (com) return '<span class="tok-com">' + com + '</span>';
+        if (block) return '<span class="tok-com">' + block + '</span>';
         return '<span class="tok-kw">' + kw + '</span>';
       });
   }
@@ -176,17 +326,23 @@
   /* ---------------- state ---------------- */
   var favs = {};
   try { favs = JSON.parse(localStorage.getItem('ml-favs') || '{}'); } catch (e) { favs = {}; }
-  var state = { cat: 'all', q: '', favOnly: false };
-  var IDX = {};
-  ITEMS.forEach(function (it, i) { IDX[it.id] = i; });
+  var recent = [];
+  try { recent = JSON.parse(localStorage.getItem('ml-recent') || '[]'); } catch (e) { recent = []; }
+  var state = { cat: 'all', q: '', favOnly: false, kind: 'all' };
 
   var grid = $('#grid');
   var chipBox = $('#chips');
+  var kindBox = $('#kinds');
   var resultCount = $('#resultCount');
   var emptyMsg = $('#empty');
   var PAGE = 60;
   var list = [];
   var shown = 0;
+
+  function pushRecent(id) {
+    recent = [id].concat(recent.filter(function (x) { return x !== id; })).slice(0, 16);
+    try { localStorage.setItem('ml-recent', JSON.stringify(recent)); } catch (e) {}
+  }
 
   /* ---------------- chips ---------------- */
   function iconFor(id) {
@@ -207,7 +363,7 @@
     }
   }
   CATS.forEach(function (c) {
-    var n = c.id === 'all' ? ITEMS.length : ITEMS.filter(function (i) { return i.cat === c.id; }).length;
+    var n = c.id === 'all' ? ITEMS.length : (BY_CAT[c.id] || []).length;
     var b = document.createElement('button');
     b.className = 'chip' + (c.id === 'all' ? ' active' : '');
     b.dataset.cat = c.id;
@@ -218,19 +374,61 @@
   });
   requestAnimationFrame(function () { window.dispatchEvent(new Event('ml:chips')); });
 
-  /* ---------------- lazy observer ---------------- */
-  var io = new IntersectionObserver(function (entries) {
+  function setKind(id) {
+    state.kind = id;
+    if (!kindBox) return;
+    $$('.kind-chip', kindBox).forEach(function (x) {
+      var on = x.dataset.kind === id;
+      x.classList.toggle('active', on);
+      x.setAttribute('aria-pressed', String(on));
+    });
+    render(true);
+  }
+  if (kindBox) {
+    KINDS.forEach(function (k) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'kind-chip' + (k.id === 'all' ? ' active' : '');
+      b.dataset.kind = k.id;
+      b.setAttribute('aria-pressed', k.id === 'all' ? 'true' : 'false');
+      b.innerHTML = k.label + '<span class="n">' + (KIND_COUNT[k.id] || 0) + '</span>';
+      b.addEventListener('click', function () { setKind(k.id); });
+      kindBox.appendChild(b);
+    });
+  }
+
+  /* ---------------- lazy observer: ACTIVE / PAUSED / DESTROYED ---------------- */
+  var ioNear = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
       var host = $('.demo-host', e.target);
       if (!host) return;
+      var item = host.__item || ITEMS[+e.target.dataset.i];
       if (e.isIntersecting) {
-        var item = ITEMS[+e.target.dataset.i];
-        mount(item, host).setVisible(true);
+        if (!host.__inst && item) mount(item, host);
+        if (host.__inst) host.__inst.setVisible(true);
+        remember(host);
       } else if (host.__inst) {
         host.__inst.setVisible(false);
       }
     });
-  }, { rootMargin: '250px 0px' });
+  }, { rootMargin: '280px 0px' });
+
+  var ioFar = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) return;
+      var host = $('.demo-host', e.target);
+      if (host && host.__inst && !isPinned(host)) destroyHost(host);
+    });
+  }, { rootMargin: '1600px 0px' });
+
+  function watchCard(el) {
+    ioNear.observe(el);
+    ioFar.observe(el);
+  }
+  function unwatchCard(el) {
+    ioNear.unobserve(el);
+    ioFar.unobserve(el);
+  }
 
   /* infinite scroll for the pages below the fold */
   var sentinel = $('#sentinel');
@@ -242,8 +440,22 @@
   moreBtn.addEventListener('click', function () { paint(); });
 
   /* ---------------- card factory ---------------- */
+  var SHARE_ICO = '<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="2.4"/><circle cx="6" cy="12" r="2.4"/><circle cx="18" cy="19" r="2.4"/><path d="M8.2 13.2l7.5 4.1M8.2 10.8l7.5-4.1"/></svg>';
+  var MORE_ICO = '<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.7"/><circle cx="12" cy="12" r="1.7"/><circle cx="12" cy="19" r="1.7"/></svg>';
+
+  function closeMenus(except) {
+    $$('.card-menu-pop').forEach(function (p) {
+      if (p !== except) {
+        p.hidden = true;
+        var btn = p.parentNode && p.parentNode.querySelector('.more-btn');
+        if (btn) btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
   function cardFor(item, i) {
     var el = document.createElement('article');
+    var f = flags(item);
     el.className = 'card' + (T && T.isTuned(item.id) ? ' is-tuned' : '');
     el.dataset.i = i;
     el.dataset.id = item.id;
@@ -253,7 +465,18 @@
     stage.className = 'card-stage';
     var host = document.createElement('div');
     host.className = 'demo-host';
+    host.__item = item;
     stage.appendChild(host);
+
+    var origin = f.gen ? 'generated' : 'original';
+    var engine = f.js ? 'js' : 'css';
+    var tuning = f.custom ? 'customisable' : 'basic tuning';
+    var extraTags = '';
+    extraTags += '<span class="tag origin">' + origin + '</span>';
+    extraTags += '<span class="tag engine">' + engine + '</span>';
+    if (f.d3 && item.cat !== '3d') extraTags += '<span class="tag">3d</span>';
+    if (f.canvas) extraTags += '<span class="tag">canvas</span>';
+    extraTags += '<span class="tag tunable">' + tuning + '</span>';
 
     var body = document.createElement('div');
     body.className = 'card-body';
@@ -264,7 +487,7 @@
       '<div class="card-tags">' +
         '<span class="tag">' + item.cat + '</span>' +
         item.tags.map(function (t) { return '<span class="tag">' + t + '</span>'; }).join('') +
-        (item.cfg && item.cfg.length ? '<span class="tag tunable">customisable</span>' : '<span class="tag tunable">tunable</span>') +
+        extraTags +
       '</div>' +
       '<div class="card-actions">' +
         '<button class="mini tune"><svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>Customise</button>' +
@@ -274,8 +497,19 @@
           '<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg></button>' +
         '<button class="mini fav flex-none" title="Favourite" aria-pressed="false">' +
           '<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.5-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.5 6c-2 4.3-9.5 9-9.5 9z"/></svg></button>' +
+        '<button class="mini share flex-none" title="Share">' + SHARE_ICO + '</button>' +
+        '<div class="card-menu">' +
+          '<button class="mini more-btn flex-none" type="button" title="More" aria-haspopup="true" aria-expanded="false">' + MORE_ICO + '</button>' +
+          '<div class="card-menu-pop" hidden>' +
+            '<button type="button" data-act="replay">Replay</button>' +
+            '<button type="button" data-act="fav">Favourite</button>' +
+            '<button type="button" data-act="share">Copy link</button>' +
+            '<button type="button" data-act="html">Download HTML</button>' +
+            '<button type="button" data-act="ae">After Effects builder</button>' +
+          '</div>' +
+        '</div>' +
       '</div>' +
-      '<button class="mini ae-export" type="button"><span class="ae-btn-mark">Ae</span><span>Download for After Effects</span><small>.aep · .aepx · .mogrt</small></button>';
+      '<button class="mini ae-export" type="button"><span class="ae-btn-mark">Ae</span><span>Generate After Effects builder</span><small>JSX · AE writes .aep</small></button>';
     $('.card-title', body).textContent = item.title;
 
     el.appendChild(stage);
@@ -283,18 +517,42 @@
 
     var favBtn = $('.fav', body);
     favBtn.setAttribute('aria-pressed', favs[item.id] ? 'true' : 'false');
-    favBtn.addEventListener('click', function () {
+    function toggleFav() {
       if (favs[item.id]) { delete favs[item.id]; } else { favs[item.id] = 1; }
       favBtn.setAttribute('aria-pressed', favs[item.id] ? 'true' : 'false');
       localStorage.setItem('ml-favs', JSON.stringify(favs));
       toast(favs[item.id] ? 'Added to favourites' : 'Removed from favourites');
       if (state.favOnly) render(false);
-    });
+    }
+    favBtn.addEventListener('click', toggleFav);
 
     $('.code', body).addEventListener('click', function () { openModal(item); });
     $('.replay', body).addEventListener('click', function () { remount(item, host); });
     $('.tune', body).addEventListener('click', function () { openTuner(item); });
     $('.ae-export', body).addEventListener('click', function () { openAE(item); });
+    $('.share', body).addEventListener('click', function () { shareItem(item); });
+
+    var moreBtnCard = $('.more-btn', body);
+    var pop = $('.card-menu-pop', body);
+    moreBtnCard.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var open = pop.hidden;
+      closeMenus(pop);
+      pop.hidden = !open;
+      moreBtnCard.setAttribute('aria-expanded', String(open));
+    });
+    pop.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-act]');
+      if (!b) return;
+      pop.hidden = true;
+      moreBtnCard.setAttribute('aria-expanded', 'false');
+      var act = b.dataset.act;
+      if (act === 'replay') remount(item, host);
+      else if (act === 'fav') toggleFav();
+      else if (act === 'share') shareItem(item);
+      else if (act === 'html') downloadHtml(item);
+      else if (act === 'ae') openAE(item);
+    });
 
     el.addEventListener('mousemove', function (e) {
       var r = el.getBoundingClientRect();
@@ -302,23 +560,41 @@
       el.style.setProperty('--my', (e.clientY - r.top) + 'px');
     });
 
-    io.observe(el);
+    watchCard(el);
     return el;
   }
 
+  document.addEventListener('click', function () { closeMenus(); });
+
   /* ---------------- rendering ---------------- */
   function matches(item) {
-    if (state.cat !== 'all' && item.cat !== state.cat) return false;
+    if (state.kind !== 'all' && !matchKind(item, state.kind)) return false;
     if (state.favOnly && !favs[item.id]) return false;
     if (!state.q) return true;
-    var hay = (item.title + ' ' + item.cat + ' ' + item.tags.join(' ') + ' ' + item.id + ' ' +
-      (item.cfg ? item.cfg.map(function (c) { return c.label; }).join(' ') : '')).toLowerCase();
-    return state.q.toLowerCase().split(/\s+/).every(function (w) { return hay.indexOf(w) > -1; });
+    var words = state.q.toLowerCase().split(/\s+/);
+    var hay = item._search || '';
+    return words.every(function (w) { return hay.indexOf(w) > -1; });
+  }
+
+  function filtered() {
+    var pool = state.cat === 'all' ? ITEMS : (BY_CAT[state.cat] || []);
+    return pool.filter(matches);
+  }
+
+  function clearGrid() {
+    var cards = $$('.card', grid);
+    for (var i = 0; i < cards.length; i++) {
+      unwatchCard(cards[i]);
+      var host = $('.demo-host', cards[i]);
+      if (host) destroyHost(host);
+    }
+    mounted = mounted.filter(function (h) { return isPinned(h) && h.__inst; });
+    grid.innerHTML = '';
   }
 
   function render(reset) {
-    list = ITEMS.filter(matches);
-    if (reset !== false) { shown = 0; grid.innerHTML = ''; }
+    list = filtered();
+    if (reset !== false) { shown = 0; clearGrid(); }
     if (!shown) paint(); else count();
   }
 
@@ -332,8 +608,9 @@
   }
 
   function count() {
+    var kindNote = state.kind !== 'all' ? ' · ' + state.kind : '';
     resultCount.textContent = (list.length ? 'Showing 1–' + shown : 'Nothing') + ' of ' + list.length +
-      (state.cat === 'all' ? '' : ' in ' + state.cat) + '  ·  ' + ITEMS.length + ' in the collection';
+      (state.cat === 'all' ? '' : ' in ' + state.cat) + kindNote + '  ·  ' + ITEMS.length + ' in the collection';
     emptyMsg.hidden = list.length > 0;
     sentinel.hidden = shown >= list.length;
     if (shown >= list.length) $('#moreBtn').parentNode.hidden = true;
@@ -347,11 +624,96 @@
     else toast('After Effects exporter is not available');
   }
 
+  /* ---------------- share / standalone html ---------------- */
+  function effectHash(id) { return '#effect/' + id; }
+  function effectUrl(id) {
+    var path = location.pathname.replace(/index\.html$/, '');
+    return location.origin + path + effectHash(id);
+  }
+  function readRoute() {
+    var h = location.hash || '';
+    var m = /^#effect\/([a-z0-9-]+)/i.exec(h);
+    if (m) return m[1];
+    var q = /(?:\?|&)e=([a-z0-9-]+)/i.exec(location.search);
+    return q ? q[1] : null;
+  }
+  function setRoute(id) {
+    var next = effectHash(id);
+    if (location.hash !== next) {
+      try { history.replaceState(null, '', next); } catch (e) { location.hash = next; }
+    }
+  }
+  function clearRoute() {
+    if (!/^#effect\//.test(location.hash || '')) return;
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+
+  function shareItem(item) {
+    setRoute(item.id);
+    var url = effectUrl(item.id);
+    if (navigator.share) {
+      navigator.share({ title: item.title + ' — Motion Lab', text: item.title + ' · ' + item.cat, url: url })
+        .then(function () { toast('Shared ' + item.title); })
+        .catch(function () { copy(url, 'Link copied'); });
+      return;
+    }
+    copy(url, 'Link copied');
+  }
+
+  function standaloneHtml(item) {
+    var attrs = T ? T.exportAttrs(item) : ' class="ml-tuned"';
+    var css = T ? T.exportCss(item) : item.css;
+    var html = src(item, 'html');
+    var js = src(item, 'js');
+    return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      '<title>' + item.title + ' — Motion Lab</title>\n' +
+      '<style>\nhtml,body{margin:0;min-height:100%;display:grid;place-items:center;background:#0b0b14;color:#f4f4f8;font-family:system-ui,sans-serif}\n' +
+      css + '\n</style>\n</head>\n<body>\n<div' + attrs + '>\n  ' + html + '\n</div>' +
+      (js ? '\n<script>\n(function(){\n  var root = document;\n  var api = { raf: function(f){ (function l(){ f(); requestAnimationFrame(l); })(); }, onCleanup: function(){} };\n' +
+        js + '\n})();\n<\/script>' : '') +
+      '\n</body>\n</html>\n';
+  }
+
+  function downloadHtml(item) {
+    var text = standaloneHtml(item);
+    var url = URL.createObjectURL(new Blob([text], { type: 'text/html;charset=utf-8' }));
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = item.id + '.html';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1800);
+    toast(item.id + '.html downloaded');
+  }
+
+  function similarTo(item, n) {
+    n = n || 4;
+    var tags = item.tags || [];
+    var pool = BY_CAT[item.cat] || ITEMS;
+    var scored = [];
+    for (var i = 0; i < pool.length; i++) {
+      var x = pool[i];
+      if (x.id === item.id) continue;
+      var s = 0, xt = x.tags || [], j;
+      for (j = 0; j < tags.length; j++) if (xt.indexOf(tags[j]) >= 0) s++;
+      if (!!x.js === !!item.js) s++;
+      if (!!x.gen === !!item.gen) s += 0.35;
+      scored.push({ x: x, s: s });
+    }
+    scored.sort(function (a, b) { return b.s - a.s; });
+    var out = [];
+    for (i = 0; i < scored.length && out.length < n; i++) out.push(scored[i].x);
+    return out;
+  }
+
   /* ---------------- modal ---------------- */
   var modal = $('#modal');
   var modalPreview = $('#modalPreview');
   var codeOut = $('#codeOut');
   var codeTabs = $('#codeTabs');
+  var similarBox = $('#similar');
   var current = null, currentTab = 'html';
 
   function tabsFor(item) {
@@ -373,14 +735,46 @@
     if (on) n.textContent = 'showing your customisation';
   }
 
-  function openModal(item) {
+  function paintSimilar(item) {
+    if (!similarBox) return;
+    var sims = similarTo(item, 4);
+    similarBox.innerHTML = '';
+    if (!sims.length) { similarBox.hidden = true; return; }
+    similarBox.hidden = false;
+    var lab = document.createElement('p');
+    lab.className = 'similar-label';
+    lab.textContent = 'Similar in ' + item.cat;
+    similarBox.appendChild(lab);
+    var row = document.createElement('div');
+    row.className = 'similar-row';
+    sims.forEach(function (s) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'similar-item';
+      b.innerHTML = '<b></b><small></small>';
+      b.querySelector('b').textContent = s.title;
+      b.querySelector('small').textContent = (s.gen ? 'generated' : 'original') + ' · ' + (s.js ? 'js' : 'css');
+      b.addEventListener('click', function () { openModal(s); });
+      row.appendChild(b);
+    });
+    similarBox.appendChild(row);
+  }
+
+  function openModal(item, opts) {
     current = item;
+    pushRecent(item.id);
     $('#modalTitle').textContent = item.title;
-    $('#modalMeta').textContent = item.cat + ' · ' + item.tags.join(' · ') + (item.js ? ' · interactive' : ' · pure css');
+    var f = flags(item);
+    $('#modalMeta').textContent = item.cat + ' · ' + item.tags.join(' · ') +
+      (f.js ? ' · javascript' : ' · pure css') +
+      (f.gen ? ' · generated' : ' · original') +
+      (f.custom ? ' · customisable' : ' · basic tuning');
     modalTuneNote();
 
     modalPreview.innerHTML = '<div class="demo-host"></div>';
-    mount(item, $('.demo-host', modalPreview)).setVisible(true);
+    var mh = $('.demo-host', modalPreview);
+    mh.__pinned = true;
+    mount(item, mh, { pin: true }).setVisible(true);
 
     codeTabs.innerHTML = '';
     tabsFor(item).forEach(function (t, i) {
@@ -392,19 +786,22 @@
       if (i === 0) b.classList.add('active');
     });
     showTab('html');
+    paintSimilar(item);
 
     modal.hidden = false;
     document.body.style.overflow = 'hidden';
+    if (!opts || !opts.fromPop) setRoute(item.id);
   }
 
-  function closeModal() {
+  function closeModal(opts) {
     var h = $('.demo-host', modalPreview);
     if (h && h.__inst) h.__inst.destroy();
     modalPreview.innerHTML = '';
     modal.hidden = true;
     document.body.style.overflow = '';
+    if (!opts || !opts.keepHash) clearRoute();
   }
-  $$('[data-close]').forEach(function (b) { b.addEventListener('click', closeModal); });
+  $$('[data-close]').forEach(function (b) { b.addEventListener('click', function () { closeModal(); }); });
 
   function fullSnippet(item) {
     var attrs = T ? T.exportAttrs(item) : ' class="ml-tuned"';
@@ -441,6 +838,10 @@
   });
   $('#tuneModalBtn').addEventListener('click', function () { openTuner(current, true); });
   $('#aeModalBtn').addEventListener('click', function () { if (current) openAE(current); });
+  var shareBtn = $('#shareBtn');
+  if (shareBtn) shareBtn.addEventListener('click', function () { if (current) shareItem(current); });
+  var dlBtn = $('#downloadHtmlBtn');
+  if (dlBtn) dlBtn.addEventListener('click', function () { if (current) downloadHtml(current); });
 
   /* ---------------- tuner drawer ---------------- */
   var tuner = $('#tuner');
@@ -510,8 +911,9 @@
     deb = setTimeout(function () { state.q = search.value.trim(); render(true); }, 120);
   });
   $('#clearSearch').addEventListener('click', function () {
-    search.value = ''; state.q = ''; state.favOnly = false;
+    search.value = ''; state.q = ''; state.favOnly = false; state.kind = 'all';
     $('#favFilter').setAttribute('aria-pressed', 'false');
+    setKind('all');
     setCat('all', false);
   });
 
@@ -569,6 +971,7 @@
     es.forEach(function (e) {
       if (!e.isIntersecting) return;
       var el = e.target, target = +el.dataset.count, t0 = null;
+      el.textContent = '0';
       requestAnimationFrame(function step(ts) {
         if (!t0) t0 = ts;
         var p = Math.min((ts - t0) / 1200, 1);
@@ -583,30 +986,38 @@
   /* ---------------- go ---------------- */
   var heroCount = $('#counterHero');
   if (heroCount) heroCount.textContent = ITEMS.length;
-  search.placeholder = 'Search ' + ITEMS.length + ' effects & templates\u2026  (press /)';
+  search.placeholder = 'Search ' + ITEMS.length + ' effects & templates…  (press /)';
   $$('.hero-stats b')[0].dataset.count = ITEMS.length;
   $$('.hero-stats b')[1].dataset.count = CATS.length - 1;
   var tunedCount = $('#tunedCount');
   if (tunedCount) {
     var n = T ? T.count() : 0;
-    tunedCount.textContent = n ? n + ' customised' : 'every effect customisable';
+    tunedCount.textContent = n ? n + ' customised' : 'every effect has a tuner';
   }
 
   render(true);
   var per = {};
   ITEMS.forEach(function (i) { per[i.cat] = (per[i.cat] || 0) + 1; });
   console.log('%c Motion Lab ', 'background:#8b7dff;color:#fff;border-radius:4px',
-    ITEMS.length + ' effects · ' + Object.keys(per).map(function (k) { return k + ' ' + per[k]; }).join(', '));
+    ITEMS.length + ' effects · ' + Object.keys(per).map(function (k) { return k + ' ' + per[k]; }).join(', ') +
+    ' · max ' + MAX_MOUNTED + ' live demos');
 
-  /* ---------------- hero stage + bento ---------------- */
-  function itemById(id) {
-    for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === id) return ITEMS[i];
-    return null;
+  /* ---------------- hero stage + bento (mount only while visible) ---------------- */
+  function watchHost(host, item, rootEl, destroyWhenHidden) {
+    host.__item = item;
+    var io = new IntersectionObserver(function (es) {
+      var on = es[0] && es[0].isIntersecting;
+      if (on) {
+        if (!host.__inst) mount(item, host);
+        if (host.__inst) host.__inst.setVisible(true);
+      } else if (host.__inst) {
+        host.__inst.setVisible(false);
+        if (destroyWhenHidden) destroyHost(host);
+      }
+    }, { rootMargin: '120px 0px' });
+    io.observe(rootEl || host);
   }
-  function firstIn(cat) {
-    for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].cat === cat) return ITEMS[i];
-    return null;
-  }
+
   (function heroStage() {
     var stage = $('#heroStage');
     if (!stage) return;
@@ -620,14 +1031,14 @@
       host.className = 'demo-host';
       card.appendChild(host);
       stage.appendChild(card);
-      try { mount(item, host).setVisible(true); } catch (e) {}
+      watchHost(host, item, stage, true);
     });
   })();
   (function bento() {
     var box = $('#bento');
     if (!box) return;
     CATS.filter(function (c) { return c.id !== 'all'; }).forEach(function (c) {
-      var n = ITEMS.filter(function (i) { return i.cat === c.id; }).length;
+      var n = (BY_CAT[c.id] || []).length;
       var item = (c.demo && itemById(c.demo)) || firstIn(c.id);
       var b = document.createElement('button');
       b.type = 'button';
@@ -640,36 +1051,65 @@
       b.querySelector('p').textContent = c.desc;
       b.addEventListener('click', function () { setCat(c.id, true); });
       box.appendChild(b);
-      if (item) {
-        try { mount(item, $('.demo-host', b)).setVisible(true); } catch (e) {}
-      }
+      if (item) watchHost($('.demo-host', b), item, b, true);
     });
   })();
 
   function queryItems(q) {
     q = (q || '').trim().toLowerCase();
-    if (!q) return ITEMS.slice(0, 12);
+    if (!q) {
+      var rec = recent.map(itemById).filter(Boolean);
+      var seen = {};
+      rec.forEach(function (it) { seen[it.id] = 1; });
+      var rest = ITEMS.filter(function (it) { return !seen[it.id]; });
+      return rec.concat(rest).slice(0, 12);
+    }
+    var words = q.split(/\s+/);
     return ITEMS.filter(function (item) {
-      var hay = (item.title + ' ' + item.cat + ' ' + item.tags.join(' ') + ' ' + item.id).toLowerCase();
-      return q.split(/\s+/).every(function (w) { return hay.indexOf(w) > -1; });
+      var hay = item._search || '';
+      return words.every(function (w) { return hay.indexOf(w) > -1; });
     });
   }
+
+  function openFromRoute() {
+    var id = readRoute();
+    if (!id) {
+      if (!modal.hidden) closeModal({ keepHash: true });
+      return;
+    }
+    var it = itemById(id);
+    if (it) openModal(it, { fromPop: true });
+  }
+  window.addEventListener('hashchange', openFromRoute);
+  openFromRoute();
 
   window.MotionLab = {
     items: ITEMS,
     cats: CATS,
+    kinds: KINDS,
+    byCat: BY_CAT,
+    count: function (cat) {
+      if (!cat || cat === 'all') return ITEMS.length;
+      return (BY_CAT[cat] || []).length;
+    },
+    flags: flags,
     /* shared with js/templates.js so the template source viewer highlights
        code exactly the way the effect modal does */
     hl: { html: hlHtml, css: hlCss, js: hlJs },
     copy: copy,
     filter: function (cat) { setCat(cat, true); },
+    filterKind: function (kind) { setKind(kind || 'all'); },
     search: function (q) { state.q = q || ''; if (search) search.value = q || ''; render(true); },
     open: function (id) {
       var it = typeof id === 'string' ? itemById(id) : id;
       if (it) openModal(it);
     },
+    share: shareItem,
+    download: downloadHtml,
     query: queryItems,
     mount: mount,
+    destroy: destroyHost,
+    recent: function () { return recent.slice(); },
     random: function () {
       var pool = list.length ? list : ITEMS;
       openModal(pool[Math.floor(Math.random() * pool.length)]);
@@ -677,3 +1117,4 @@
   };
   window.dispatchEvent(new Event('ml:ready'));
 })();
+
