@@ -4,11 +4,17 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Motion Lab — 900 Web Animations, every one customisable</title>
-<meta name="description" content="An open gallery of 900 hand-crafted CSS &amp; JavaScript animations. Retune every effect, copy the web code, or download an After Effects builder that recreates its motion with native editable layers and your settings baked in." />
+<meta name="description" content="An open gallery of 900 CSS and JavaScript animations across 9 categories. Retune every effect, copy the web code, share a deep link, or generate an After Effects JSX builder that recreates its motion with native editable layers." />
 <meta name="theme-color" content="#05050a" />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://ayushghbk-afk.github.io/A-web-for-animation-/" />
 <meta property="og:title" content="Motion Lab — 900 customisable Web Animations" />
 <meta property="og:description" content="100 animations in each of 9 categories, a tuner on every one, full-page starter templates, and a native After Effects builder for every effect." />
 <meta property="og:type" content="website" />
+<meta property="og:url" content="https://ayushghbk-afk.github.io/A-web-for-animation-/" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"CollectionPage","name":"Motion Lab","url":"https://ayushghbk-afk.github.io/A-web-for-animation-/","description":"A static gallery of 900 CSS and JavaScript animations across nine categories, each with a live tuner and an After Effects builder.","isPartOf":{"@type":"WebSite","name":"Motion Lab","url":"https://ayushghbk-afk.github.io/A-web-for-animation-/"},"numberOfItems":900,"about":["CSS animation","JavaScript animation","UI motion","After Effects"]}
+</script>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2305050a'/><circle cx='16' cy='16' r='10' fill='none' stroke='%238b7dff' stroke-width='2'/><circle cx='16' cy='6' r='2.4' fill='%2322d3ee'/><circle cx='16' cy='16' r='3.2' fill='%238b7dff'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -115,7 +121,11 @@
       </a>
       <a href="#after-effects" class="mega-row">
         <span class="mega-ico ae-menu-mark" aria-hidden="true">Ae</span>
-        <span><b>After Effects export</b><small>Native shape layers, expressions, AEP, AEPX and MOGRT.</small></span>
+        <span><b>After Effects export</b><small>A JSX builder — After Effects itself writes .aep / .aepx / .mogrt.</small></span>
+      </a>
+      <a href="./catalog.html" class="mega-row">
+        <span class="mega-ico" aria-hidden="true">Aa</span>
+        <span><b>Text catalog</b><small>All 900 effects, readable with JavaScript off.</small></span>
       </a>
       <button type="button" class="mega-row" id="openShortcuts">
         <span class="mega-ico" aria-hidden="true">⌘</span>
@@ -148,6 +158,7 @@
       <a href="#gallery" class="mobile-link" data-close-menu>Gallery</a>
       <a href="#after-effects" class="mobile-link" data-close-menu>After Effects export</a>
       <a href="#templates" class="mobile-link" data-close-menu>Templates</a>
+      <a href="./catalog.html" class="mobile-link">Text catalog</a>
       <a href="#how" class="mobile-link" data-close-menu>How it works</a>
       <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
     </div>
@@ -177,11 +188,16 @@
 </div>
 
 <main id="top">
+  <noscript>
+    <div class="noscript-banner">
+      <p><strong>Motion Lab</strong> is a static gallery of <b>900</b> CSS and JavaScript animations in nine categories (100 each), plus two full-page starter templates. Enable JavaScript for the live lab, or browse the <a href="./catalog.html">text catalog of every effect</a>.</p>
+    </div>
+  </noscript>
 
   <section class="hero">
     <div class="hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow"><span class="dot-live"></span> Pure CSS &amp; vanilla JS · zero dependencies · <b id="tunedCount">every effect customisable</b></p>
+        <p class="eyebrow"><span class="dot-live"></span> Pure CSS &amp; vanilla JS · zero dependencies · <b id="tunedCount">every effect has a tuner</b></p>
         <h1 class="hero-title">
           <span class="line"><span>The motion system</span></span>
           <span class="line"><span>behind a thousand</span></span>
@@ -193,11 +209,11 @@
           <button class="btn-ghost mag-btn" id="randomBtn" type="button">Surprise me <span class="spark">✦</span></button>
         </div>
         <ul class="hero-stats">
-          <li><b data-count="900">0</b><span>effects</span></li>
-          <li><b data-count="9">0</b><span>categories</span></li>
-          <li><b data-count="100">0</b><span>per category</span></li>
-          <li><b data-count="2" id="tplHeroStat">0</b><span>templates</span></li>
-          <li><b data-count="100">0</b><span>% customisable</span></li>
+          <li><b data-count="900">900</b><span>effects</span></li>
+          <li><b data-count="9">9</b><span>categories</span></li>
+          <li><b data-count="100">100</b><span>per category</span></li>
+          <li><b data-count="2" id="tplHeroStat">2</b><span>templates</span></li>
+          <li><b data-count="100">100</b><span>% with a tuner</span></li>
           <li><b data-count="0">0</b><span>dependencies</span></li>
         </ul>
       </div>
@@ -241,10 +257,11 @@
     <div class="bento" id="bento"></div>
   </section>
 
-  <nav class="filters" id="filters" aria-label="Filter by category">
+  <nav class="filters" id="filters" aria-label="Filter the collection">
     <div class="filters-inner" id="chips">
       <span class="chip-ink" id="chipInk" aria-hidden="true"></span>
     </div>
+    <div class="kind-bar" id="kinds" role="toolbar" aria-label="Filter by type"></div>
   </nav>
 
   <section id="gallery" class="gallery-section">
@@ -253,7 +270,7 @@
         <p class="kicker">The collection</p>
         <h2>Every effect, live.</h2>
       </div>
-      <p id="resultCount">Loading effects…</p>
+        <p id="resultCount">900 live effects in the collection</p>
     </div>
     <div class="grid" id="grid" aria-live="polite"></div>
     <p class="empty" id="empty" hidden>Nothing matches that search. <button id="clearSearch" type="button">Clear filters</button></p>
@@ -276,7 +293,7 @@
         <span class="ae-logo" aria-hidden="true">Ae</span>
         <p class="ae-lede">A browser cannot safely forge Adobe's binary project format. Motion Lab does the reliable thing instead: it downloads a small <code>.jsx</code> builder, then After Effects creates and saves the real project itself.</p>
         <ol class="ae-steps">
-          <li><span>01</span><div><b>Choose any effect</b><p>Tune speed, scale, colours and parameters first, then press <strong>Download for AE</strong> on its card.</p></div></li>
+          <li><span>01</span><div><b>Choose any effect</b><p>Tune speed, scale, colours and parameters first, then press <strong>Generate After Effects builder</strong> on its card.</p></div></li>
           <li><span>02</span><div><b>Run one script</b><p>In After Effects choose <strong>File › Scripts › Run Script File</strong> and select the downloaded builder.</p></div></li>
           <li><span>03</span><div><b>Edit native layers</b><p>The script creates named shape/text layers, a Controls null, expressions, usage notes and a transparent 60 fps comp.</p></div></li>
         </ol>
@@ -346,7 +363,7 @@
       <article>
         <span class="outro-ico" aria-hidden="true">🧪</span>
         <h3>Isolated demos</h3>
-        <p>Shadow roots + lazy mounting mean 900 animated demos on one page without your fan taking off.</p>
+        <p>Shadow roots, a shared rAF pump, off-screen CSS pause and destroying far-away demos mean 900 cards without keeping hundreds of live instances.</p>
       </article>
       <article>
         <span class="outro-ico" aria-hidden="true">♿</span>
@@ -379,6 +396,7 @@
       <a href="#product">Categories</a>
       <a href="#after-effects">After Effects export</a>
       <a href="#templates">Starter templates</a>
+      <a href="./catalog.html">Text catalog</a>
       <a href="#how">How it works</a>
     </div>
     <div>
@@ -418,7 +436,10 @@
       </button>
     </header>
     <div class="modal-body">
-      <div class="modal-preview" id="modalPreview"></div>
+      <div class="modal-side">
+        <div class="modal-preview" id="modalPreview"></div>
+        <div class="similar" id="similar" hidden></div>
+      </div>
       <div class="modal-code">
         <div class="code-tabs" id="codeTabs"></div>
         <pre class="code-block"><code id="codeOut"></code></pre>
@@ -426,7 +447,9 @@
           <button class="btn-ghost sm" id="tuneModalBtn">✨ Customise</button>
           <button class="btn-primary sm" id="copyBtn">Copy this tab</button>
           <button class="btn-ghost sm" id="copyAllBtn">Copy full snippet</button>
-          <button class="btn-ghost sm ae-inline-btn" id="aeModalBtn"><span class="ae-btn-mark">Ae</span> Download for AE</button>
+          <button class="btn-ghost sm ae-inline-btn" id="aeModalBtn"><span class="ae-btn-mark">Ae</span> Generate AE builder</button>
+          <button class="btn-ghost sm" id="shareBtn">Share</button>
+          <button class="btn-ghost sm" id="downloadHtmlBtn">Download HTML</button>
           <button class="btn-ghost sm" id="replayModal">Replay ⟳</button>
         </div>
       </div>
@@ -454,7 +477,7 @@
       <div class="tuner-mini">
         <button class="btn-ghost sm" id="tunerFav" type="button">☆ Favourite</button>
         <button class="btn-ghost sm" id="tunerCode" type="button">Code</button>
-        <button class="btn-ghost sm ae-inline-btn" id="tunerAE" type="button"><span class="ae-btn-mark">Ae</span> Export</button>
+        <button class="btn-ghost sm ae-inline-btn" id="tunerAE" type="button"><span class="ae-btn-mark">Ae</span> AE builder</button>
         <button class="btn-primary sm" id="tunerCopy" type="button">Copy tuned snippet</button>
       </div>
     </div>

@@ -157,7 +157,7 @@
     if (!L || !grid) return;
     grid.innerHTML = '';
     L.cats.filter(function (c) { return c.id !== 'all'; }).forEach(function (c) {
-      var n = L.items.filter(function (i) { return i.cat === c.id; }).length;
+      var n = L.count ? L.count(c.id) : L.items.filter(function (i) { return i.cat === c.id; }).length;
       var a = document.createElement('button');
       a.type = 'button';
       a.className = 'mega-card';

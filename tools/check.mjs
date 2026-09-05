@@ -272,6 +272,34 @@ function checkTemplates() {
 }
 checkTemplates();
 
+/* ---- runtime lifecycle + SEO wiring ---- */
+function checkRuntimeAndSeo() {
+  const app = read('js/app.js');
+  const tune = read('js/tune.js');
+  if (!tune.includes(':host(.is-offscreen)')) {
+    ok = false; note('js/tune.js must pause CSS animations on :host(.is-offscreen)');
+  }
+  ['MAX_MOUNTED', 'ioFar', 'is-offscreen', '_search', 'BY_CAT'].forEach((needle) => {
+    if (!app.includes(needle)) { ok = false; note(`js/app.js is missing ${needle} — demo lifecycle / indexes`); }
+  });
+  ['id="kinds"', 'id="similar"', 'id="shareBtn"', 'id="downloadHtmlBtn"', 'application/ld+json', '<noscript>', 'catalog.html'].forEach((needle) => {
+    if (!html.includes(needle)) { ok = false; note(`index.html is missing ${needle}`); }
+  });
+  const catPath = path.join(root, 'catalog.html');
+  if (!fs.existsSync(catPath)) {
+    ok = false; note('catalog.html is missing — run node tools/build-seo.mjs');
+    return;
+  }
+  const cat = read('catalog.html');
+  let missing = 0;
+  ITEMS.forEach((it) => {
+    if (!cat.includes('data-id="' + it.id + '"')) missing++;
+  });
+  if (missing) { ok = false; note(`catalog.html is missing ${missing} effect ids — regenerate with node tools/build-seo.mjs`); }
+  else console.log(`  seo: catalog.html lists all ${ITEMS.length} effects · kinds/share/json-ld wired · off-screen CSS pause`);
+}
+checkRuntimeAndSeo();
+
 if (fail.length) {
   console.log(`\n  \u001b[31m${fail.length} problem(s):\u001b[0m`);
   fail.slice(0, 40).forEach((m) => console.log('   · ' + m));

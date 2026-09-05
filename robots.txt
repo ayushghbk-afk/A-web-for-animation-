@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ayushghbk-afk.github.io/A-web-for-animation-/sitemap.xml

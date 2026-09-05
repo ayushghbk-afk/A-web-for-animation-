@@ -284,7 +284,7 @@
   /* the full stylesheet handed to the shadow root */
   var PREFIX =
     ':host{display:contents}' +
-    ':host(.is-paused) *{animation-play-state:paused !important}' +
+    ':host(.is-paused) *,:host(.is-offscreen) *{animation-play-state:paused !important}' +
     '*{box-sizing:border-box}' +
     ':host,div,span,b,i,em,p,button,input,label,svg,figure,figcaption,h4,nav,output{font-family:"Space Grotesk",system-ui,sans-serif}';
   function styleFor(item) {
