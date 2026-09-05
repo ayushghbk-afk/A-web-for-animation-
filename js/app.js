@@ -274,7 +274,8 @@
           '<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v5h5"/></svg></button>' +
         '<button class="mini fav flex-none" title="Favourite" aria-pressed="false">' +
           '<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.7-9.5-9A5.3 5.3 0 0 1 12 6a5.3 5.3 0 0 1 9.5 6c-2 4.3-9.5 9-9.5 9z"/></svg></button>' +
-      '</div>';
+      '</div>' +
+      '<button class="mini ae-export" type="button"><span class="ae-btn-mark">Ae</span><span>Download for After Effects</span><small>.aep · .aepx · .mogrt</small></button>';
     $('.card-title', body).textContent = item.title;
 
     el.appendChild(stage);
@@ -293,6 +294,7 @@
     $('.code', body).addEventListener('click', function () { openModal(item); });
     $('.replay', body).addEventListener('click', function () { remount(item, host); });
     $('.tune', body).addEventListener('click', function () { openTuner(item); });
+    $('.ae-export', body).addEventListener('click', function () { openAE(item); });
 
     el.addEventListener('mousemove', function (e) {
       var r = el.getBoundingClientRect();
@@ -337,6 +339,12 @@
     if (shown >= list.length) $('#moreBtn').parentNode.hidden = true;
     else $('#moreBtn').parentNode.hidden = false;
     $('#moreBtn').textContent = 'Load ' + Math.min(PAGE, list.length - shown) + ' more';
+  }
+
+  /* ---------------- After Effects bridge ---------------- */
+  function openAE(item) {
+    if (window.MotionLabAE && window.MotionLabAE.open) window.MotionLabAE.open(item);
+    else toast('After Effects exporter is not available');
   }
 
   /* ---------------- modal ---------------- */
@@ -432,6 +440,7 @@
     if (h) remount(current, h);
   });
   $('#tuneModalBtn').addEventListener('click', function () { openTuner(current, true); });
+  $('#aeModalBtn').addEventListener('click', function () { if (current) openAE(current); });
 
   /* ---------------- tuner drawer ---------------- */
   var tuner = $('#tuner');
@@ -463,6 +472,7 @@
     };
     $('#tunerCopy').onclick = function () { copy(fullSnippet(item), 'Customised snippet copied'); };
     $('#tunerCode').onclick = function () { openModal(item); };
+    $('#tunerAE').onclick = function () { openAE(item); };
   }
   function closeTuner() {
     tuner.classList.remove('open');

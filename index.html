@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Motion Lab — 900 Web Animations, every one customisable</title>
-<meta name="description" content="An open gallery of 900 hand-crafted CSS &amp; JavaScript animations — 100 loaders, 100 buttons, 100 text effects and more. Every single one is customisable: retune its speed, colours, size, glow and built-in parameters, then copy the code with your settings baked in. Plus full-page starter templates you can preview live, read and fork." />
+<meta name="description" content="An open gallery of 900 hand-crafted CSS &amp; JavaScript animations. Retune every effect, copy the web code, or download an After Effects builder that recreates its motion with native editable layers and your settings baked in." />
 <meta name="theme-color" content="#05050a" />
 <meta property="og:title" content="Motion Lab — 900 customisable Web Animations" />
-<meta property="og:description" content="100 animations in each of 9 categories, a tuner on every one, and full-page starter templates you can launch. Copy the code with your settings baked in." />
+<meta property="og:description" content="100 animations in each of 9 categories, a tuner on every one, full-page starter templates, and a native After Effects builder for every effect." />
 <meta property="og:type" content="website" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2305050a'/><circle cx='16' cy='16' r='10' fill='none' stroke='%238b7dff' stroke-width='2'/><circle cx='16' cy='6' r='2.4' fill='%2322d3ee'/><circle cx='16' cy='16' r='3.2' fill='%238b7dff'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -113,6 +113,10 @@
         <span class="mega-ico" aria-hidden="true">03</span>
         <span><b>Starter templates</b><small>Two full-page scenes: a 3D galaxy and a neon particle heart.</small></span>
       </a>
+      <a href="#after-effects" class="mega-row">
+        <span class="mega-ico ae-menu-mark" aria-hidden="true">Ae</span>
+        <span><b>After Effects export</b><small>Native shape layers, expressions, AEP, AEPX and MOGRT.</small></span>
+      </a>
       <button type="button" class="mega-row" id="openShortcuts">
         <span class="mega-ico" aria-hidden="true">⌘</span>
         <span><b>Keyboard shortcuts</b><small>⌘K search · / focus · Esc close.</small></span>
@@ -142,6 +146,7 @@
       <div class="mobile-cats" id="mobileCats"></div>
       <p class="mobile-kicker">Navigate</p>
       <a href="#gallery" class="mobile-link" data-close-menu>Gallery</a>
+      <a href="#after-effects" class="mobile-link" data-close-menu>After Effects export</a>
       <a href="#templates" class="mobile-link" data-close-menu>Templates</a>
       <a href="#how" class="mobile-link" data-close-menu>How it works</a>
       <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
@@ -182,7 +187,7 @@
           <span class="line"><span>behind a thousand</span></span>
           <span class="line"><span><em id="counterHero">900</em> interfaces.</span></span>
         </h1>
-        <p class="hero-sub">A product-grade gallery of loaders, buttons, type, cards, backgrounds, controls, SVG, 3D and interaction — each one live in its own shadow root, tunable from a panel, and one click from your clipboard. Plus a shelf of full-page starter templates you can preview and fork.</p>
+        <p class="hero-sub">A product-grade gallery of loaders, buttons, type, cards, backgrounds, controls, SVG, 3D and interaction — each one live, tunable, and one click from your clipboard or After Effects. Export native shape layers, expressions and project files with your settings baked in.</p>
         <div class="hero-cta">
           <a href="#gallery" class="btn-primary mag-btn">Browse the lab <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           <button class="btn-ghost mag-btn" id="randomBtn" type="button">Surprise me <span class="spark">✦</span></button>
@@ -219,8 +224,8 @@
       </article>
       <article style="--i:2">
         <span class="step-n">03</span>
-        <h3>Copy &amp; ship</h3>
-        <p>The snippet you copy already carries your numbers. Drop it into any page. No framework, no attribution required.</p>
+        <h3>Copy or export</h3>
+        <p>Ship the tuned web snippet, or download an After Effects builder for editable layers, controls, expressions and project files.</p>
       </article>
     </div>
   </section>
@@ -258,6 +263,42 @@
     </div>
   </section>
 
+  <section class="ae-workflow" id="after-effects">
+    <div class="section-head">
+      <div>
+        <p class="kicker">After Effects bridge</p>
+        <h2>From live CSS to an editable timeline.</h2>
+      </div>
+      <p>All 900 effects · current tuning included · no server required</p>
+    </div>
+    <div class="ae-workflow-grid">
+      <div class="ae-workflow-copy">
+        <span class="ae-logo" aria-hidden="true">Ae</span>
+        <p class="ae-lede">A browser cannot safely forge Adobe's binary project format. Motion Lab does the reliable thing instead: it downloads a small <code>.jsx</code> builder, then After Effects creates and saves the real project itself.</p>
+        <ol class="ae-steps">
+          <li><span>01</span><div><b>Choose any effect</b><p>Tune speed, scale, colours and parameters first, then press <strong>Download for AE</strong> on its card.</p></div></li>
+          <li><span>02</span><div><b>Run one script</b><p>In After Effects choose <strong>File › Scripts › Run Script File</strong> and select the downloaded builder.</p></div></li>
+          <li><span>03</span><div><b>Edit native layers</b><p>The script creates named shape/text layers, a Controls null, expressions, usage notes and a transparent 60 fps comp.</p></div></li>
+        </ol>
+        <div class="ae-bundle-actions">
+          <button class="btn-primary sm" id="aeStarterKit" type="button"><span class="ae-btn-mark">Ae</span> 10-effect starter kit</button>
+          <button class="btn-ghost sm" id="aeFullBundle" type="button">Build all 900</button>
+        </div>
+      </div>
+      <div class="ae-format-board" aria-label="After Effects output formats">
+        <div class="ae-format-head">
+          <span>Builder output</span>
+          <span class="ae-compat">CC 2018+ · best effort</span>
+        </div>
+        <article><code>.aep</code><div><b>Full project</b><p>Adobe's native binary project, with every layer and expression editable.</p></div><span>primary</span></article>
+        <article><code>.aepx</code><div><b>XML project copy</b><p>Text-based companion for version control and automation workflows.</p></div><span>included</span></article>
+        <article><code>.mogrt</code><div><b>Motion Graphics template</b><p>Exported when the installed After Effects version exposes the MOGRT API.</p></div><span>optional</span></article>
+        <article><code>.ffx</code><div><b>Preset-ready controls</b><p>Select the generated Controls layer, then use Animation › Save Animation Preset.</p></div><span>manual</span></article>
+        <p class="ae-honesty"><b>Native recreation, not a wrapped web page.</b> DOM, CSS and canvas do not exist in After Effects. The bridge maps each effect's mechanism, timing, palette and tuning to AE primitives; complex browser-only rendering can differ.</p>
+      </div>
+    </div>
+  </section>
+
   <section class="templates" id="templates">
     <div class="section-head">
       <div>
@@ -290,7 +331,7 @@
 
   <section class="outro">
     <h2>Built to be taken apart</h2>
-    <p>Every card is rendered inside a Shadow DOM, so no two demos can ever fight over a class name. Hit <b>Code</b> to read the exact HTML, CSS and JS that produces it, or <b>Customise</b> to retune it — the snippet you copy out already carries your settings.</p>
+    <p>Every card is rendered inside a Shadow DOM, so no two demos can ever fight over a class name. Read the exact web source, retune it, or send its mechanism to a native After Effects rig — every export carries your current settings.</p>
     <div class="outro-cards">
       <article>
         <span class="outro-ico" aria-hidden="true">🎛️</span>
@@ -336,6 +377,7 @@
       <h4>Product</h4>
       <a href="#gallery">Gallery</a>
       <a href="#product">Categories</a>
+      <a href="#after-effects">After Effects export</a>
       <a href="#templates">Starter templates</a>
       <a href="#how">How it works</a>
     </div>
@@ -384,6 +426,7 @@
           <button class="btn-ghost sm" id="tuneModalBtn">✨ Customise</button>
           <button class="btn-primary sm" id="copyBtn">Copy this tab</button>
           <button class="btn-ghost sm" id="copyAllBtn">Copy full snippet</button>
+          <button class="btn-ghost sm ae-inline-btn" id="aeModalBtn"><span class="ae-btn-mark">Ae</span> Download for AE</button>
           <button class="btn-ghost sm" id="replayModal">Replay ⟳</button>
         </div>
       </div>
@@ -411,6 +454,7 @@
       <div class="tuner-mini">
         <button class="btn-ghost sm" id="tunerFav" type="button">☆ Favourite</button>
         <button class="btn-ghost sm" id="tunerCode" type="button">Code</button>
+        <button class="btn-ghost sm ae-inline-btn" id="tunerAE" type="button"><span class="ae-btn-mark">Ae</span> Export</button>
         <button class="btn-primary sm" id="tunerCopy" type="button">Copy tuned snippet</button>
       </div>
     </div>
@@ -479,6 +523,64 @@
   </div>
 </div>
 
+<!-- After Effects export -->
+<div class="modal ae-modal" id="aeExport" hidden>
+  <div class="modal-backdrop" data-ae-close></div>
+  <div class="modal-panel ae-panel" role="dialog" aria-modal="true" aria-labelledby="aeTitle" aria-describedby="aeIntro">
+    <header class="modal-head ae-modal-head">
+      <div class="ae-title-lockup">
+        <span class="ae-logo sm" aria-hidden="true">Ae</span>
+        <div>
+          <h3 id="aeTitle">Export for After Effects</h3>
+          <p id="aeMeta" class="muted"></p>
+        </div>
+      </div>
+      <button class="icon-btn" data-ae-close title="Close (Esc)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </header>
+    <div class="ae-export-body">
+      <aside class="ae-export-preview">
+        <div class="ae-preview" id="aePreview" aria-label="Live web preview"></div>
+        <div class="ae-profile-card">
+          <div class="ae-profile-state"><span id="aeTuneState">Authored defaults included</span><span class="ae-palette" id="aePalette"></span></div>
+          <dl class="ae-profile-stats">
+            <div><dt>Rig</dt><dd id="aeArchetype">shape</dd></div>
+            <div><dt>Layers</dt><dd id="aeLayers">~4</dd></div>
+            <div><dt>Cycle</dt><dd id="aeCycle">2s</dd></div>
+          </dl>
+          <p id="aeComp">1080 × 1080 · 60 fps · 6s</p>
+        </div>
+        <p class="ae-preview-note">The preview is the live web original. The download rebuilds its motion with editable AE primitives rather than embedding a browser.</p>
+      </aside>
+      <section class="ae-export-options">
+        <p class="ae-export-kicker">Standalone ExtendScript builder</p>
+        <h4><code id="aeFileName">effect.jsx</code></h4>
+        <p id="aeIntro">Run this file from <strong>File › Scripts › Run Script File</strong>. It creates organized layers, expressions, a Controls null, README guide layer and transparent composition—then asks where to save the real Adobe files.</p>
+
+        <fieldset class="ae-formats">
+          <legend>Files for After Effects to save</legend>
+          <label class="ae-format"><input type="checkbox" id="aeAep" checked /><span><b>.aep</b><small>native project</small></span><i>recommended</i></label>
+          <label class="ae-format"><input type="checkbox" id="aeAepx" checked /><span><b>.aepx</b><small>XML project copy</small></span><i>versionable</i></label>
+          <label class="ae-format"><input type="checkbox" id="aeMogrt" checked /><span><b>.mogrt</b><small>Essential Graphics template</small></span><i>when supported</i></label>
+        </fieldset>
+        <p class="ae-output-summary" id="aeOutputSummary"></p>
+
+        <div class="ae-primary-actions">
+          <button class="btn-primary" id="aeDownload" type="button"><span class="ae-btn-mark light">Ae</span> Download JSX builder</button>
+          <button class="btn-ghost" id="aeExpression" type="button">Copy AE expression</button>
+        </div>
+        <button class="ae-manifest" id="aeManifest" type="button">Download settings manifest (.json)</button>
+
+        <div class="ae-safety-note">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 16H3L12 3z"/><path d="M12 9v4M12 16h.01"/></svg>
+          <p><b>Start in a blank project for a standalone file.</b> If another project is open, the builder asks before adding anything. AEP/AEPX are always written by After Effects itself—not imitated in the browser.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="./js/data/loaders.js"></script>
@@ -502,6 +604,8 @@
 <script src="./js/gen/motion.gen.js"></script>
 <script src="./js/gen/expand.js"></script>
 <script src="./js/tune.js"></script>
+<script src="./js/ae-core.js"></script>
+<script src="./js/ae-export.js"></script>
 <script src="./js/app.js"></script>
 <script src="./js/templates.js"></script>
 <script src="./js/nav.js"></script>
