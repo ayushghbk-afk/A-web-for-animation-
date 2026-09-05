@@ -168,10 +168,44 @@ else {
 
 console.log(`  sources: ${checked.js} interactive demos compiled · ${ITEMS.length} html/css pairs validated`);
 
+/* ---- After Effects bridge (profiles + generated JSX) ---- */
+run('js/ae-core.js');
+const AE = win.MotionLabAECore;
+const html = read('index.html');
+function checkAfterEffects() {
+  if (!AE || typeof AE.profile !== 'function' || typeof AE.generate !== 'function') {
+    ok = false; note('js/ae-core.js did not define a usable MotionLabAECore'); return;
+  }
+  const profiles = ITEMS.map((item, i) => AE.profile(item, { index: i + 1, settings: {}, palette: Tune.palette(item) }));
+  const kinds = new Map();
+  profiles.forEach((p, i) => {
+    const where = `AE profile #${i + 1} ${ITEMS[i].id}`;
+    if (p.id !== ITEMS[i].id) { ok = false; note(`${where}: id changed to ${p.id}`); }
+    if (!p.fileBase || !/^\d{3}-[a-z0-9-]+$/.test(p.fileBase)) { ok = false; note(`${where}: bad fileBase "${p.fileBase}"`); }
+    if (!AE.ARCHETYPES.includes(p.archetype)) { ok = false; note(`${where}: unknown archetype "${p.archetype}"`); }
+    if (!Array.isArray(p.colors) || p.colors.length < 3) { ok = false; note(`${where}: needs at least three AE colours`); }
+    if (!(p.cycle > 0) || !(p.compDuration >= p.cycle)) { ok = false; note(`${where}: invalid cycle / comp duration`); }
+    if (!(p.layerEstimate >= 3)) { ok = false; note(`${where}: invalid layer estimate`); }
+    if (!kinds.has(p.archetype)) kinds.set(p.archetype, p);
+  });
+  kinds.forEach((p, kind) => {
+    try {
+      const jsx = AE.generate(p, { aep: true, aepx: true, mogrt: true });
+      if (!/^#target aftereffects/.test(jsx)) throw new Error('missing #target aftereffects');
+      if (!jsx.includes("'ADBE Slider Control'") || !jsx.includes('.aepx')) throw new Error('missing controls or project output');
+      new Function(jsx.replace(/^#target[^\n]*\n/, ''));
+    } catch (e) { ok = false; note(`AE ${kind} builder does not compile — ${e.message}`); }
+  });
+  ['id="aeExport"', 'id="after-effects"', 'id="aeStarterKit"', 'id="aeFullBundle"', 'id="aeModalBtn"', 'js/ae-core.js', 'js/ae-export.js'].forEach((needle) => {
+    if (!html.includes(needle)) { ok = false; note(`index.html is missing ${needle} — After Effects export is not wired up`); }
+  });
+  console.log(`  after effects: ${profiles.length} profiles · ${kinds.size} native rig archetypes · ${kinds.size} JSX builders compiled`);
+}
+checkAfterEffects();
+
 /* ---- starter templates (js/templates.js + ./templates) ---- */
 run('js/templates.js');
 const TPL = win.ML_TEMPLATES;
-const html = read('index.html');
 
 function checkTemplates() {
   if (!Array.isArray(TPL) || !TPL.length) { ok = false; note('js/templates.js did not define ML_TEMPLATES'); return; }

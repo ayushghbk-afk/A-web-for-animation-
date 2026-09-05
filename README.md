@@ -8,8 +8,8 @@ them: a Three.js galaxy and a neon particle geometry engine — preview them inl
 copy them out, fork them.
 
 **Every single one is customisable.** Each demo ships a tuner — speed, size, glow, hue, easing and
-direction plus per-effect parameters — that animates live *and* bakes your numbers into the snippet
-you copy out.
+direction plus per-effect parameters — that animates live and bakes your numbers into the web
+snippet or the downloadable **After Effects builder**.
 
 Built to be dropped straight onto **GitHub Pages** — no build step, no bundler, no npm install.
 
@@ -105,6 +105,43 @@ Under the hood every effect is written against custom properties — `var(--sz, 
 
 ---
 
+## 🎬 After Effects export
+
+Every animation card also has **Download for After Effects**. It profiles the effect's mechanism,
+current timing, palette, dimensions and tuner values, then downloads a standalone ExtendScript
+builder (`.jsx`). Run that file from **After Effects → File → Scripts → Run Script File**.
+
+The builder creates:
+
+* a transparent 1080 × 1080, 60 fps composition;
+* named, editable shape/text layers organized by effect mechanism;
+* a **Controls** null with Speed, Cycle, Amount, Direction, Scale, Rotation, Opacity, Glow, Blur and
+  three Color Controls;
+* expressions wired to those controls and a hidden README guide layer containing usage and license;
+* real `.aep` and `.aepx` projects written by After Effects itself, plus `.mogrt` when the installed
+  version exposes the Motion Graphics Template export API.
+
+This is intentionally a bridge rather than a fake converter: After Effects has no DOM, CSS, canvas
+or WebGL runtime. The generated comp maps the web effect's primary motion, timing, palette and
+customisation to native AE primitives; complex browser-only rendering can differ. `.ffx` is
+preset-ready but remains a manual **Animation → Save Animation Preset** step because Adobe's preset
+format is binary.
+
+The browser can generate a 10-effect starter kit or one builder containing all 900 comps. For a
+static release folder with one builder and manifest per effect:
+
+```bash
+node tools/build-ae-assets.mjs            # curated starter 10
+node tools/build-ae-assets.mjs --all      # all 900 in generated/animation-assets/
+node tools/build-ae-assets.mjs --limit=50 --out=/tmp/ae-assets
+```
+
+`js/ae-core.js` is the shared, DOM-free profiler/generator; `js/ae-export.js` is only the browser UI.
+The real Adobe project formats are never fabricated in JavaScript—the JSX asks After Effects to save
+them, which keeps the output compatible and structurally valid.
+
+---
+
 ## 🧠 How it works
 
 * `js/templates.js` holds the template catalogue and its UI (cards, live previews, the launch and
@@ -127,7 +164,7 @@ Under the hood every effect is written against custom properties — `var(--sz, 
 
 ```bash
 node tools/check.mjs     # 100 per category, unique ids, honest knobs, 900 stylesheets compiled,
-                         # plus the template catalogue vs what is really in ./templates
+                         # all AE profiles / rig builders, plus the template catalogue vs disk
 node tools/stats.mjs     # the table above, and the template shelf
 
 # deeper QA (needs two dev-only packages, the site itself has none):
