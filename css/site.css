@@ -2230,3 +2230,20 @@ html[data-theme="light"] .site-header {
 @media (max-width: 760px) {
   .hero-stats { width: 100%; justify-content: space-between; }
 }
+
+/* ============================================================
+   Mobile hero background containment
+   Keeps the Aurora as a decorative top band instead of a
+   full-height blur behind the single-column hero.
+   ============================================================ */
+@media (max-width: 640px) {
+  .hero-bg {
+    inset: 0 0 auto 0;
+    height: 42%;
+    opacity: .22;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+  }
+  .hero-grid { position: relative; z-index: 2; }
+  .hero-copy { position: relative; z-index: 3; }
+}
