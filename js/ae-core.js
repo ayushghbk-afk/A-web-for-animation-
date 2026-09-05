@@ -23,7 +23,7 @@
   function slug(s) {
     return String(s || 'effect').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 72) || 'effect';
   }
-  function pad(n) { n = String(Math.max(0, Number(n) || 0)); while (n.length < 3) n = '0' + n; return n; }
+  function pad(n) { n = String(Math.max(0, Number(n) || 0)); while (n.length < 4) n = '0' + n; return n; }
   function copy(o) {
     var out = {}, k;
     o = o || {};

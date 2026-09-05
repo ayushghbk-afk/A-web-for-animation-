@@ -1,6 +1,6 @@
-# ⚡ Motion Lab — 900 web animations & UI elements
+# ⚡ Motion Lab — 1,800 web animations & UI elements
 
-A zero-dependency, static showcase of **900 live web animations**: exactly **100 in each of nine
+A zero-dependency, static showcase of **1,800 live web animations**: exactly **200 in each of nine
 categories** — loaders, buttons, text effects, cards & hover, backgrounds, controls, SVG line art,
 3D scenes and interaction patterns. 204 are hand-written, 696 were generated as distinct mechanics
 (not colour swaps) through the same pipeline. Two **full-page starter templates** ship alongside
@@ -20,30 +20,30 @@ Built to be dropped straight onto **GitHub Pages** — no build step, no bundler
 
 | Category | Count | Examples |
 | --- | --- | --- |
-| Loaders | 100 | conic spinner, equalizer, atom orbitals, metronome tick, domino chain, odometer digits |
-| Buttons | 100 | magnetic pull, material ripple, liquid blob, shine sweep, hold-to-confirm, confetti press |
-| Text FX | 100 | typewriter, glitch, scramble decode, neon breath, per-word mask reveal, split-slide links |
-| Cards & Hover | 100 | 3D tilt, holographic foil, cursor spotlight, concert ticket, stacked deck, flip card |
-| Backgrounds | 100 | particle network, meteor shower, lightning storm, warp speed, aurora veils, canvas rain |
-| Controls | 100 | day/night toggle, PIN code, password meter, rotary knob, fader bank, drag-drop zone |
-| SVG & Lines | 100 | self-drawing path, progress ring, marching ants, radar blips, morphing blob, line chart |
-| 3D | 100 | rotating cube, 3D carousel, dice, DNA helix, isometric city, cloth sim, lathe & vase |
-| Interaction | 100 | scroll reveal, parallax, cursor follower, drag-to-sort, spring modal, confetti, ticker |
-| **Total** | **900** | *170 distinct mechanic families* |
+| Loaders | 200 | conic spinner, equalizer, atom orbitals, metronome tick, domino chain, mega ring stack |
+| Buttons | 200 | magnetic pull, material ripple, liquid blob, split-hinge press, letterpress keys, beam hover |
+| Text FX | 200 | typewriter, CRT scan, glitch, scramble decode, neon blink, 3D letter cascades |
+| Cards & Hover | 200 | 3D tilt, holographic foil, dashboard stat cards, table rows, bank cards, weather card |
+| Backgrounds | 200 | nebula canvas, city skyline, aurora veils, cyber rain, 3D wave floor, light beams |
+| Controls | 200 | fader bank, joystick, rotary dial, breaker board, keypads, lever switches, arc gauges |
+| SVG & Lines | 200 | self-drawing path, progress ring, marching ants, radar blips, morphing blob, compass |
+| 3D | 200 | rotating cube, isometric city, DNA helix, torus rings, planet systems, casino card fans |
+| Interaction | 200 | parallax layers, marquee walls, cursor trails, drag boards, physics balls, flip grids |
+| **Total** | **1,800** | *236 distinct mechanic families* |
 
 ```
   category           hand   gen  total  knobs
-  Loaders              27    73    100    377
-  Buttons              26    74    100    479
-  Text FX              23    77    100    504
-  Cards & Hover        23    77    100    479
-  Backgrounds          26    74    100    398
-  Controls             22    78    100    301
-  SVG & Lines          19    81    100     98
-  3D                   18    82    100    234
-  Interaction          20    80    100    134
+  Loaders              27   173    200    992
+  Buttons              26   174    200    790
+  Text FX              23   177    200    866
+  Cards & Hover        23   177    200    948
+  Backgrounds          26   174    200    517
+  Controls             22   178    200    706
+  SVG & Lines          19   181    200    475
+  3D                   18   182    200    592
+  Interaction          20   180    200    487
   ────────────────────────────────────────────────────────
-  TOTAL               204   696    900   3004
+  TOTAL               204  1596   1800   6373
 ```
 
 Run `node tools/stats.mjs` to reprint that table — it prints the template shelf too.
@@ -128,12 +128,12 @@ customisation to native AE primitives; complex browser-only rendering can differ
 preset-ready but remains a manual **Animation → Save Animation Preset** step because Adobe's preset
 format is binary.
 
-The browser can generate a 10-effect starter kit or one builder containing all 900 comps. For a
+The browser can generate a 10-effect starter kit or one builder containing all 1,800 comps. For a
 static release folder with one builder and manifest per effect:
 
 ```bash
 node tools/build-ae-assets.mjs            # curated starter 10
-node tools/build-ae-assets.mjs --all      # all 900 in generated/animation-assets/
+node tools/build-ae-assets.mjs --all      # all 1,800 in generated/animation-assets/
 node tools/build-ae-assets.mjs --limit=50 --out=/tmp/ae-assets
 ```
 
@@ -155,12 +155,12 @@ them, which keeps the output compatible and structurally valid.
   `rng()`). `js/gen/expand.js` pads or prunes every category to exactly 100 and keeps ids unique
   against the hand-written set.
 * `js/app.js` renders a card per effect and mounts each demo inside its **own Shadow DOM**, so
-  900 independent stylesheets coexist without a single class-name collision.
+  1,800 independent stylesheets coexist without a single class-name collision.
 * Demos follow a real lifecycle — **unmounted → active → paused → destroyed**. They mount as they
   scroll in (60 cards at a time, 24 on a phone), JS work shares one `requestAnimationFrame` pump, CSS
   animations
   pause from inside the shadow root (`:host(.is-offscreen)`), and far-away instances are torn down
-  so exploring all 900 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
+  so exploring all 1,800 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
   mobile) is the backstop.
 * Search and category filters use a **precomputed index** (`item._search`, `BY_CAT`) instead of
   rebuilding haystacks on every keypress.
@@ -189,7 +189,7 @@ covers fold-cover screens.
 ## ✅ Verify it
 
 ```bash
-node tools/check.mjs        # 100 per category, unique ids, honest knobs, 900 stylesheets compiled,
+node tools/check.mjs        # 200 per category, unique ids, honest knobs, 1,800 stylesheets compiled,
                             # all AE profiles / rig builders, plus the template catalogue vs disk
 node tools/responsive.mjs   # mobile/touch invariants: viewport + safe areas, viewport-proof grid
                             # tracks, 44px targets, sheet geometry, hover-free behaviour
@@ -198,7 +198,7 @@ node tools/build-seo.mjs    # catalog.html + sitemap.xml (add --pages for effect
 
 # deeper QA (needs two dev-only packages, the site itself has none):
 npm i --no-save --prefix /tmp/qa jsdom css-tree
-QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 900 demos, fires 330 interactions
+QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 1,800 demos, fires 1,800 interactions
 QA_DIR=/tmp/qa node tools/touch.mjs   # boots the whole page at phone + desktop width and drives
                                       # the drawer, relocated toggles, dialog stacking, scroll locks
 ```

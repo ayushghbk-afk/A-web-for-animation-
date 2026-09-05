@@ -8,7 +8,7 @@
 
    Examples:
      node tools/build-ae-assets.mjs                 # starter 10
-     node tools/build-ae-assets.mjs --all           # all 900
+     node tools/build-ae-assets.mjs --all           # all 1,800
      node tools/build-ae-assets.mjs --limit=50
      node tools/build-ae-assets.mjs --all --out=/tmp/ae-assets
    ============================================================ */
@@ -90,7 +90,7 @@ selected.forEach((item, i) => {
 });
 
 const bundleProfiles = selected.map((item) => Core.profile(item, { index: items.indexOf(item) + 1, settings: {} }));
-const bundleBase = selected.length === items.length ? 'motion-lab-900-effect-bundle' : 'motion-lab-' + selected.length + '-effect-starter-kit';
+const bundleBase = selected.length === items.length ? 'motion-lab-1800-effect-bundle' : 'motion-lab-' + selected.length + '-effect-starter-kit';
 const bundle = Core.generate(bundleProfiles, { aep: true, aepx: true, mogrt: selected.length <= 50, baseName: bundleBase });
 fs.writeFileSync(path.join(outDir, bundleBase + '.jsx'), bundle);
 bytes += Buffer.byteLength(bundle);

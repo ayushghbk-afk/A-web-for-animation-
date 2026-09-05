@@ -120,7 +120,7 @@
   /* -------- item factory + registry -------- */
   var GEN = global.ML_GEN = global.ML_GEN || {};
   var SEEN = global.ML_SEEN_IDS = global.ML_SEEN_IDS || {};
-  var TARGET = global.ML_TARGET = 100;              // 100 effects in every category
+  var TARGET = global.ML_TARGET = 200;              // 200 effects in every category
   /* the hand written set is already in MOTION_LAB — never reuse one of its ids */
   (global.MOTION_LAB || []).forEach(function (i) { SEEN[i.id] = 1; });
   var CATS = ['loaders', 'buttons', 'text', 'cards', 'backgrounds', 'controls', 'svg', '3d', 'motion'];

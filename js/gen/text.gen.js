@@ -191,7 +191,7 @@
    ['mq-reverse', 'Reverse Ticker', 'to{transform:translateX(50%)}', 'linear', false],
    ['mq-pause', 'Ticker Pauses On Hover', 'to{transform:translateX(-50%)}', 'linear', true],
    ['mq-3d', 'Curved Ticker', 'to{transform:translateX(-50%) rotateX(0)}', 'linear', false],
-   ['mq-vert', 'Vertical Ticker', 'to{transform:translateY(-50%)}', 'linear', false],
+   ['mq-vert', 'Vertical Marquee', 'to{transform:translateY(-50%)}', 'linear', false],
    ['mq-duo', 'Counter Scrolling Rows', 'to{transform:translateX(-50%)}', 'linear', false],
    ['mq-accel', 'Accelerating Ticker', '0%{transform:translateX(0)}100%{transform:translateX(-50%)}', 'cubic-bezier(.6,0,.4,1)', false],
    ['mq-steps', 'Stop-Motion Ticker', 'to{transform:translateX(-50%)}', 'steps(28,end)', false]
