@@ -450,6 +450,7 @@ html[data-theme="light"] #themeToggle .i-sun { display: block; }
   font-family: var(--mono); font-size: .68rem; color: var(--muted);
   border: 1px solid var(--border); border-radius: 6px; padding: 2px 6px;
 }
+.cmdk-close { display: none; }
 .cmdk-label {
   margin: 0; padding: 8px 16px 0;
   font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
@@ -1547,11 +1548,6 @@ html[data-theme="light"] .ae-format b { color: #5432a8; }
 .tz-foot { display: flex; gap: 7px; flex-wrap: wrap; padding-top: 18px; }
 .tz-foot .btn-ghost.sm { flex: 1; justify-content: center; }
 
-@media (max-width: 620px) {
-  .tuner-panel { width: 100%; height: min(84vh, 720px); top: auto; bottom: 0; border-left: 0; border-top: 1px solid var(--border-strong); border-radius: 20px 20px 0 0; transform: translateY(102%); }
-  .tuner.open .tuner-panel { transform: translateY(0); }
-}
-
 /* ---------- pause + reduced motion ---------- */
 body.paused .card-stage *, body.paused .modal-preview *,
 body.paused .float-card *, body.paused .bento-preview *,
@@ -1633,6 +1629,7 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   .steps { padding: 6px 14px 44px; }
   .steps article { padding: 18px; }
   .gallery-section { padding: 26px 12px 64px; }
+  .inventory { padding: 22px 12px 60px; }
   .ae-workflow { padding: 22px 12px 60px; }
   .templates { padding: 26px 12px 60px; }
   .outro { padding: 0 14px 72px; }
@@ -1643,6 +1640,7 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   .hero-stage { overflow: hidden; border-radius: 24px; }
   .bento { gap: 10px; }
   .empty { padding: 40px 0; }
+  .inv-h { margin: 28px 0 12px; font-size: .74rem; }
 }
 
 /* ---------- ≤640px · the phone layout ---------- */
@@ -1672,7 +1670,7 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   /* the header only keeps what cannot live anywhere else; the utility
      toggles are moved into the drawer by js/nav.js (and hidden here as a
      no-JS fallback so the hamburger can never be pushed off-screen) */
-  .site-header { padding: var(--safe-t) clamp(10px, 3.4vw, 16px) 0; }
+  .site-header { padding: max(8px, var(--safe-t)) clamp(10px, 3.4vw, 16px) 8px; }
   .header-tools > #favFilter,
   .header-tools > #motionToggle,
   .header-tools > #themeToggle { display: none; }
@@ -1694,18 +1692,20 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
      short card, so lazy rows do not shove the page while you flick */
   .card { contain-intrinsic-size: auto 276px; }
   .card-title { font-size: .93rem; }
+  .card-actions { flex-wrap: wrap; }
+  .card-menu { display: contents; }
   .mini { min-height: 42px; font-size: .76rem; padding: 8px 6px; gap: 4px; min-width: 0; white-space: nowrap; }
   .mini.flex-none { width: 42px; }
   .knob-n { font-size: .58rem; padding: 2px 5px; }
   /* on touch the "more" list becomes an in-flow action row: the card clips
      its own overflow, so a floating popover would be cut in half */
   .card-menu-pop {
-    position: static; inset: auto; width: 100%; min-width: 0;
+    position: static; inset: auto; width: 100%; min-width: 0; flex: 1 1 100%;
     display: flex; flex-wrap: wrap; gap: 6px;
     padding: 6px 0 0; border: 0; border-radius: 0; background: none; box-shadow: none;
   }
   .card-menu-pop button {
-    flex: 1 1 46%; width: auto; min-height: 42px; padding: 8px 7px; text-align: center;
+    flex: 1 1 calc(50% - 6px); width: auto; min-height: 42px; padding: 8px 7px; text-align: center;
     border: 1px solid var(--border); border-radius: 10px; background: var(--panel);
     font-size: .74rem; line-height: 1.25; white-space: normal;
   }
@@ -1715,7 +1715,7 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
 
   /* dialogs become bottom sheets so the thumbs reach everything */
   .modal { padding: 0; align-items: end; }
-  .modal-panel {
+  .modal-panel, .tpl-modal .modal-panel, .ae-panel {
     width: 100%; max-height: 93vh; max-height: min(93svh, 100%);
     border-radius: 20px 20px 0 0; border-left: 0; border-right: 0; border-bottom: 0;
     animation: sheetIn .36s var(--ease) both;
@@ -1724,9 +1724,10 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   .modal-body { overflow: auto; overscroll-behavior: contain; }
   .modal-side { border-right: 0; border-bottom: 1px solid var(--border); grid-template-rows: auto auto; }
   .modal-preview { min-height: 208px; }
-  .modal-head { padding: 14px 14px 12px; flex-wrap: wrap; }
-  .tpl-head-tools { width: 100%; justify-content: flex-end; }
+  .modal-head { padding: 14px 14px 12px; flex-wrap: wrap; gap: 8px; }
+  .tpl-head-tools { justify-content: flex-end; gap: 6px; }
   .tpl-head-tools > * { min-height: 40px; }
+  .tpl-code-panel .modal-actions a, .tpl-code-panel .modal-actions button { white-space: normal; }
   .code-tabs { padding: 8px 10px 0; overflow-x: auto; scrollbar-width: none; }
   .code-tabs::-webkit-scrollbar { display: none; }
   .filters-inner, .kind-bar { padding-bottom: 6px; }
@@ -1751,11 +1752,19 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   }
   .ae-format { padding: 12px; }
   .ae-format input { width: 22px; height: 22px; }
+  .ae-manifest { min-height: var(--tap); display: inline-flex; align-items: center; }
 
   /* the tuner sheet */
   .tuner-panel {
-    height: 93vh; height: min(93svh, 900px); border-radius: 22px 22px 0 0;
+    width: 100%; height: 93vh; height: min(93svh, 900px);
+    top: auto; bottom: 0; right: 0; left: 0;
+    border-left: 0; border-right: 0; border-bottom: 0;
+    border-top: 1px solid var(--border-strong);
+    border-radius: 22px 22px 0 0;
+    transform: translateY(102%);
+    transition: transform .38s var(--ease);
   }
+  .tuner.open .tuner-panel { transform: translateY(0); }
   .tuner-panel::before {
     content: ""; position: absolute; z-index: 2; top: 7px; left: 50%;
     width: 46px; height: 4px; margin-left: -23px; border-radius: 999px;
@@ -1782,7 +1791,8 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
     display: flex; flex-direction: column; animation: cmdInM .26s var(--ease) both;
   }
   @keyframes cmdInM { from { opacity: 0; transform: translateY(14px); } }
-  .cmdk-bar { padding: calc(12px + var(--safe-t)) 14px 12px; }
+  .cmdk-bar { padding: max(12px, calc(8px + var(--safe-t))) 14px 12px; gap: 10px; }
+  .cmdk-close { display: grid; place-items: center; width: 38px; height: 38px; flex: none; border-radius: 10px; }
   .cmdk-results { flex: 1; max-height: none; }
   .cmdk-item { min-height: var(--tap); padding: 10px 12px; }
   .cmdk-bar kbd, .cmdk-foot { display: none; }
@@ -1813,6 +1823,7 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   .mobile-search span { min-width: 0; }
   .mobile-search:hover { color: var(--text); border-color: var(--border-strong); }
   .mobile-search svg { width: 17px; height: 17px; flex: none; }
+  .mobile-device-box[hidden] { display: none; }
   .mobile-prefs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .mobile-prefs:empty { display: none; }
   .mobile-prefs .icon-btn {
@@ -1870,7 +1881,8 @@ a, button, .chip, .kind-chip, .mini, .icon-btn, .menu-toggle, .btn-primary,
   .ae-steps li { grid-template-columns: 1fr; gap: 6px; }
   .ae-format-head { flex-direction: column; align-items: flex-start; gap: 2px; }
   .hero { padding: 16px 12px 40px; }
-  .gallery-section, .explore, .templates, .ae-workflow { padding-inline: 10px; }
+  .gallery-section, .explore, .templates, .ae-workflow, .inventory { padding-inline: 10px; }
+  .inv-list { grid-template-columns: 1fr; }
   .float-card { scale: .5; }
   .fc-2 { display: none; }
 }

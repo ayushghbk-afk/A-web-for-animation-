@@ -50,8 +50,8 @@
       tags: ['css', '3d', 'isometric', 'loader', 'big'],
       html: '<div class="sc">' + cells(6, 'i') + '</div>',
       css: join([
-        '.sc{position:relative;width:160px;height:120px;transform:rotateX(55deg) rotateZ(-45deg);transform-style:preserve-3d}',
-        '.sc i{position:absolute;width:36px;height:36px;background:var(--c1,' + C1 + ');left:calc((var(--i)%3)*28px);top:calc((var(--i)/3|0)*28px);box-shadow:18px 0 0 color-mix(in srgb,var(--c1,' + C1 + ') 55%,#000),0 18px 0 color-mix(in srgb,var(--c2,' + C2 + ') 70%,#000);animation:sc-isob var(--dur,1.6s) ease-in-out infinite;animation-delay:calc(var(--i)*-.18s)}',
+        '.sc{position:relative;width:160px;height:120px;display:grid;grid-template-columns:repeat(3,36px);gap:8px;place-content:center;transform:rotateX(55deg) rotateZ(-45deg);transform-style:preserve-3d}',
+        '.sc i{position:relative;width:36px;height:36px;background:var(--c1,' + C1 + ');box-shadow:18px 0 0 color-mix(in srgb,var(--c1,' + C1 + ') 55%,#000),0 18px 0 color-mix(in srgb,var(--c2,' + C2 + ') 70%,#000);animation:sc-isob var(--dur,1.6s) ease-in-out infinite;animation-delay:calc(var(--i)*-.18s)}',
         kf('sc-isob', '0%,100%{transform:translateZ(0);opacity:.7}50%{transform:translateZ(22px);opacity:1}')
       ]),
       cfg: [range('Cycle', '--dur', .6, 4, .1, 1.6, 's'), col('Brick', '--c1', C1), col('Side', '--c2', C2)]
@@ -496,9 +496,9 @@
       tags: ['css', '3d', 'city', 'big'],
       html: '<div class="mb"><div class="ct">' + cells(9) + '</div></div>',
       css: join([
-        '.mb{width:100%;height:var(--h,210px);overflow:hidden;border-radius:10px;background:#07070f;perspective:500px}',
-        '.ct{position:absolute;inset:-20%;transform:rotateX(60deg) rotateZ(-20deg);transform-style:preserve-3d;animation:sc-icf var(--dur,18s) linear infinite}',
-        '.ct i{position:absolute;width:18%;height:30%;background:linear-gradient(var(--c1,' + C1 + '),#0a0a14);left:calc((var(--i)%3)*32% + 8%);top:calc((var(--i)/3|0)*32%);box-shadow:0 0 18px color-mix(in srgb,var(--c2,' + C2 + ') 40%,transparent)}',
+        '.mb{width:100%;height:var(--h,210px);overflow:hidden;border-radius:10px;background:#07070f;perspective:500px;position:relative}',
+        '.ct{position:absolute;inset:-20%;display:grid;grid-template-columns:repeat(3,1fr);gap:14%;padding:8%;transform:rotateX(60deg) rotateZ(-20deg);transform-style:preserve-3d;animation:sc-icf var(--dur,18s) linear infinite}',
+        '.ct i{position:relative;width:100%;height:60px;background:linear-gradient(var(--c1,' + C1 + '),#0a0a14);box-shadow:0 0 18px color-mix(in srgb,var(--c2,' + C2 + ') 40%,transparent)}',
         kf('sc-icf', 'to{transform:rotateX(60deg) rotateZ(340deg)}')
       ]),
       cfg: [range('Height', '--h', 120, 420, 2, 210, 'px'), range('Cycle', '--dur', 8, 40, 1, 18, 's'),
@@ -510,7 +510,8 @@
       html: '<div class="mb xf">' + cells(12) + '</div>',
       css: join([
         '.mb{width:100%;height:var(--h,210px);overflow:hidden;border-radius:10px;background:#080812;position:relative}',
-        '.xf i{position:absolute;width:18px;height:28px;background:linear-gradient(160deg,var(--c2,' + C2 + '),transparent);clip-path:polygon(50% 0,100% 100%,0 100%);left:calc(8% + var(--i)*7%);top:calc(20% + (var(--i)%4)*12%);opacity:.7;animation:sc-xf var(--dur,4s) ease-in-out infinite;animation-delay:calc(var(--i)*-.2s);filter:drop-shadow(0 0 8px var(--c1,' + C1 + '))}',
+        '.xf{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;padding:24px 16px;place-items:center;height:100%}',
+        '.xf i{position:relative;width:18px;height:28px;background:linear-gradient(160deg,var(--c2,' + C2 + '),transparent);clip-path:polygon(50% 0,100% 100%,0 100%);opacity:.7;animation:sc-xf var(--dur,4s) ease-in-out infinite;animation-delay:calc(var(--i)*-.2s);filter:drop-shadow(0 0 8px var(--c1,' + C1 + '))}',
         kf('sc-xf', '0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-10px) rotate(6deg)}')
       ]),
       cfg: [range('Height', '--h', 120, 420, 2, 210, 'px'), range('Cycle', '--dur', 1.5, 8, .1, 4, 's'),
@@ -851,8 +852,8 @@
       html: '<div class="d3"><div class="cl">' + cells(6) + '</div></div>',
       css: join([
         d3,
-        '.cl{position:relative;width:140px;height:140px;transform-style:preserve-3d;animation:sc-cl3 var(--dur,12s) linear infinite}',
-        '.cl i{position:absolute;width:36px;height:52px;left:calc(20% + (var(--i)%3)*22%);top:calc(18% + (var(--i)/3|0)*28%);background:linear-gradient(160deg,var(--c2,' + C2 + '),transparent);clip-path:polygon(50% 0,100% 100%,0 100%);filter:drop-shadow(0 0 10px var(--c1,' + C1 + '))}',
+        '.cl{position:relative;width:140px;height:140px;display:grid;grid-template-columns:repeat(3,36px);gap:16px;place-content:center;transform-style:preserve-3d;animation:sc-cl3 var(--dur,12s) linear infinite}',
+        '.cl i{position:relative;width:36px;height:52px;background:linear-gradient(160deg,var(--c2,' + C2 + '),transparent);clip-path:polygon(50% 0,100% 100%,0 100%);filter:drop-shadow(0 0 10px var(--c1,' + C1 + '))}',
         kf('sc-cl3', 'to{transform:rotateY(1turn) rotateX(12deg)}')
       ]),
       cfg: [range('Scene height', '--h', 180, 420, 2, 260, 'px'), range('Cycle', '--dur', 4, 24, .5, 12, 's'),
