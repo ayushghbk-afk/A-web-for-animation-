@@ -215,6 +215,7 @@
     .filter(Boolean);
   var headerTools = $('#headerTools');
   var prefsSlot = $('#mobilePrefs');
+  var deviceBox = $('#mobileDeviceBox');
   var prefsAnchor = headerTools && prefBtns.length ? prefBtns[prefBtns.length - 1].nextElementSibling : null;
 
   function placePrefs() {
@@ -224,6 +225,7 @@
       if (inDrawer && btn.parentNode !== prefsSlot) prefsSlot.appendChild(btn);
       else if (!inDrawer && btn.parentNode === prefsSlot) headerTools.insertBefore(btn, prefsAnchor);
     });
+    if (deviceBox) deviceBox.hidden = !inDrawer;
   }
   placePrefs();
   if (smallScreen.addEventListener) smallScreen.addEventListener('change', placePrefs);

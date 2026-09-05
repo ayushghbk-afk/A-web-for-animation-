@@ -183,8 +183,10 @@
       <a href="./catalog.html" class="mobile-link">Text catalog</a>
       <a href="#how" class="mobile-link" data-close-menu>How it works</a>
       <a href="https://github.com/ayushghbk-afk/A-web-for-animation-" target="_blank" rel="noopener" class="mobile-link">GitHub</a>
-      <p class="mobile-kicker">This device</p>
-      <div class="mobile-prefs" id="mobilePrefs"></div>
+      <div class="mobile-device-box" id="mobileDeviceBox">
+        <p class="mobile-kicker">This device</p>
+        <div class="mobile-prefs" id="mobilePrefs"></div>
+      </div>
     </div>
     <footer class="mobile-nav-foot">
       <a href="#gallery" class="btn-primary" data-close-menu>Open the lab</a>
@@ -201,6 +203,9 @@
       <input id="search" type="search" placeholder="Search 1,800 effects &amp; templates…" aria-label="Search animations"
            autocomplete="off" spellcheck="false" autocapitalize="off" enterkeyhint="search" />
       <kbd>esc</kbd>
+      <button class="icon-btn cmdk-close" type="button" data-close-cmdk aria-label="Close search" title="Close (Esc)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
     <p class="cmdk-label" id="cmdkLabel">Jump to an effect or a template, or filter the gallery</p>
     <div class="cmdk-results" id="cmdkResults" role="listbox"></div>
