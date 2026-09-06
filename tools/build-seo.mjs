@@ -35,6 +35,7 @@ const run = (f) => new Function('window', 'document', 'localStorage', 'globalThi
 
 fs.readdirSync(path.join(root, 'js/data')).filter((f) => f.endsWith('.js')).sort().forEach((f) => run('js/data/' + f));
 run('js/gen/kit.js');
+run('js/gen/varykit.js');
 fs.readdirSync(path.join(root, 'js/gen')).filter((f) => f.endsWith('.gen.js')).sort().forEach((f) => run('js/gen/' + f));
 run('js/gen/expand.js');
 
@@ -45,6 +46,7 @@ if (!Array.isArray(ITEMS) || !ITEMS.length) {
 }
 
 const LABEL = {
+  data: 'Data & Charts', nature: 'Nature & Weather', retro: 'Retro & Arcade', transitions: 'Transitions',
   loaders: 'Loaders', buttons: 'Buttons', text: 'Text FX', cards: 'Cards & Hover',
   backgrounds: 'Backgrounds', controls: 'Controls', svg: 'SVG & Lines', '3d': '3D', motion: 'Interaction'
 };
@@ -107,8 +109,8 @@ let catalog = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Motion Lab catalog — 1,800 web animations</title>
-<meta name="description" content="A crawlable index of all 1,800 Motion Lab animations across nine categories. Open any effect in the live lab, or read this page with JavaScript disabled.">
+<title>Motion Lab catalog — 3,400 web animations</title>
+<meta name="description" content="A crawlable index of all 3,400 Motion Lab animations across thirteen categories. Open any effect in the live lab, or read this page with JavaScript disabled.">
 <link rel="canonical" href="${SITE}/catalog.html">
 <meta name="robots" content="index,follow">
 <style>${catalogCss.trim()}</style>

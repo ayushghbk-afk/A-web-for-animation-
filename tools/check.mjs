@@ -39,6 +39,7 @@ const genFiles = fs.readdirSync(path.join(root, 'js/gen')).filter((f) => f.endsW
 dataFiles.forEach((f) => run('js/data/' + f));
 /* kit first, then the generators (any order), then the expander, then tune */
 run('js/gen/kit.js');
+run('js/gen/varykit.js');
 genFiles.filter((f) => f.endsWith('.gen.js')).sort().forEach((f) => run('js/gen/' + f));
 run('js/gen/expand.js');
 run('js/tune.js');
@@ -47,6 +48,7 @@ const ITEMS = win.MOTION_LAB;
 const KIT = win.MLKit;
 const CATS = KIT.CATS;
 const TARGET = KIT.TARGET;
+const targetFor = KIT.targetFor || (() => TARGET);
 const report = win.ML_EXPAND;
 
 console.log(`\n  Motion Lab collection check\n  ${'─'.repeat(52)}`);
@@ -54,6 +56,7 @@ console.log(`  files: ${dataFiles.length} data · ${genFiles.length} generator`)
 
 if (!Array.isArray(ITEMS) || !ITEMS.length) { console.error('  ✗ MOTION_LAB is empty'); process.exit(1); }
 
+const GRAND = CATS.reduce((n, c) => n + targetFor(c), 0);
 const per = {};
 ITEMS.forEach((i) => { (per[i.cat] = per[i.cat] || []).push(i); });
 
@@ -62,16 +65,17 @@ console.log(`\n  ${'category'.padEnd(14)} ${'hand'.padStart(5)} ${'gen'.padStart
 CATS.forEach((c) => {
   const all = per[c] || [];
   const g = all.filter((i) => i.gen).length;
-  const status = all.length === TARGET ? '\u001b[32m✓ exactly ' + TARGET + '\u001b[0m'
-    : `\u001b[31m✗ ${all.length}/${TARGET} (need ${TARGET - all.length > 0 ? '+' + (TARGET - all.length) : all.length - TARGET})\u001b[0m`;
-  if (all.length !== TARGET) { ok = false; note(`${c}: expected ${TARGET} effects, found ${all.length}`); }
+  const want = targetFor(c);
+  const status = all.length === want ? '\u001b[32m✓ exactly ' + want + '\u001b[0m'
+    : `\u001b[31m✗ ${all.length}/${want} (need ${want - all.length > 0 ? '+' + (want - all.length) : all.length - want})\u001b[0m`;
+  if (all.length !== want) { ok = false; note(`${c}: expected ${want} effects, found ${all.length}`); }
   console.log(`  ${c.padEnd(14)} ${String(all.length - g).padStart(5)} ${String(g).padStart(5)} ${String(all.length).padStart(6)}   ${status}`);
 });
 const orphans = ITEMS.filter((i) => !CATS.includes(i.cat));
 if (orphans.length) { ok = false; note(`${orphans.length} items in unknown categories: ${[...new Set(orphans.map(o => o.cat))].join(', ')}`); }
 
 console.log(`  ${'─'.repeat(52)}`);
-console.log(`  ${'TOTAL'.padEnd(14)} ${String(ITEMS.length).padStart(15)}   ${ITEMS.length === CATS.length * TARGET ? '\u001b[32m✓ complete\u001b[0m' : '\u001b[33mtarget is ' + CATS.length * TARGET + '\u001b[0m'}`);
+console.log(`  ${'TOTAL'.padEnd(14)} ${String(ITEMS.length).padStart(15)}   ${ITEMS.length === GRAND ? '\u001b[32m✓ complete\u001b[0m' : '\u001b[33mtarget is ' + GRAND + '\u001b[0m'}`);
 if (report && report.short) {
   const short = Object.entries(report.short).filter(([, n]) => n > 0);
   if (short.length) { ok = false; short.forEach(([c, n]) => note(`${c}: generator pool was ${n} variants short of the target`)); }

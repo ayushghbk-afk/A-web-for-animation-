@@ -127,6 +127,10 @@
     if (cat === 'svg') return 'line';
     if (cat === '3d') return 'three';
     if (cat === 'motion') return 'motion';
+    if (cat === 'data') return 'bars';
+    if (cat === 'nature') return 'background';
+    if (cat === 'retro') return 'grid';
+    if (cat === 'transitions') return 'card';
     if (/orbit|atom|solar|planet|saturn/.test(hay)) return 'orbit';
     if (/ring|spinner|conic|arc|radial|clock|gauge/.test(hay)) return 'ring';
     if (/dot|bubble|ellipsis|typing/.test(hay)) return 'dots';
