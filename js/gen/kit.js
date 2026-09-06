@@ -120,10 +120,18 @@
   /* -------- item factory + registry -------- */
   var GEN = global.ML_GEN = global.ML_GEN || {};
   var SEEN = global.ML_SEEN_IDS = global.ML_SEEN_IDS || {};
-  var TARGET = global.ML_TARGET = 200;              // 200 effects in every category
+  var TARGET = global.ML_TARGET = 200;              // 200 effects in the nine original categories
+  /* the four newer categories are deeper: 400 effects each */
+  var TARGETS = global.ML_TARGETS = {
+    loaders: 200, buttons: 200, text: 200, cards: 200, backgrounds: 200,
+    controls: 200, svg: 200, '3d': 200, motion: 200,
+    data: 400, nature: 400, retro: 400, transitions: 400
+  };
+  function targetFor(cat) { return TARGETS[cat] || TARGET; }
   /* the hand written set is already in MOTION_LAB — never reuse one of its ids */
   (global.MOTION_LAB || []).forEach(function (i) { SEEN[i.id] = 1; });
-  var CATS = ['loaders', 'buttons', 'text', 'cards', 'backgrounds', 'controls', 'svg', '3d', 'motion'];
+  var CATS = ['loaders', 'buttons', 'text', 'cards', 'backgrounds', 'controls', 'svg', '3d', 'motion',
+    'data', 'nature', 'retro', 'transitions'];
 
   function item_srcHas(o, key) {
     return [o.html, o.css, o.js].some(function (s) { return s && s.indexOf(key) > -1; });
@@ -173,6 +181,8 @@
     ACCENT: ACCENT,
     CATS: CATS,
     TARGET: TARGET,
+    TARGETS: TARGETS,
+    targetFor: targetFor,
     clamp: clamp, r2: r2, px: px,
     hex2rgb: hex2rgb, rgb2hex: rgb2hex, mix: mix, rgba: rgba, shift: shift, accent: accent,
     rgb2hsl: rgb2hsl, hsl2rgb: hsl2rgb,

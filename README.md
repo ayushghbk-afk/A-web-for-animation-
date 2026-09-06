@@ -1,9 +1,11 @@
-# ⚡ Motion Lab — 1,800 web animations & UI elements
+# ⚡ Motion Lab — 3,400 web animations & UI elements
 
-A zero-dependency, static showcase of **1,800 live web animations**: exactly **200 in each of nine
-categories** — loaders, buttons, text effects, cards & hover, backgrounds, controls, SVG line art,
-3D scenes and interaction patterns. 204 are hand-written, 1,596 were generated as distinct mechanics
-(not colour swaps) through the same pipeline. Two **full-page starter templates** ship alongside
+A zero-dependency, static showcase of **3,400 live web animations** across **thirteen categories**:
+**200 each** in the nine original ones — loaders, buttons, text effects, cards & hover, backgrounds,
+controls, SVG line art, 3D scenes and interaction patterns — plus **400 each** in the four deep
+categories: data & charts, nature & weather, retro & arcade, and transitions & reveals.
+204 are hand-written, 3,196 were generated as distinct mechanics (not colour swaps) through the
+same pipeline. Two **full-page starter templates** ship alongside
 them: a Three.js galaxy and a neon particle geometry engine — preview them inline, launch them,
 copy them out, fork them.
 
@@ -29,7 +31,11 @@ Built to be dropped straight onto **GitHub Pages** — no build step, no bundler
 | SVG & Lines | 200 | self-drawing path, progress ring, marching ants, radar blips, morphing blob, compass |
 | 3D | 200 | rotating cube, isometric city, DNA helix, torus rings, planet systems, casino card fans |
 | Interaction | 200 | parallax layers, marquee walls, cursor trails, drag boards, physics balls, flip grids |
-| **Total** | **1,800** | *269 distinct mechanic families* |
+| Data & Charts | 400 | growth bars, donut fills, sparklines, arc gauges, heatmaps, candlesticks, radars, sankeys, KPI tiles, live log streams |
+| Nature & Weather | 400 | rainfall, snow, flame tongues, smoke, rolling clouds, falling leaves, ocean waves, lightning, fireflies, aurora, starfields |
+| Retro & Arcade | 400 | CRT scanlines, VHS tracking, pixel sprites, arcade marquees, 8-bit HUDs, vaporwave grids, neon signs, flip clocks, terminal boots |
+| Transitions | 400 | directional wipes, curtains, irises, blinds, tile grids, page turns, dissolves, zoom-throughs, cube swaps, gooey blob wipes |
+| **Total** | **3,400** | *349 distinct mechanic families* |
 
 ```
   category           hand   gen  total  knobs
@@ -42,8 +48,12 @@ Built to be dropped straight onto **GitHub Pages** — no build step, no bundler
   SVG & Lines          19   181    200    484
   3D                   18   182    200    605
   Interaction          20   180    200    494
+  Data & Charts         0   400    400   2980
+  Nature & Weather      0   400    400   3540
+  Retro & Arcade        0   400    400   3400
+  Transitions           0   400    400   3880
   ────────────────────────────────────────────────────────
-  TOTAL               204  1596   1800   6339
+  TOTAL               204  3196   3400  20139
 ```
 
 Run `node tools/stats.mjs` to reprint that table — it prints the template shelf too.
@@ -128,12 +138,12 @@ customisation to native AE primitives; complex browser-only rendering can differ
 preset-ready but remains a manual **Animation → Save Animation Preset** step because Adobe's preset
 format is binary.
 
-The browser can generate a 10-effect starter kit or one builder containing all 1,800 comps. For a
+The browser can generate a 10-effect starter kit or one builder containing all 3,400 comps. For a
 static release folder with one builder and manifest per effect:
 
 ```bash
 node tools/build-ae-assets.mjs            # curated starter 10
-node tools/build-ae-assets.mjs --all      # all 1,800 in generated/animation-assets/
+node tools/build-ae-assets.mjs --all      # all 3,400 in generated/animation-assets/
 node tools/build-ae-assets.mjs --limit=50 --out=/tmp/ae-assets
 ```
 
@@ -150,17 +160,20 @@ them, which keeps the output compatible and structurally valid.
   source viewer always shows the real files.
 * A hand-written effect is a plain data object — `{ id, title, cat, tags, html, css, js? }` —
   in `js/data/*.js`.
+* The four 400-effect categories are built as mechanic × variant matrices via `js/gen/varykit.js`
+  (`MLVary.matrix`), which varies palette, easing, direction, counts and geometry per variant.
 * A generated family lives in `js/gen/<category>.gen.js` and uses `js/gen/kit.js` (colour maths,
   `cells()`, `letters()`, `keyframes()`, `range()` / `color()` / `select()` knob builders, seeded
-  `rng()`). `js/gen/expand.js` pads or prunes every category to exactly 200 and keeps ids unique
+  `rng()`). `js/gen/expand.js` pads or prunes every category to its target (200, or 400 for the deep four,
+  declared in `MLKit.TARGETS`) and keeps ids unique
   against the hand-written set.
 * `js/app.js` renders a card per effect and mounts each demo inside its **own Shadow DOM**, so
-  1,800 independent stylesheets coexist without a single class-name collision.
+  3,400 independent stylesheets coexist without a single class-name collision.
 * Demos follow a real lifecycle — **unmounted → active → paused → destroyed**. They mount as they
   scroll in (60 cards at a time, 24 on a phone), JS work shares one `requestAnimationFrame` pump, CSS
   animations
   pause from inside the shadow root (`:host(.is-offscreen)`), and far-away instances are torn down
-  so exploring all 1,800 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
+  so exploring all 3,400 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
   mobile) is the backstop.
 * Search and category filters use a **precomputed index** (`item._search`, `BY_CAT`) instead of
   rebuilding haystacks on every keypress.
@@ -189,7 +202,7 @@ covers fold-cover screens.
 ## ✅ Verify it
 
 ```bash
-node tools/check.mjs        # 200 per category, unique ids, honest knobs, 1,800 stylesheets compiled,
+node tools/check.mjs        # 200 per category, unique ids, honest knobs, 3,400 stylesheets compiled,
                             # all AE profiles / rig builders, plus the template catalogue vs disk
 node tools/responsive.mjs   # mobile/touch invariants: viewport + safe areas, viewport-proof grid
                             # tracks, 44px targets, sheet geometry, hover-free behaviour
@@ -198,7 +211,7 @@ node tools/build-seo.mjs    # catalog.html + sitemap.xml (add --pages for effect
 
 # deeper QA (needs two dev-only packages, the site itself has none):
 npm i --no-save --prefix /tmp/qa jsdom css-tree
-QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 1,800 demos, fires 1,800 interactions
+QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 3,400 demos, fires 3,400 interactions
 QA_DIR=/tmp/qa node tools/touch.mjs   # boots the whole page at phone + desktop width and drives
                                       # the drawer, relocated toggles, dialog stacking, scroll locks
 ```

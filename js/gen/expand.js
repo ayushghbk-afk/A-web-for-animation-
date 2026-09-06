@@ -11,9 +11,10 @@
   var LAB = (global.MOTION_LAB = global.MOTION_LAB || []);
   var KIT = global.MLKit;
   var TARGET = KIT ? KIT.TARGET : 200;
+  var targetFor = (KIT && KIT.targetFor) || function () { return TARGET; };
   var CATS = KIT ? KIT.CATS : Object.keys(global.ML_GEN || {});
 
-  var have = {}, report = { target: TARGET, added: {}, short: {}, pruned: {}, byCat: {} };
+  var have = {}, report = { target: TARGET, targets: {}, added: {}, short: {}, pruned: {}, byCat: {} };
   LAB.forEach(function (i) { have[i.cat] = (have[i.cat] || 0) + 1; });
 
   var pools = global.ML_GEN || {};
@@ -41,7 +42,8 @@
 
   CATS.forEach(function (cat) {
     var pool = pools[cat] || [];
-    var need = Math.max(0, TARGET - (have[cat] || 0));
+    var want = targetFor(cat);
+    var need = Math.max(0, want - (have[cat] || 0));
     var woven = weave(pool.slice());
     var take = woven.slice(0, need);
     take.forEach(function (it) {
@@ -53,6 +55,7 @@
     report.short[cat] = Math.max(0, need - pool.length);
     report.pruned[cat] = Math.max(0, pool.length - need);
     report.byCat[cat] = have[cat];
+    report.targets[cat] = want;
   });
 
   global.ML_EXPAND = report;

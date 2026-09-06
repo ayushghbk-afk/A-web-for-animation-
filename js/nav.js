@@ -23,7 +23,11 @@
     controls:    '<svg viewBox="0 0 24 24"><rect x="3" y="10" width="18" height="4" rx="2"/><circle cx="15" cy="12" r="3"/></svg>',
     svg:         '<svg viewBox="0 0 24 24"><path d="M4 16c4-10 12 10 16 0"/><circle cx="5" cy="16" r="1.4"/><circle cx="19" cy="16" r="1.4"/></svg>',
     '3d':        '<svg viewBox="0 0 24 24"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>',
-    motion:      '<svg viewBox="0 0 24 24"><path d="M4 12h4l3-7 4 14 3-7h2"/></svg>'
+    motion:      '<svg viewBox="0 0 24 24"><path d="M4 12h4l3-7 4 14 3-7h2"/></svg>',
+    data:        '<svg viewBox="0 0 24 24"><path d="M4 20V10M9 20V4M14 20v-7M19 20v-12"/></svg>',
+    nature:      '<svg viewBox="0 0 24 24"><path d="M12 21v-7M12 14c-4 0-6-3-6-7 4 0 6 3 6 7zM12 14c4 0 6-3 6-7-4 0-6 3-6 7z"/></svg>',
+    retro:       '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="13" rx="2"/><path d="M7 21h10M9 9h2M10 8v2"/><circle cx="16" cy="10" r="1.2"/></svg>',
+    transitions: '<svg viewBox="0 0 24 24"><rect x="3" y="5" width="7" height="14" rx="1.5"/><path d="M14 5h7v14h-7M13 12h6M17 9l3 3-3 3"/></svg>'
   };
 
   function lab() { return window.MotionLab || null; }
@@ -364,7 +368,7 @@
     cmdItems = list;
     cmdIndex = 0;
     if (!list.length) {
-      results.innerHTML = '<p class="cmdk-empty">No matches. Try a category — loaders, buttons, 3d — or a template: galaxy, heart.</p>';
+      results.innerHTML = '<p class="cmdk-empty">No matches. Try a category — loaders, buttons, 3d, data, nature, retro, transitions — or a template: galaxy, heart.</p>';
       return;
     }
     results.innerHTML = '';

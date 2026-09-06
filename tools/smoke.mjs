@@ -51,6 +51,7 @@ const run = (f) => new Function('window', 'document', 'localStorage', read(f)).c
 
 fs.readdirSync(path.join(root, 'js/data')).filter((f) => f.endsWith('.js')).sort().forEach((f) => run('js/data/' + f));
 run('js/gen/kit.js');
+run('js/gen/varykit.js');
 fs.readdirSync(path.join(root, 'js/gen')).filter((f) => f.endsWith('.gen.js')).sort().forEach((f) => run('js/gen/' + f));
 run('js/gen/expand.js');
 run('js/tune.js');
