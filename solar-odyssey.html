@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Solar Odyssey — Live 3D Animation Lab</title>
+<meta name="description" content="Every 3D model, animation and effect from Solar Odyssey, rendered live in the browser from the game's own procedural source code. Solar system motion, rocket launches, landing cinematics, particles, asteroids, stations and the astronaut walk cycle." />
+<meta name="theme-color" content="#05050a" />
+<meta name="robots" content="index,follow" />
+<meta property="og:title" content="Solar Odyssey — Live 3D Animation Lab" />
+<meta property="og:description" content="Solar system orbits, rocket staging, atmospheric re-entry, pooled particles, asteroid tumbling and the EVA walk cycle — all rendered live from the game's own code." />
+<meta property="og:type" content="website" />
+<link rel="canonical" href="https://ayushghbk-afk.github.io/A-web-for-animation-/solar-odyssey.html" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2305050a'/><circle cx='16' cy='16' r='11' fill='none' stroke='%2322d3ee' stroke-width='2'/><circle cx='16' cy='5.5' r='2.4' fill='%238b7dff'/><circle cx='16' cy='16' r='3.2' fill='%2322d3ee'/></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #05050a;
+    --panel: rgba(255, 255, 255, 0.04);
+    --panel-2: rgba(255, 255, 255, 0.06);
+    --line: rgba(255, 255, 255, 0.09);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --text: #f4f4f8;
+    --muted: #8b8b9f;
+    --accent: #8b7dff;
+    --accent-2: #22d3ee;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font-family: var(--sans); line-height: 1.5; overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  button { font-family: inherit; color: inherit; }
+  svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* ---------- header ---------- */
+  header {
+    height: 58px; display: flex; align-items: center; gap: 14px;
+    padding: 0 18px; border-bottom: 1px solid var(--line);
+    background: rgba(5, 5, 10, 0.82); backdrop-filter: blur(14px);
+    position: relative; z-index: 20;
+  }
+  .back {
+    display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+    font: 600 .8rem var(--mono); color: var(--muted); padding: 8px 12px;
+    border: 1px solid var(--line); border-radius: 10px; transition: .2s;
+  }
+  .back:hover { color: var(--text); border-color: var(--line-strong); }
+  .brand { display: flex; align-items: center; gap: 9px; font-weight: 800; letter-spacing: -.02em; }
+  .brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 12px var(--accent-2); }
+  .brand small { display: block; font: 500 .66rem var(--mono); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+  .header-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .header-right .hint { color: var(--muted); font: .72rem var(--mono); }
+
+  /* ---------- layout ---------- */
+  .wrap { display: flex; height: calc(100% - 58px); }
+  .rail {
+    width: 316px; flex: none; border-right: 1px solid var(--line);
+    overflow-y: auto; padding: 14px 12px 22px; background: rgba(255,255,255,0.012);
+  }
+  .rail h2 { font: 600 .66rem var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin: 6px 8px 10px; }
+  .scene-item {
+    display: flex; gap: 11px; align-items: flex-start; width: 100%; text-align: left;
+    padding: 11px 10px; border-radius: 12px; border: 1px solid transparent;
+    background: transparent; cursor: pointer; transition: .16s;
+  }
+  .scene-item:hover { background: var(--panel); }
+  .scene-item.active { background: var(--panel-2); border-color: var(--line); box-shadow: inset 2px 0 0 var(--accent); }
+  .scene-item .glyph {
+    flex: none; width: 34px; height: 34px; display: grid; place-items: center;
+    font-size: 1.05rem; border-radius: 10px; background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, transparent);
+  }
+  .scene-item b { display: block; font-size: .88rem; letter-spacing: -.01em; }
+  .scene-item span { display: block; font-size: .74rem; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+  .scene-item .num { margin-left: auto; flex: none; font: 600 .64rem var(--mono); color: var(--muted); padding-top: 2px; }
+
+  .stage { flex: 1; position: relative; min-width: 0; }
+  #viewport { position: absolute; inset: 0; }
+  #viewport canvas { display: block; }
+
+  /* ---------- HUD ---------- */
+  .hud { position: absolute; top: 14px; left: 14px; max-width: min(430px, calc(100% - 28px)); pointer-events: none; z-index: 5; }
+  .hud-card {
+    background: rgba(6, 8, 16, 0.62); border: 1px solid var(--line);
+    border-radius: 12px; padding: 10px 13px; backdrop-filter: blur(8px);
+  }
+  .hud-card .t { font-weight: 700; font-size: .9rem; letter-spacing: -.01em; }
+  .hud-card .s { font: .72rem var(--mono); color: var(--accent-2); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 4px; }
+  .hud-card .live { font: .78rem var(--mono); color: var(--muted); line-height: 1.6; white-space: pre-wrap; }
+  .hud-card .live b { color: var(--text); font-weight: 600; }
+
+  .badge-row { position: absolute; top: 14px; right: 14px; display: flex; gap: 8px; z-index: 5; }
+  .badge {
+    font: 600 .66rem var(--mono); padding: 6px 9px; border-radius: 999px;
+    border: 1px solid var(--line); background: rgba(6,8,16,.62); color: var(--muted);
+    backdrop-filter: blur(8px);
+  }
+  .badge.live { color: #7dffb0; border-color: rgba(125,255,176,.35); }
+  .badge.live::before { content: "● "; color: #7dffb0; }
+
+  /* ---------- controls ---------- */
+  .controls {
+    position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 8px; z-index: 6;
+    background: rgba(6,8,16,.72); border: 1px solid var(--line); border-radius: 14px;
+    padding: 8px; backdrop-filter: blur(10px); max-width: calc(100% - 28px); flex-wrap: wrap; justify-content: center;
+  }
+  .ctl {
+    display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 12px;
+    border: 1px solid var(--line); border-radius: 9px; background: transparent;
+    font: 600 .74rem var(--mono); color: var(--muted); cursor: pointer; transition: .15s;
+  }
+  .ctl:hover { color: var(--text); border-color: var(--line-strong); }
+  .ctl.on { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .ctl:disabled { opacity: .35; cursor: default; }
+  .ctl.primary { color: #0b0b12; background: linear-gradient(180deg, #b7a8ff, #8b7dff); border-color: transparent; font-weight: 700; }
+  .ctl.primary:hover { filter: brightness(1.08); }
+  .speed { display: inline-flex; height: 36px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
+  .speed select {
+    background: transparent; color: var(--text); border: 0; font: 600 .74rem var(--mono);
+    padding: 0 8px; outline: none; cursor: pointer;
+  }
+  .speed select option { background: #101018; }
+
+  /* ---------- info panel ---------- */
+  .info {
+    position: absolute; top: 14px; right: 14px; bottom: 74px; width: min(340px, calc(100% - 28px));
+    background: rgba(6,8,16,.9); border: 1px solid var(--line); border-radius: 14px;
+    padding: 16px; overflow-y: auto; z-index: 7; display: none; backdrop-filter: blur(12px);
+  }
+  .info.open { display: block; }
+  .info h3 { margin: 0 0 4px; font-size: 1rem; letter-spacing: -.01em; }
+  .info .lede { color: var(--muted); font-size: .82rem; line-height: 1.6; margin: 0 0 14px; }
+  .info h4 { font: 600 .64rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 14px 0 6px; }
+  .info ul { margin: 0; padding-left: 18px; color: var(--muted); font-size: .8rem; line-height: 1.7; }
+  .info ul li::marker { color: var(--accent); }
+  .info .src a {
+    display: block; font: .72rem var(--mono); color: var(--accent-2); text-decoration: none;
+    padding: 3px 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .info .src a:hover { text-decoration: underline; }
+  .info .note { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); font-size: .76rem; color: var(--muted); }
+
+  /* ---------- loading / error ---------- */
+  .overlay {
+    position: absolute; inset: 0; display: grid; place-items: center; z-index: 30;
+    background: rgba(5,5,10,.72); backdrop-filter: blur(6px);
+  }
+  .overlay .box { text-align: center; }
+  .spinner {
+    width: 34px; height: 34px; margin: 0 auto 14px; border-radius: 50%;
+    border: 2px solid var(--line-strong); border-top-color: var(--accent-2); animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .overlay p { color: var(--muted); font: .8rem var(--mono); }
+
+  @media (max-width: 860px) {
+    body { overflow: auto; }
+    .wrap { flex-direction: column; height: auto; }
+    .rail { width: 100%; border-right: 0; border-bottom: 1px solid var(--line); overflow-x: auto; overflow-y: hidden; display: flex; gap: 8px; padding: 10px; }
+    .rail h2 { display: none; }
+    .scene-item { flex: none; width: 200px; }
+    .scene-item .num { display: none; }
+    .stage { height: calc(100dvh - 58px - 92px); position: sticky; top: 58px; }
+    .info { bottom: 86px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="back" href="./index.html#game-showcase"><svg viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></svg> Motion Lab</a>
+  <div class="brand">
+    <span class="dot"></span>
+    <div>Solar Odyssey<small>live 3D animation lab</small></div>
+  </div>
+  <div class="header-right">
+    <span class="hint">drag orbit · scroll zoom · right-drag pan</span>
+  </div>
+</header>
+
+<div class="wrap">
+  <aside class="rail" id="rail" aria-label="Scenes"></aside>
+
+  <main class="stage">
+    <div id="viewport" aria-label="3D viewport"></div>
+
+    <div class="hud" id="hud" hidden>
+      <div class="hud-card">
+        <div class="s" id="hudScene"></div>
+        <div class="t" id="hudTitle"></div>
+        <div class="live" id="hudLive"></div>
+      </div>
+    </div>
+
+    <div class="badge-row">
+      <span class="badge" id="badgeFps">-- fps</span>
+      <span class="badge live">procedural · no .glb · no video</span>
+    </div>
+
+    <section class="info" id="info" aria-label="Scene details"></section>
+
+    <div class="controls" id="controls">
+      <button class="ctl primary" id="playBtn" type="button">
+        <svg class="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></svg>
+        <svg class="i-play" viewBox="0 0 24 24" style="display:none"><path d="M7 4l13 8-13 8z"/></svg>
+        <span id="playLabel">Pause</span>
+      </button>
+      <div class="speed">
+        <select id="speedSel" aria-label="Speed">
+          <option value="0.25">0.25×</option>
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×</option>
+          <option value="2">2×</option>
+          <option value="4">4×</option>
+        </select>
+      </div>
+      <button class="ctl" id="orbitBtn" type="button">Auto-orbit</button>
+      <button class="ctl" id="resetBtn" type="button">Reset view</button>
+      <button class="ctl" id="replayBtn" type="button">⟳ Replay</button>
+      <button class="ctl" id="infoBtn" type="button">ⓘ About scene</button>
+    </div>
+
+    <div class="overlay" id="overlay">
+      <div class="box">
+        <div class="spinner"></div>
+        <p id="overlayMsg">Loading Solar Odyssey…</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+/* ============================================================
+   Solar Odyssey — live 3D animation showcase
+   Renders the game's REAL procedural systems (models/source-code/)
+   in the browser. Zero .glb assets, zero video, zero build step.
+   ============================================================ */
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { PLANETS, MOONS, STATIONS, BELT, QUALITY } from './models/source-code/config.js';
+import { SolarSystem } from './models/source-code/planets/SolarSystem.js';
+import { Body } from './models/source-code/planets/Planet.js';
+import { Starfield } from './models/source-code/world/Starfield.js';
+import { AsteroidField } from './models/source-code/world/AsteroidField.js';
+import { SpaceStation } from './models/source-code/world/SpaceStation.js';
+import { Effects } from './models/source-code/fx/Effects.js';
+import { LandingSequence } from './models/source-code/fx/LandingSequence.js';
+import { buildShipMesh, ShipTrail } from './models/source-code/spacecraft/Ship.js';
+import { LaunchSequence } from './models/source-code/rockets/LaunchSequence.js';
+import { starterDesign } from './models/source-code/rockets/RocketParts.js';
+import { SurfaceScene } from './models/source-code/game/SurfaceScene.js';
+
+const REPO = 'https://github.com/ayushghbk-afk/A-web-for-animation-/blob/main/models/source-code';
+const Q = 'medium';
+const EARTH_CFG = PLANETS.find(p => p.id === 'earth');
+const MARS_CFG = PLANETS.find(p => p.id === 'mars');
+
+/* ---------------- renderer ---------------- */
+const viewport = document.getElementById('viewport');
+const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.08;
+viewport.appendChild(renderer.domElement);
+
+const camera = new THREE.PerspectiveCamera(55, 1, 0.01, 40000);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.autoRotateSpeed = 0.5;
+controls.minDistance = 1.5;
+controls.maxDistance = 4000;
+
+function resize() {
+  const w = viewport.clientWidth, h = viewport.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+window.addEventListener('resize', resize);
+resize();
+
+/* ---------------- helpers ---------------- */
+const $ = (id) => document.getElementById(id);
+function disposeObjects(root) {
+  // Dispose geometry + materials only. Texture maps are left alive because
+  // the game's ProceduralTextures cache is shared and must survive replays.
+  root.traverse(o => {
+    if (o.geometry) o.geometry.dispose();
+    if (o.material) {
+      const mats = Array.isArray(o.material) ? o.material : [o.material];
+      mats.forEach(m => { if (m) m.dispose(); });
+    }
+  });
+}
+function skyBackground(scene) { scene.background = new THREE.Color(0x05060d); return scene; }
+function sunAndAmbient(scene) {
+  const l = new THREE.PointLight(0xfff1dc, 2.2, 0, 0);
+  scene.add(l);
+  scene.add(new THREE.AmbientLight(0x30405a, 0.6));
+}
+
+/* ============================================================
+   Scene builders — each returns { scene, cinematic, frame, tick,
+   hud, dispose }. tick(dt) receives SIM seconds (already scaled).
+   ============================================================ */
+
+/* 01 — the whole game world, live */
+function buildSolar() {
+  const scene = new THREE.Scene();
+  skyBackground(scene);
+  const system = new SolarSystem(scene, Q);
+  const stars = new Starfield(scene, Q);
+  const belt = new AsteroidField(scene, Q);
+  let t = 0;
+  const beltCount = Math.floor(BELT.counts[Q] * QUALITY[Q].beltScale);
+  return {
+    scene, cinematic: false,
+    frame() { camera.position.set(120, 55, 160); controls.target.set(0, 0, 0); },
+    tick(dt) { t += dt; system.update(t, dt); belt.update(dt, camera.position); },
+    hud() {
+      const days = Math.floor(t / (24 * 60));
+      const hh = Math.floor((t % (24 * 60)) / 60);
+      const mm = Math.floor(t % 60);
+      return `sim day ${days} · ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}\n` +
+        `<b>${PLANETS.length}</b> planets + <b>${MOONS.length}</b> moons + <b>${STATIONS.length}</b> stations · <b>${beltCount}</b> asteroids · <b>${QUALITY[Q].stars.toLocaleString()}</b> stars\n` +
+        `SOL fBm churn · Venus & Uranus retrograde · Earth clouds ×1.25`;
+    },
+    dispose() { disposeObjects(scene); }
+  };
+}
+
+/* 02 — rocket build → orbit, real physics + visible staging */
+function buildLaunch() {
+  const scene = new THREE.Scene();
+  skyBackground(scene);
+  new Starfield(scene, Q);
+  sunAndAmbient(scene);
+  const earth = new Body(EARTH_CFG, 'planet', 7001, Q);
+  scene.add(earth.group);
+  const launch = new LaunchSequence(starterDesign(), earth, scene);
+  let t = 0;
+  return {
+    scene, cinematic: true,
+    frame() { launch.cameraFor(camera); },
+    tick(dt) { t += dt; earth.update(t, 0, null); launch.update(dt); launch.cameraFor(camera); },
+    hud() {
+      const m = launch.telemetry();
+      let s = `phase: <b>${m.phase.toUpperCase()}</b>`;
+      if (m.countdown > 0) s += ` · T-${m.countdown}`;
+      s += `\naltitude <b>${m.altitudeKm.toLocaleString()}</b> km · speed <b>${m.speed}</b> m/s · stage <b>${m.stage}/${m.stages}</b>`;
+      if (m.fuelPct >= 0) s += ` · fuel ${(m.fuelPct * 100) | 0}%`;
+      s += `\ndelta-v <b>${m.deltaV.toLocaleString()}</b> m/s · apoapsis ${m.apoapsisKm.toLocaleString()} km`;
+      const ev = m.events.slice(-2);
+      if (ev.length) s += `\n» ${ev.join('\n» ')}`;
+      return s;
+    },
+    dispose() { disposeObjects(scene); }
+  };
+}
+
+/* 03 — cinematic landing: entry → retro → dust → touchdown */
+function buildLanding() {
+  const surface = new SurfaceScene(EARTH_CFG, Q, { streaming: 'medium' });
+  const landing = new LandingSequence(surface, camera, { cloudDeck: true });
+  return {
+    scene: surface.scene, cinematic: true,
+    frame() {},
+    tick(dt) { landing.update(dt); },
+    hud() {
+      return `phase: <b>${landing.caption()}</b>\ncinematic <b>${Math.round(landing.progress * 100)}</b>%` +
+        `\nentry streaks · heat-shield glow · retro plume · touchdown dust ring`;
+    },
+    dispose() { surface.streamer?.clear(); disposeObjects(surface.scene); }
+  };
+}
+
+/* 04 — the Odyssey ship: engine flame + fading flight trail */
+function buildShip() {
+  const scene = new THREE.Scene();
+  skyBackground(scene);
+  new Starfield(scene, Q);
+  const sun = new THREE.DirectionalLight(0xfff1dc, 2.5); sun.position.set(6, 8, 4); scene.add(sun);
+  scene.add(new THREE.AmbientLight(0x30405a, 1.1));
+  const ship = buildShipMesh();
+  scene.add(ship.group);
+  const trail = new ShipTrail(scene, 150);
+  const fx = new Effects(scene, Q);
+  const pos = new THREE.Vector3(), prev = new THREE.Vector3(), dir = new THREE.Vector3(0, 0, -1);
+  const ZNEG = new THREE.Vector3(0, 0, -1);
+  const pathAt = (t, out) => out.set(
+    Math.sin(t * 0.4) * 9,
+    2 + Math.sin(t * 0.7) * 2.5 + Math.sin(t * 0.23) * 1.5,
+    Math.cos(t * 0.4) * 9
+  );
+  let t = 0;
+  pathAt(0, pos); prev.copy(pos);
+  return {
+    scene, cinematic: false,
+    frame() { camera.position.set(17, 8, 17); controls.target.set(0, 1.5, 0); },
+    tick(dt) {
+      t += dt;
+      pathAt(t, pos);
+      dir.subVectors(pos, prev).normalize();
+      if (dir.lengthSq() < 1e-6) dir.copy(ZNEG);
+      ship.group.position.copy(pos);
+      ship.group.quaternion.setFromUnitVectors(ZNEG, dir);
+      ship.flame.scale.setScalar(0.55 + Math.random() * 0.55);
+      ship.flame.material.opacity = 0.9;
+      ship.engineLight.intensity = 1.8 + Math.random() * 1.2;
+      trail.push(pos);
+      fx.enginePuff(pos, dir.clone().negate(), 0.7, false);
+      fx.update(dt);
+      prev.copy(pos);
+    },
+    hud() { return `engine flame + glow flicker\nfading flight trail · <b>${Math.round(trail.count)}</b> segments\npooled engine sparks behind the ship`; },
+    dispose() { disposeObjects(scene); }
+  };
+}
+
+/* 05 — pooled particle systems + the mining laser beam */
+function buildFx() {
+  const scene = new THREE.Scene();
+  skyBackground(scene);
+  new Starfield(scene, Q);
+  scene.add(new THREE.AmbientLight(0x404a5a, 1.4));
+  const fx = new Effects(scene, Q);
+  const emitter = new THREE.Vector3(), target = new THREE.Vector3();
+  let t = 0, nextBurst = 0.7, bursts = 0;
+  return {
+    scene, cinematic: false,
+    frame() { camera.position.set(14, 7, 14); controls.target.set(0, 0, 0); },
+    tick(dt) {
+      t += dt;
+      emitter.set(Math.sin(t * 0.5) * 5, 1.4 + Math.sin(t * 1.1) * 1.2, Math.cos(t * 0.5) * 5);
+      const vx = Math.cos(t * 0.5), vz = -Math.sin(t * 0.5);
+      fx.enginePuff(emitter, new THREE.Vector3(-vx, 0.15, -vz).normalize(), 0.8, false);
+      target.set(emitter.x * 0.4 + Math.sin(t * 0.9) * 2.2, emitter.y * 0.35, emitter.z * 0.4 + Math.cos(t * 0.9) * 2.2);
+      fx.setBeam(emitter, target, Math.sin(t * 2.2) > -0.2);
+      fx.mineSparks(target);
+      if (t > nextBurst) {
+        fx.explosion(new THREE.Vector3((Math.random() - 0.5) * 9, Math.random() * 4, (Math.random() - 0.5) * 9), 0.8 + Math.random() * 0.6);
+        bursts++; nextBurst = t + 1.0 + Math.random() * 1.2;
+      }
+      fx.update(dt);
+    },
+    hud() { return `3 pooled systems · <b>90</b> engine + <b>70</b> mining + <b>140</b> explosion particles\nmining laser beam (stretches + flickers) · additive glow sprites\n<b>${bursts}</b> explosions triggered`; },
+    dispose() { disposeObjects(scene); }
+  };
+}
+
+/* 06 — tumbling instanced asteroids in the belt */
+function buildAsteroids() {
+  const scene = new THREE.Scene();
+  skyBackground(scene);
+  new Starfield(scene, Q);
+  sunAndAmbient(scene);
+  const belt = new AsteroidField(scene, Q);
+  return {
+    scene, cinematic: false,
+    frame() { camera.position.set(262, 12, 34); controls.target.set(270, 0, 0); },
+    tick(dt) { belt.update(dt, camera.position); },
+    hud() { return `deformed-icosahedron rocks (seed 777)\nper-rock spin axes · instanced colours (iron / nickel / ice / rare)\nrocks near the camera tumble · far rocks stay cheap`; },
+    dispose() { disposeObjects(scene); }
+  };
+}
+
+/* 07 — orbital habitat: ring, spokes, pulsing beacon */
+function buildStation() {
+  const scene = new THREE.Scene();
+  skyBackground(scene);
+  new Starfield(scene, Q);
+  sunAndAmbient(scene);
+  const earth = new Body(EARTH_CFG, 'planet', 5001, Q);
+  scene.add(earth.group);
+  const st = new SpaceStation(STATIONS[0], Q);
+  scene.add(st.group);
+  let t = 0;
+  return {
+    scene, cinematic: false,
+    frame() { camera.position.set(26, 12, 26); controls.target.set(0, 0, 0); },
+    tick(dt) { t += dt; earth.update(t, 0, null); st.update(t, earth.group.position); st.group.rotation.y += dt * 0.1; },
+    hud() { return `torus habitat ring + hub + 4 spokes\nbeacon emissive pulse · glowing window strip\nslow orbit around Earth (1 lap / 6 game-hours)`; },
+    dispose() { disposeObjects(scene); }
+  };
+}
+
+/* 08 — EVA astronaut walk cycle on the Martian surface */
+function buildAstronaut() {
+  const surface = new SurfaceScene(MARS_CFG, Q, { streaming: 'medium' });
+  surface.enterFoot(surface.shipState.position);
+  const input = { throttleF: 1, strafe: 0, vert: 0, yawDelta: 0, pitchDelta: 0, boost: false, brake: false };
+  let t = 0, nextJump = 3.2, jumps = 0;
+  return {
+    scene: surface.scene, cinematic: true,
+    frame() {},
+    tick(dt) {
+      t += dt;
+      input.throttleF = 1;
+      input.yawDelta = 0.28;              // keep turning → circular patrol
+      input.vert = 0;
+      if (t > nextJump) { input.vert = 1; jumps++; nextJump = t + 3.5 + Math.random() * 2.5; }
+      surface.update(dt, input, camera, { fuelAvailable: () => false, onCrash: () => {}, onLeave: () => {} });
+    },
+    hud() { return `vehicle: <b>foot</b> · EVA walk cycle (limb swing + torso bob)\ncircular patrol on Mars terrain · <b>${jumps}</b> jumps under local gravity\noutpost · rover · supply caches · sample site`; },
+    dispose() { surface.streamer?.clear(); disposeObjects(surface.scene); }
+  };
+}
+
+/* ============================================================
+   Scene catalogue — the complete animation inventory, mapped.
+   ============================================================ */
+const SCENES = [
+  {
+    id: 'solar', num: '01', glyph: '🪐', name: 'Solar system motion',
+    tag: '8 planets · 10 moons · stations · belt',
+    blurb: 'The entire game world, live: orbits, spins, rings, atmospheres, the churning Sun and a tumbling asteroid belt.',
+    defaultSpeed: 90,
+    animating: [
+      'Sun fBm shader churn + layered additive glow',
+      '8 planets orbiting + spinning — Venus & Uranus spin retrograde',
+      'Earth cloud layer drifting 1.25× faster than the surface, with night city lights',
+      'Saturn & Uranus ring systems; atmosphere shells on Earth, Venus, Mars and the giants',
+      '10 moons orbiting their parents at their real in-game rates',
+      '4 space stations with pulsing beacons orbiting their planets',
+      'Asteroid belt: instanced rocks tumbling on individual spin axes',
+      '3-layer starfield + procedural nebulae, and the orbit-line guides'
+    ],
+    sources: [
+      ['planets/SolarSystem.js', 'orbits, sun shader, lights, orbit lines'],
+      ['planets/Planet.js', 'spin, clouds, rings, atmospheres, LOD'],
+      ['planets/Moon.js', 'parent-relative moon orbits'],
+      ['planets/ProceduralTextures.js', 'all procedural surfaces'],
+      ['world/Starfield.js', 'starfield + nebulae'],
+      ['world/AsteroidField.js', 'instanced asteroid belt'],
+      ['world/SpaceStation.js', 'station build + beacon pulse']
+    ],
+    build: buildSolar
+  },
+  {
+    id: 'launch', num: '02', glyph: '🚀', name: 'Rocket launch & staging',
+    tag: 'countdown → liftoff → orbit',
+    blurb: 'The stock “Odyssey I” rocket flies off the pad with real thrust, real mass flow and visible stage separation, ending in orbit.',
+    defaultSpeed: 2,
+    animating: [
+      'Countdown, lift-off and the gravity turn',
+      'Real thrust / mass-flow physics — the rocket burns the fuel its design carries',
+      'Stage separation: spent stages visibly shed via dropStage(n)',
+      'Engine glow plates that light up during a burn',
+      'Procedural part textures (rivets, stripes, ablative tiles) drawn to canvas',
+      'Earth spinning beneath the chase camera'
+    ],
+    sources: [
+      ['rockets/LaunchSequence.js', 'scripted-physical ascent'],
+      ['rockets/RocketMesh.js', 'design → 3D stack + dropStage'],
+      ['rockets/RocketParts.js', 'part catalogue + analyzeDesign'],
+      ['rockets/PartTextures.js', 'procedural part skins']
+    ],
+    build: buildLaunch
+  },
+  {
+    id: 'landing', num: '03', glyph: '🛬', name: 'Landing cinematic',
+    tag: 'entry → retro burn → touchdown',
+    blurb: 'The scripted descent: atmospheric entry glow, retro plume, the flip manoeuvre, suicide burn and the touchdown dust ring.',
+    defaultSpeed: 1,
+    animating: [
+      'Atmospheric entry streak particles',
+      'Heat-shield glow sprite that fades with progress',
+      'Retro-burn engine plume + engine light',
+      'Flip manoeuvre and final-descent trajectory',
+      'Touchdown dust ring that expands and fades',
+      'Cinematic camera sweep (wide chase → side flip → low pad view)',
+      'Terrain streamed in under the camera as it flies'
+    ],
+    sources: [
+      ['fx/LandingSequence.js', 'the 5-phase cinematic'],
+      ['game/SurfaceScene.js', 'terrain, sky, base, ship'],
+      ['spacecraft/Ship.js', 'the hover shuttle + flame'],
+      ['world/ObjectStreamer.js', 'cell streaming']
+    ],
+    build: buildLanding
+  },
+  {
+    id: 'ship', num: '04', glyph: '🛸', name: 'Ship flight & trail',
+    tag: 'engine flame · fading trail',
+    blurb: 'The procedural low-poly Odyssey ship in cruise: flickering engine flame, glow light and a fading ribbon trail.',
+    defaultSpeed: 1,
+    animating: [
+      'Procedural low-poly ship (fuselage, wings, cockpit, engine)',
+      'Flickering engine flame sprite + point light',
+      'Fading flight trail (ring-buffer line strip)',
+      'Pooled engine sparks streaming behind'
+    ],
+    sources: [
+      ['spacecraft/Ship.js', 'buildShipMesh + ShipTrail'],
+      ['fx/Effects.js', 'engine particle pool']
+    ],
+    build: buildShip
+  },
+  {
+    id: 'fx', num: '05', glyph: '✦', name: 'Particles & gameplay FX',
+    tag: '3 pools · mining beam',
+    blurb: 'The pooled particle systems and the mining laser, exercised the way combat and mining do in-game.',
+    defaultSpeed: 1,
+    animating: [
+      '90-particle engine pool (blue-white puffs)',
+      '70-particle mining-spark pool (amber)',
+      '140-particle explosion pool (orange bursts)',
+      'Mining laser beam that stretches and flickers',
+      'Additive glow sprites (soft radial gradients drawn to canvas)'
+    ],
+    sources: [
+      ['fx/Effects.js', 'ParticlePool + Effects'],
+      ['planets/ProceduralTextures.js', 'getGlowTexture']
+    ],
+    build: buildFx
+  },
+  {
+    id: 'asteroids', num: '06', glyph: '☄️', name: 'Asteroid belt',
+    tag: 'instanced · tumbling',
+    blurb: 'The shared deformed-icosahedron rock, instanced hundreds of times with per-rock spin and ore colours.',
+    defaultSpeed: 1,
+    animating: [
+      'Deformed icosahedron geometry (seed 777), shared by every instance',
+      'Per-rock spin axis, angle and speed — near-field rocks tumble',
+      'Instance colours: iron, nickel, ice, rare-mineral',
+      'Depleted-rock recycling (object pooling)'
+    ],
+    sources: [
+      ['world/AsteroidField.js', 'InstancedMesh belt'],
+      ['config.js', 'BELT + ore types']
+    ],
+    build: buildAsteroids
+  },
+  {
+    id: 'station', num: '07', glyph: '🛰️', name: 'Space station',
+    tag: 'torus habitat · beacon',
+    blurb: 'A torus habitat ring with docking hub, spokes and a pulsing beacon, orbiting Earth.',
+    defaultSpeed: 1,
+    animating: [
+      'Torus ring + hub + 4 spokes + window strip',
+      'Beacon emissive pulse',
+      'Slow orbit around the parent planet',
+      'Canvas-drawn nameplate sprite'
+    ],
+    sources: [
+      ['world/SpaceStation.js', 'station mesh + update']
+    ],
+    build: buildStation
+  },
+  {
+    id: 'astronaut', num: '08', glyph: '🧑‍🚀', name: 'Astronaut EVA walk',
+    tag: 'walk cycle · local gravity',
+    blurb: 'The humanoid EVA suit walks, jumps and patrols the procedural Martian surface around the outpost.',
+    defaultSpeed: 1,
+    animating: [
+      'Astronaut walk cycle: leg / arm swing + torso bob',
+      'EVA jumps under local gravity',
+      'Procedural Mars terrain (Olympus Mons, Valles Marineris, Hellas…)',
+      'Outpost, rover, supply caches, sample site, broken rovers',
+      'Third-person camera that orbits the astronaut'
+    ],
+    sources: [
+      ['game/SurfaceScene.js', 'terrain + astronaut + vehicles'],
+      ['surface/SurfaceThemes.js', 'per-world features'],
+      ['utils/Noise.js', 'value noise / fBm']
+    ],
+    build: buildAstronaut
+  }
+];
+
+/* ============================================================
+   UI wiring
+   ============================================================ */
+const rail = $('rail');
+const hudEl = $('hud'), hudScene = $('hudScene'), hudTitle = $('hudTitle'), hudLive = $('hudLive');
+const infoEl = $('info');
+const overlay = $('overlay'), overlayMsg = $('overlayMsg');
+const fpsEl = $('badgeFps');
+
+let current = null, currentMeta = null, building = false;
+let paused = false, speedMult = 1;
+const clock = new THREE.Clock();
+let hudTimer = 0, fpsAcc = 0, fpsN = 0, fpsTimer = 0;
+
+/* build the rail */
+SCENES.forEach((s) => {
+  const b = document.createElement('button');
+  b.className = 'scene-item';
+  b.dataset.id = s.id;
+  b.innerHTML = `<span class="glyph">${s.glyph}</span><span><b>${s.name}</b><span>${s.tag}</span></span><span class="num">${s.num}</span>`;
+  b.addEventListener('click', () => selectScene(s.id, true));
+  rail.appendChild(b);
+});
+
+function setStatus(msg) {
+  if (msg) { overlay.style.display = 'grid'; overlayMsg.textContent = msg; }
+  else { overlay.style.display = 'none'; }
+}
+
+function nextPaint() { return new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))); }
+
+async function selectScene(id, pushHash) {
+  const meta = SCENES.find(s => s.id === id);
+  if (!meta) return;
+  if (meta === currentMeta && current) { if (pushHash) setHash(id); return; }
+  if (building) return;
+  building = true;
+  setStatus(`Building “${meta.name}”…`);
+  await nextPaint();
+  try {
+    if (current) { current.dispose(); current = null; }
+    currentMeta = meta;
+    current = meta.build();
+    controls.enabled = !current.cinematic;
+    controls.autoRotate = current.cinematic ? false : (autoOrbitOn && meta.id !== 'fx');
+    current.frame && current.frame();
+    controls.update();
+    updateRail();
+    updateInfo();
+    hudEl.hidden = false;
+    hudScene.textContent = meta.name;
+    hudTitle.textContent = meta.blurb;
+    hudLive.textContent = '';
+    if (pushHash) setHash(id);
+    syncPlayUI();
+    setStatus('');
+  } catch (e) {
+    console.error(e);
+    overlayMsg.textContent = 'Could not build this scene — ' + (e && e.message ? e.message : e);
+    overlay.style.display = 'grid';
+  } finally {
+    building = false;
+  }
+}
+
+function setHash(id) {
+  try { history.replaceState(null, '', '#' + id); } catch (e) { /* noop */ }
+}
+function hashScene() { return (location.hash || '').replace(/^#/, '') || null; }
+
+function updateRail() {
+  [...rail.children].forEach(b => b.classList.toggle('active', b.dataset.id === (currentMeta?.id)));
+  const act = rail.querySelector('.scene-item.active');
+  if (act) act.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+function updateInfo() {
+  if (!currentMeta) return;
+  const src = currentMeta.sources.map(([f, note]) =>
+    `<a href="${REPO}/${f}" target="_blank" rel="noopener">${f}</a>`).join('');
+  infoEl.innerHTML = `
+    <h3>${currentMeta.glyph} ${currentMeta.name}</h3>
+    <p class="lede">${currentMeta.blurb}</p>
+    <h4>Animating here</h4>
+    <ul>${currentMeta.animating.map(a => `<li>${a}</li>`).join('')}</ul>
+    <h4>Source (the game's own code)</h4>
+    <div class="src">${src}</div>
+    <p class="note">Everything on screen is generated live by the <b>Solar Odyssey</b> source in
+    <code style="font: .72rem var(--mono)">models/source-code/</code> — procedural geometry, canvas
+    textures, shaders and particle pools. No .glb files, no pre-rendered video.</p>`;
+}
+
+/* ---------------- controls ---------------- */
+let autoOrbitOn = true;
+const playBtn = $('playBtn'), playLabel = $('playLabel');
+function syncPlayUI() {
+  playLabel.textContent = paused ? 'Play' : 'Pause';
+  playBtn.querySelector('.i-pause').style.display = paused ? 'none' : '';
+  playBtn.querySelector('.i-play').style.display = paused ? '' : 'none';
+}
+playBtn.addEventListener('click', () => { paused = !paused; syncPlayUI(); });
+
+$('speedSel').addEventListener('change', (e) => { speedMult = parseFloat(e.target.value); });
+
+const orbitBtn = $('orbitBtn');
+function syncOrbitUI() {
+  orbitBtn.classList.toggle('on', autoOrbitOn);
+  if (current && !current.cinematic) controls.autoRotate = autoOrbitOn;
+}
+orbitBtn.addEventListener('click', () => { autoOrbitOn = !autoOrbitOn; syncOrbitUI(); });
+
+$('resetBtn').addEventListener('click', () => { if (current?.frame) { current.frame(); controls.update(); } });
+$('replayBtn').addEventListener('click', () => currentMeta && selectScene(currentMeta.id, false));
+$('infoBtn').addEventListener('click', () => infoEl.classList.toggle('open'));
+
+window.addEventListener('keydown', (e) => {
+  if (e.code === 'Space' && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement?.tagName || '')) {
+    e.preventDefault(); paused = !paused; syncPlayUI();
+  }
+  if (e.key === 'i' || e.key === 'I') infoEl.classList.toggle('open');
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= SCENES.length) selectScene(SCENES[n - 1].id, true);
+});
+
+window.addEventListener('hashchange', () => {
+  const id = hashScene();
+  if (id && id !== currentMeta?.id) selectScene(id, false);
+});
+
+/* ---------------- main loop ---------------- */
+function frame() {
+  requestAnimationFrame(frame);
+  const realDt = Math.min(clock.getDelta(), 0.05);
+  if (current && !paused) {
+    const dt = realDt * (currentMeta.defaultSpeed || 1) * speedMult;
+    current.tick(dt, realDt);
+  }
+  if (current && !current.cinematic) controls.update();
+  if (current) renderer.render(current.scene, camera);
+
+  hudTimer += realDt;
+  if (current && hudTimer > 0.12) {
+    hudTimer = 0;
+    try { hudLive.textContent = current.hud ? current.hud() : ''; } catch (e) { /* noop */ }
+  }
+  fpsAcc += 1 / Math.max(realDt, 1e-4); fpsN++; fpsTimer += realDt;
+  if (fpsTimer > 0.5) { fpsEl.textContent = Math.round(fpsAcc / fpsN) + ' fps'; fpsAcc = 0; fpsN = 0; fpsTimer = 0; }
+}
+
+/* ---------------- boot ---------------- */
+function boot() {
+  resize();
+  syncOrbitUI();
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    paused = true; syncPlayUI();
+  }
+  const start = hashScene() && SCENES.some(s => s.id === hashScene()) ? hashScene() : SCENES[0].id;
+  selectScene(start, false);
+  frame();
+}
+boot();
+</script>
+</body>
+</html>
