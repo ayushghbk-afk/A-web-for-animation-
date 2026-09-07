@@ -2,7 +2,7 @@
    Motion Lab — inventory ("All" section)
    1. Maps every animation and UI element this site itself uses,
       section by section.
-   2. Indexes the complete collection — all 3,400 effects, grouped
+   2. Indexes the complete collection — all 6,500 effects, grouped
       by section, each linked straight into the live lab.
    ============================================================ */
 (function () {
@@ -17,6 +17,7 @@
     var ML = window.MotionLab;
     var byId = {};
     (ML.items || []).forEach(function (it) { byId[it.id] = it; });
+    var TOTAL = (ML.items || []).length.toLocaleString('en-US');
 
     /* ---------------- 1. what this site itself animates ---------------- */
     var SITE = [
@@ -71,7 +72,7 @@
         { t: 'Kind chips: Original · Generated · CSS · JS · Interactive · 3D · SVG · Canvas · Big stage' }
       ] },
       { sec: 'Gallery', id: 'gallery', el: [
-        { t: '3,400 shadow-DOM demo cards with infinite scroll + load-more' },
+        { t: TOTAL + ' shadow-DOM demo cards with infinite scroll + load-more' },
         { t: 'Pointer-follow spotlight on each card' },
         { t: 'Tuner panel, favourites, deep links, copy & download' },
         { t: 'After Effects builder button on every card' }
@@ -79,11 +80,11 @@
       { sec: 'Inventory', id: 'inventory', el: [
         { t: 'Live thumbs of every collection effect mounted on this page' },
         { t: 'Section-by-section map of site chrome' },
-        { t: 'Full 3,400-effect index, linked into the lab' }
+        { t: 'Full ' + TOTAL + '-effect index, linked into the lab' }
       ] },
       { sec: 'After Effects', id: 'after-effects', el: [
         { t: 'Live isometric city stage', id: 'd3towr-0' },
-        { t: 'Workflow cards, 10-effect starter kit, all-3,400 bundle builders' },
+        { t: 'Workflow cards, 10-effect starter kit, all-' + TOTAL + ' bundle builders' },
         { t: 'Format board (.aep / .aepx / .mogrt / .ffx)' }
       ] },
       { sec: 'Templates', id: 'templates', el: [

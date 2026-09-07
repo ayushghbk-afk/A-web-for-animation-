@@ -369,5 +369,5 @@
     };
   } });
 
-  K.add('transitions', V.matrix('transitions', M, 22, 'trn'));
+  K.add('transitions', V.matrix('transitions', M, 25, 'trn'));
 })(window);
