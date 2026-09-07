@@ -32,7 +32,6 @@ const dataFiles = fs.readdirSync(path.join(root, 'js/data')).filter((f) => f.end
 const genFiles = fs.readdirSync(path.join(root, 'js/gen')).filter((f) => f.endsWith('.js')).sort();
 dataFiles.forEach((f) => run('js/data/' + f));
 run('js/gen/kit.js');
-run('js/gen/varykit.js');
 genFiles.filter((f) => f.endsWith('.gen.js')).sort().forEach((f) => run('js/gen/' + f));
 run('js/gen/expand.js');
 run('js/tune.js');
@@ -46,8 +45,7 @@ const CATS = KIT.CATS;
 const TARGET = KIT.TARGET;
 const LABEL = {
   loaders: 'Loaders', buttons: 'Buttons', text: 'Text FX', cards: 'Cards & Hover',
-  backgrounds: 'Backgrounds', controls: 'Controls', svg: 'SVG & Lines', '3d': '3D', motion: 'Interaction',
-  data: 'Data & Charts', nature: 'Nature & Weather', retro: 'Retro & Arcade', transitions: 'Transitions'
+  backgrounds: 'Backgrounds', controls: 'Controls', svg: 'SVG & Lines', '3d': '3D', motion: 'Interaction'
 };
 
 const pad = (v, n) => String(v) + ' '.repeat(Math.max(0, n - String(v).length));
@@ -85,7 +83,7 @@ const byCat = new Map();
 });
 console.log(`  ${families.size} mechanic families — ${CATS.map((c) => (LABEL[c] || c) + ' ' + (byCat.get(c) || 1)).join(', ')}`);
 
-/* the template shelf lives outside the thirteen categories: whole pages, not effects */
+/* the template shelf lives outside the nine categories: whole pages, not effects */
 const TPL = win.ML_TEMPLATES || [];
 if (TPL.length) {
   const tLines = (t) => t.files.reduce((n, f) => n + f.lines, 0);
