@@ -2232,6 +2232,28 @@ html[data-theme="light"] .site-header {
 }
 
 /* ============================================================
+   Solar Odyssey game pack showcase
+   ============================================================ */
+.game-showcase { max-width: 1180px; margin: 0 auto; padding: 100px 28px 72px; }
+.game-showcase-head { align-items: end; }
+.game-showcase-head h2 { max-width: 650px; }
+.game-showcase-head .btn-primary { white-space: nowrap; }
+.game-showcase-lede { max-width: 760px; margin: 18px 0 34px; color: var(--muted); font-size: 1.05rem; line-height: 1.75; }
+.game-showcase-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+.game-feature { min-height: 190px; padding: 22px; border: 1px solid color-mix(in srgb, var(--line) 75%, transparent); border-radius: 18px; background: linear-gradient(145deg, color-mix(in srgb, var(--panel-solid) 88%, #121e3a), color-mix(in srgb, var(--panel-solid) 94%, transparent)); transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.game-feature:hover { transform: translateY(-5px); border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); box-shadow: 0 18px 40px -28px var(--accent); }
+.game-feature-wide { grid-column: span 2; }
+.game-feature-icon { display: inline-grid; place-items: center; width: 38px; height: 38px; margin-bottom: 24px; border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); border-radius: 11px; color: var(--accent); font-size: 1.25rem; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.game-feature h3 { margin: 0 0 8px; font-size: 1rem; }
+.game-feature p { margin: 0; color: var(--muted); font-size: .88rem; line-height: 1.6; }
+.game-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+.game-tags b { padding: 5px 8px; border-radius: 999px; color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); font: 600 .68rem var(--mono); }
+.game-showcase-foot { display: flex; flex-wrap: wrap; gap: 22px; align-items: center; margin-top: 22px; color: var(--muted); font: .75rem var(--mono); }
+.game-showcase-foot strong { color: var(--text); }
+.game-showcase-foot a { color: var(--accent); text-decoration: none; }
+@media (max-width: 760px) { .game-showcase { padding: 70px 18px 50px; } .game-showcase-head { align-items: start; gap: 18px; } .game-showcase-grid { grid-template-columns: 1fr; } .game-feature-wide { grid-column: auto; } }
+
+/* ============================================================
    Mobile hero background containment
    Keeps the Aurora as a decorative top band instead of a
    full-height blur behind the single-column hero.
