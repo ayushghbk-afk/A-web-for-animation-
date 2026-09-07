@@ -16,6 +16,7 @@ textures, same seeds — pixel-for-pixel what players see in-game.
 
 | Method | How |
 |---|---|
+| **Live 3D lab** | Open **`../solar-odyssey.html`** — every animation below rendered live, no download needed. |
 | **Included viewer** | Open **`viewer.html`** and drag any `.glb` onto it (needs internet for the three.js CDN). |
 | **Blender** | `File → Import → glTF 2.0 (.glb/.gltf)` |
 | **Windows** | Right-click a `.glb` → *Open with → 3D Viewer* |

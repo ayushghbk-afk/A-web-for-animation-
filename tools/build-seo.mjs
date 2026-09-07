@@ -157,7 +157,8 @@ fs.writeFileSync(path.join(root, 'robots.txt'), robots);
 const urls = [
   { loc: `${SITE}/`, pri: '1.0', freq: 'weekly' },
   { loc: `${SITE}/catalog.html`, pri: '0.9', freq: 'weekly' },
-  { loc: `${SITE}/index.html`, pri: '0.8', freq: 'weekly' }
+  { loc: `${SITE}/index.html`, pri: '0.8', freq: 'weekly' },
+  { loc: `${SITE}/solar-odyssey.html`, pri: '0.8', freq: 'weekly' }
 ];
 if (WRITE_PAGES) {
   ITEMS.forEach((it) => {
