@@ -1,7 +1,7 @@
 /* ============================================================
    Motion Lab — gallery engine
    Mounts every demo inside its own Shadow DOM, lazily, and pipes the
-   Tune layer (js/tune.js) through it so all 3,400 effects are customisable.
+   Tune layer (js/tune.js) through it so all 6,500 effects are customisable.
 
    Lifecycle (per demo host):
      unmounted  →  mounted+ACTIVE (in / near viewport)

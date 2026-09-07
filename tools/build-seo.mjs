@@ -109,8 +109,8 @@ let catalog = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Motion Lab catalog — 3,400 web animations</title>
-<meta name="description" content="A crawlable index of all 3,400 Motion Lab animations across thirteen categories. Open any effect in the live lab, or read this page with JavaScript disabled.">
+<title>Motion Lab catalog — ${ITEMS.length.toLocaleString('en-US')} web animations</title>
+<meta name="description" content="A crawlable index of all ${ITEMS.length.toLocaleString('en-US')} Motion Lab animations across thirteen categories. Open any effect in the live lab, or read this page with JavaScript disabled.">
 <link rel="canonical" href="${SITE}/catalog.html">
 <meta name="robots" content="index,follow">
 <style>${catalogCss.trim()}</style>

@@ -346,5 +346,5 @@
     };
   } });
 
-  K.add('nature', V.matrix('nature', M, 22, 'nat'));
+  K.add('nature', V.matrix('nature', M, 25, 'nat'));
 })(window);
