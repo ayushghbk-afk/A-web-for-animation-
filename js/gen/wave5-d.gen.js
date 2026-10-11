@@ -82,28 +82,6 @@
     };
   } });
 
-  /* 4. flying deck — the top card lifts off and the deck reshuffles */
-  M.push({ key: 'flyingdeck', title: 'Flying Deck', tags: ['card', 'deck', 'js'], build: function (v) {
-    var d = D(v, 3.4);
-    return {
-      html: '<div class="fk"><div class="cd2 dk"><div class="ph"></div><b class="tt">Deck 01</b><s class="st">Top card flies off</s></div><div class="cd2 dk"><div class="ph"></div><b class="tt">Deck 02</b><s class="st">Next in line</s></div><div class="cd2 dk"><div class="ph"></div><b class="tt">Deck 03</b><s class="st">Deep in stack</s></div></div>',
-      css: join([
-        '.fk{position:relative;width:var(--w,190px);height:150px;perspective:700px}',
-        '.fk .dk{position:absolute;inset:0}',
-        '.fk .dk:nth-child(2){transform:translate(6px,6px) scale(.97);z-index:2}',
-        '.fk .dk:nth-child(3){transform:translate(12px,12px) scale(.94);z-index:1}',
-        '.fk .dk .ph{height:52px}',
-        '.fk .dk.fly{z-index:5;animation:fk-a' + v.i + ' var(--dur,' + d + 's) cubic-bezier(.3,.8,.4,1) forwards}',
-        '.fk .dk{animation:fk-b' + v.i + ' calc(var(--dur,' + d + 's) * 2.4) ease-in-out infinite}',
-        kf('fk-a' + v.i, '0%{transform:translate(0,0) rotate(0)}100%{transform:translate(150px,-90px) rotate(18deg);opacity:0}'),
-        kf('fk-b' + v.i, '0%,100%{box-shadow:0 18px 34px -20px rgba(0,0,0,.8)}50%{box-shadow:0 22px 40px -18px rgba(0,0,0,.85)}')
-      ]),
-      js: 'var k=root.querySelector(".fk"),ds=Array.prototype.slice.call(k.children);var order=[0,1,2];var acc=0;api.raf(function(){acc+=.016;if(acc<3.2)return;acc=0;var top=order[0];order.push(order.shift());var t=ds[top];t.classList.remove("fly");void t.offsetWidth;t.classList.add("fly");for(var i=0;i<3;i++){var el=ds[order[i]];el.style.zIndex=String(3-i);el.style.transform=i===0?"":"translate("+(6*i)+"px,"+(6*i)+"px) scale("+(1-.03*i)+")";}setTimeout(function(){t.classList.remove("fly");t.style.opacity="0";void t.offsetWidth;t.style.transition="opacity .5s ease .08s";t.style.opacity="1";setTimeout(function(){t.style.transition="";},650);},3200);});',
-      cfg: core(v, [range('Width', '--w', 150, 250, 2, 190, 'px')])
-    };
-  } });
-
-  /* 5. spark trail — the pointer leaves a trail of sparks */
   M.push({ key: 'sparktrail', title: 'Spark Trail', tags: ['card', 'pointer', 'js'], build: function (v) {
     return {
       html: '<div class="cd2 spk"><div class="ph"></div><b class="tt">Spark Trail</b><s class="st">Move across the card</s><u class="ch">WANDER</u></div>',

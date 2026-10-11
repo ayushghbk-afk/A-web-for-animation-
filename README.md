@@ -1,10 +1,12 @@
-# ⚡ Motion Lab — 13,000 web animations & UI elements
+# ⚡ Motion Lab — 12,301 web animations & UI elements
 
-A zero-dependency, static showcase of **13,000 live web animations** across **thirteen categories** —
-**1,000 in every single one**: loaders, buttons, text effects, cards & hover, backgrounds, controls,
-SVG line art, 3D scenes, interaction patterns, data & charts, nature & weather, retro & arcade, and
-transitions & reveals.
-204 are hand-written, 6,296 were generated as distinct mechanics (not colour swaps) through the
+A zero-dependency, static showcase of **12,301 live web animations** across **thirteen categories**:
+loaders, buttons, text effects, cards & hover, backgrounds, controls, SVG line art, 3D scenes,
+interaction patterns, data & charts, nature & weather, retro & arcade, and transitions & reveals.
+Ten categories carry a full 1,000; buttons (587), cards (998) and interaction (716) carry every
+distinct effect their generators can honestly produce — repeats and demos that could not render were
+removed rather than padded back out, so **no two cards in the collection are the same animation**.
+204 are hand-written, 12,097 were generated as distinct mechanics (not colour swaps) through the
 same pipeline. Two **full-page starter templates** ship alongside
 them: a Three.js galaxy and a neon particle geometry engine — preview them inline, launch them,
 copy them out, fork them.
@@ -23,37 +25,37 @@ Built to be dropped straight onto **GitHub Pages** — no build step, no bundler
 | Category | Count | Examples |
 | --- | --- | --- |
 | Loaders | 1000 | conic spinner, equalizer, atom orbitals, metronome tick, domino chain, mega ring stack, liquid tanks, warp tunnels, newton cradles, morph blobs |
-| Buttons | 1000 | magnetic pull, material ripple, liquid blob, split-hinge press, letterpress keys, beam hover, rising tides, neon tube flickers, click sparks, cube-flip labels |
+| Buttons | 587 | magnetic pull, material ripple, liquid blob, split-hinge press, letterpress keys, beam hover, rising tides, neon tube flickers, click sparks, cube-flip labels |
 | Text FX | 1000 | typewriter, CRT scan, glitch, scramble decode, neon blink, 3D letter cascades, split-flap boards, titanium sheens, colour chases, sky drops |
-| Cards & Hover | 1000 | 3D tilt, holographic foil, dashboard stat cards, table rows, bank cards, weather card, venetian reveals, avatar fans, torch sweeps, beacon edges |
+| Cards & Hover | 998 | 3D tilt, holographic foil, dashboard stat cards, table rows, bank cards, weather card, venetian reveals, avatar fans, torch sweeps, beacon edges |
 | Backgrounds | 1000 | nebula canvas, city skyline, aurora veils, cyber rain, 3D wave floor, light beams, goo blobs, warp streaks, mosaic flickers, corner radars |
 | Controls | 1000 | fader bank, joystick, rotary dial, breaker board, keypads, lever switches, arc gauges, day-night switches, combo wheels, VU meters, scrub rings |
 | SVG & Lines | 1000 | self-drawing path, progress ring, marching ants, radar blips, morphing blob, compass, path trains, spiral draws, infinity rides, barcode lasers |
 | 3D | 1000 | rotating cube, isometric city, DNA helix, torus rings, planet systems, casino card fans, pyramids, gyroscopes, tumbling dice, ferris pods, bloom cores |
-| Interaction | 1000 | parallax layers, marquee walls, cursor trails, drag boards, physics balls, flip grids, spring chases, inertia dials, heat grids, confetti pops, spotlight type |
+| Interaction | 716 | parallax layers, marquee walls, cursor trails, drag boards, physics balls, flip grids, spring chases, inertia dials, heat grids, confetti pops, spotlight type |
 | Data & Charts | 1000 | growth bars, donut fills, sparklines, arc gauges, heatmaps, candlesticks, radars, sankeys, KPI tiles, live log streams |
 | Nature & Weather | 1000 | rainfall, snow, flame tongues, smoke, rolling clouds, falling leaves, ocean waves, lightning, fireflies, aurora, starfields |
 | Retro & Arcade | 1000 | CRT scanlines, VHS tracking, pixel sprites, arcade marquees, 8-bit HUDs, vaporwave grids, neon signs, flip clocks, terminal boots |
 | Transitions | 1000 | directional wipes, curtains, irises, blinds, tile grids, page turns, dissolves, zoom-throughs, cube swaps, gooey blob wipes |
-| **Total** | **13,000** | *756 distinct mechanic families* |
+| **Total** | **12,301** | *736 distinct mechanic families* |
 
 ```
   category           hand   gen  total  knobs
-  Loaders              27   973   1000   5509
-  Buttons              26   974   1000   5820
+  Loaders              27   973   1000   5510
+  Buttons              26   561    587   3749
   Text FX              23   977   1000   5291
-  Cards & Hover        23   977   1000   5757
-  Backgrounds          26   974   1000   5112
-  Controls             22   978   1000   4479
+  Cards & Hover        23   975    998   5819
+  Backgrounds          26   974   1000   5066
+  Controls             22   978   1000   4489
   SVG & Lines          19   981   1000   4316
   3D                   18   982   1000   5152
-  Interaction          20   980   1000   3981
+  Interaction          20   696    716   2663
   Data & Charts         0  1000   1000   5903
   Nature & Weather      0  1000   1000   6314
   Retro & Arcade        0  1000   1000   5779
   Transitions           0  1000   1000   7087
   ────────────────────────────────────────────────────────
-  TOTAL               204 12796  13000  70500
+  TOTAL               204 12097  12301  67138
 ```
 
 Run `node tools/stats.mjs` to reprint that table — it prints the template shelf too.
@@ -138,12 +140,12 @@ customisation to native AE primitives; complex browser-only rendering can differ
 preset-ready but remains a manual **Animation → Save Animation Preset** step because Adobe's preset
 format is binary.
 
-The browser can generate a 10-effect starter kit or one builder containing all 13,000 comps. For a
+The browser can generate a 10-effect starter kit or one builder containing all 12,301 comps. For a
 static release folder with one builder and manifest per effect:
 
 ```bash
 node tools/build-ae-assets.mjs            # curated starter 10
-node tools/build-ae-assets.mjs --all      # all 13,000 in generated/animation-assets/
+node tools/build-ae-assets.mjs --all      # all 12,301 in generated/animation-assets/
 node tools/build-ae-assets.mjs --limit=50 --out=/tmp/ae-assets
 ```
 
@@ -160,24 +162,30 @@ them, which keeps the output compatible and structurally valid.
   source viewer always shows the real files.
 * A hand-written effect is a plain data object — `{ id, title, cat, tags, html, css, js? }` —
   in `js/data/*.js`.
-* Every category reaches 1,000 effects. The four deep categories are built as mechanic × variant
-  matrices via `js/gen/varykit.js` (`MLVary.matrix`), which varies palette, easing, direction,
-  counts and geometry per variant; the wave-four generators (`js/gen/wave4-*.gen.js`) add sixteen
-  more mechanic families to each of the nine original categories, and the wave-five generators
-  (`js/gen/wave5-a..m.gen.js`) add another twenty-one new mechanic families to all thirteen
-  categories, bringing every category to 1,000 through the same matrix.
+* Ten categories reach 1,000 effects; buttons, cards and interaction stop at every distinct
+  animation their generators can produce (587 / 998 / 716). The four deep categories are built as
+  mechanic × variant matrices via `js/gen/varykit.js` (`MLVary.matrix`), which varies palette,
+  easing, direction, counts and geometry per variant; the wave-four generators
+  (`js/gen/wave4-*.gen.js`) add sixteen more mechanic families to each of the nine original
+  categories, and the wave-five generators (`js/gen/wave5-a..m.gen.js`) add another twenty-one new
+  mechanic families to all thirteen categories through the same matrix.
 * A generated family lives in `js/gen/<category>.gen.js` and uses `js/gen/kit.js` (colour maths,
   `cells()`, `letters()`, `keyframes()`, `range()` / `color()` / `select()` knob builders, seeded
-  `rng()`). `js/gen/expand.js` pads or prunes every category to its target (1,000 in all thirteen,
-  declared in `MLKit.TARGETS`) and keeps ids unique
-  against the hand-written set.
+  `rng()`). `js/gen/expand.js` pads or prunes every category to its target (declared in
+  `MLKit.TARGETS`) and keeps ids unique against the hand-written set.
+* `MLKit.add()` is the gate every generated effect passes through. It refuses an effect whose own
+  markup cannot render it — a control with no style of its own, a visible part no rule addresses, a
+  demo that paints nothing, a geometry property reading a variable nothing supplies — and refuses an
+  effect whose source is the same animation as one already in the collection. `MLKit.defects()` and
+  `MLKit.srcKey()` are the same two checks `tools/check.mjs` runs over the finished library, so a
+  broken or repeated card cannot get back in.
 * `js/app.js` renders a card per effect and mounts each demo inside its **own Shadow DOM**, so
-  13,000 independent stylesheets coexist without a single class-name collision.
+  12,301 independent stylesheets coexist without a single class-name collision.
 * Demos follow a real lifecycle — **unmounted → active → paused → destroyed**. They mount as they
   scroll in (60 cards at a time, 24 on a phone), JS work shares one `requestAnimationFrame` pump, CSS
   animations
   pause from inside the shadow root (`:host(.is-offscreen)`), and far-away instances are torn down
-  so exploring all 13,000 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
+  so exploring all 12,301 does not keep hundreds of shadow trees alive. A hard cap (96 desktop / 48
   mobile) is the backstop.
 * Search and category filters use a **precomputed index** (`item._search`, `BY_CAT`) instead of
   rebuilding haystacks on every keypress.
@@ -206,7 +214,7 @@ covers fold-cover screens.
 ## ✅ Verify it
 
 ```bash
-node tools/check.mjs        # 1,000 per category, unique ids, honest knobs, 13,000 stylesheets compiled,
+node tools/check.mjs        # per-category targets, unique ids, no repeats, honest knobs, 12,301 stylesheets compiled,
                             # all AE profiles / rig builders, plus the template catalogue vs disk
 node tools/responsive.mjs   # mobile/touch invariants: viewport + safe areas, viewport-proof grid
                             # tracks, 44px targets, sheet geometry, hover-free behaviour
@@ -215,7 +223,7 @@ node tools/build-seo.mjs    # catalog.html + sitemap.xml (add --pages for effect
 
 # deeper QA (needs two dev-only packages, the site itself has none):
 npm i --no-save --prefix /tmp/qa jsdom css-tree
-QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 13,000 demos, fires hundreds of interactions
+QA_DIR=/tmp/qa node tools/smoke.mjs   # boots all 12,301 demos, fires hundreds of interactions
 QA_DIR=/tmp/qa node tools/touch.mjs   # boots the whole page at phone + desktop width and drives
                                       # the drawer, relocated toggles, dialog stacking, scroll locks
 ```

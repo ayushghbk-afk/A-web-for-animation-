@@ -182,15 +182,6 @@
 ` + kf('wxp', '0%,100%{transform:scale(1)}50%{transform:scale(1.1)}') + '\n' + kf('wxc', '0%,100%{transform:translateX(0)}50%{transform:translateX(-14px)}'),
       '' ],
 
-    ['stat', 'Stat Card Count-Up', `<figure class="cd cd-stat"><figcaption><h4><b class="num">0</b></h4><p>Active users today</p><span class="spark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="row"><b class="up">+18%</b><b>vs yesterday</b></span></figcaption></figure>`,
-      `.cd-stat h4 b{font:700 1.9rem/1 "JetBrains Mono",monospace;color:#fff;font-variant-numeric:tabular-nums}
-.cd-stat .spark{display:flex;gap:4px;align-items:flex-end;height:34px}
-.cd-stat .spark i{flex:1;border-radius:3px;background:linear-gradient(var(--c2,${C2}),transparent);height:calc(24% + var(--i) * 11%);animation:stb 2.6s ease-in-out infinite alternate;animation-delay:calc(var(--i) * -.2s)}
-.cd-stat .up{color:#34d399!important;border-color:rgba(52,211,153,.5)!important}
-.cd-stat:hover{transform:translateY(calc(var(--lift,8px) * -1))}
-` + kf('stb', 'to{height:100%}'),
-      'var b=root.querySelector(".num"),t0=null;\napi.raf(function(){var n=performance.now();if(t0===null)t0=n;var p=Math.min((n-t0)/1800,1);\n  b.textContent=Math.round(18374*(1-Math.pow(1-p,3))).toLocaleString("en-US");if(p>=1)t0=null;});' ],
-
     ['quote', 'Quote Card', `<figure class="cd cd-q"><figcaption><b class="mark">\u201C</b><p class="qt">Animation is not about making things move — it is about making them mean something.</p><span class="row"><b>A. Ghosh</b></span></figcaption></figure>`,
       `.cd-q .qt{font:500 .98rem/1.5 "Space Grotesk",serif;color:#e6e6f4;margin:0}
 .cd-q .mark{font:700 3.4rem/.4 "Space Grotesk",sans-serif;color:var(--c1,${C1});display:block;transform:translateY(18px);opacity:.9}

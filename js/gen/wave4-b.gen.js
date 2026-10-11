@@ -516,22 +516,6 @@
     };
   } });
 
-  /* 16. corner radar — rings and a sweep from the far corner */
-  BG.push({ key: 'radar', title: 'Corner Radar', tags: ['background', 'css'], build: function (v) {
-    return {
-      html: '<div class="wbg rdr"><i></i><i></i><i></i></div>',
-      css: join([
-        BGS,
-        '.wbg.rdr{background:radial-gradient(90% 90% at 88% 12%,color-mix(in srgb,var(--c1,' + v.c1 + ') 14%,transparent),transparent 70%),#080b12}',
-        '.wbg.rdr::before{content:"";position:absolute;right:-14%;top:-36%;width:58%;aspect-ratio:1;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 82%,color-mix(in srgb,var(--c2,' + v.c2 + ') 65%,transparent) 96%,transparent 100%);animation:bgrd-' + v.i + ' var(--dur,' + D(v, 2) + 's) linear infinite}',
-        '.wbg.rdr i{position:absolute;right:-14%;top:-36%;width:calc(30% * (var(--i) + 1));aspect-ratio:1;border:1.5px solid color-mix(in srgb,var(--c2,' + v.c2 + ') 42%,transparent);border-radius:50%;opacity:0;animation:bgrr-' + v.i + ' var(--dur,' + D(v, 2) + 's) linear infinite;animation-delay:calc(var(--i) * var(--step,' + v.step + 's) * -4)}',
-        kf('bgrd-' + v.i, 'to{transform:rotate(1turn)}'),
-        kf('bgrr-' + v.i, '0%{transform:scale(.2);opacity:0}25%{opacity:.9}100%{transform:scale(1.6);opacity:0}')
-      ]),
-      cfg: bgCfg(v, [range('Stagger', '--step', 0, .5, .01, v.step, 's')])
-    };
-  } });
-
   K.add('backgrounds', V.matrix('backgrounds', BG, 20, 'w4bg'));
 
   /* ════════════════════════ CONTROLS ════════════════════════ */
