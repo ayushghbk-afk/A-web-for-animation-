@@ -1,9 +1,11 @@
 /* ============================================================
    Motion Lab — expander
    The hand written set (js/data) is the seed. js/gen/*.gen.js each fill a
-   pool with far more variants than the category needs; this file tops every
-   category up to exactly 200, so the collection stays complete and the
-   generators can never over- or under-shoot the count.
+   pool with more variants than the category needs; this file tops every
+   category up to its own target (MLKit.TARGETS), so the collection stays
+   complete and the generators can never over- or under-shoot the count.
+   The pools arriving here are already gated by MLKit.add(): no repeats and
+   no demo its own source cannot render.
    ============================================================ */
 (function (global) {
   'use strict';
