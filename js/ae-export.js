@@ -1,6 +1,6 @@
 /* ============================================================
    Motion Lab — After Effects export UI
-   Generates a tuned, standalone JSX builder for any of the 6,500 effects.
+   Generates a tuned, standalone JSX builder for any of the 13,000 effects.
    The builder runs in After Effects, where Adobe itself writes the binary
    .aep, XML .aepx and optional .mogrt outputs.
    ============================================================ */

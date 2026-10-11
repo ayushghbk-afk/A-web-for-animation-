@@ -8,7 +8,7 @@
 
    Examples:
      node tools/build-ae-assets.mjs                 # starter 10
-     node tools/build-ae-assets.mjs --all           # all 6,500
+     node tools/build-ae-assets.mjs --all           # all 13,000
      node tools/build-ae-assets.mjs --limit=50
      node tools/build-ae-assets.mjs --all --out=/tmp/ae-assets
    ============================================================ */
