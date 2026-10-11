@@ -3,8 +3,9 @@
    Usage: node tools/check.mjs
    Loads every data + generator file the way the browser does and asserts
    the invariants the site relies on: exactly the target count per category
-   (1,000 each — 13,000 in total), unique ids, valid demo sources, honest
-   controls. Zero dependencies.
+   (MLKit.TARGETS — 12,301 in total), unique ids, no repeated animation, no
+   demo its own source cannot render, valid demo sources, honest controls.
+   Zero dependencies.
    ============================================================ */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -88,6 +89,7 @@ if (report && report.short) {
 /* ---- per item sanity ---- */
 const ids = new Map();
 const titles = new Map();
+const sources = new Map();
 const checked = { js: 0, cfg: 0, cols: 0 };
 ITEMS.forEach((it, n) => {
   const where = `#${n} ${it.id || '(missing id)'} [${it.cat}]`;
@@ -96,6 +98,13 @@ ITEMS.forEach((it, n) => {
   if (ids.has(it.id)) { ok = false; note(`duplicate id "${it.id}" (${ids.get(it.id)}) and (${where})`); } else ids.set(it.id, where);
   const tk = (it.title || '').toLowerCase();
   if (titles.has(tk)) { ok = false; note(`duplicate title "${it.title}" in ${titles.get(tk)} and ${where}`); } else titles.set(tk, where);
+  /* the same animation twice is a repeat, whatever it is called */
+  const sk = KIT.srcKey(it);
+  if (sources.has(sk)) { ok = false; note(`repeated animation: ${where} has the same source as ${sources.get(sk)}`); }
+  else sources.set(sk, where);
+  /* and every demo must be renderable by its own markup + stylesheet */
+  const why = KIT.defects(it);
+  if (why.length) { ok = false; note(`broken demo ${where}: ${why.join('; ')}`); }
   if (!Array.isArray(it.tags) || !it.tags.length) note(`${where}: no tags`);
   if (!it.html || !String(it.html).trim()) note(`${where}: empty html`);
   if (!it.css || !String(it.css).trim()) note(`${where}: empty css`);
@@ -172,6 +181,7 @@ else {
 }
 
 console.log(`  sources: ${checked.js} interactive demos compiled · ${ITEMS.length} html/css pairs validated`);
+console.log(`  repeats: ${sources.size} distinct animations for ${ITEMS.length} cards · generators dropped ${KIT.REJECTED.repeated.length} repeats and ${KIT.REJECTED.broken.length} unrenderable demos`);
 
 /* ---- After Effects bridge (profiles + generated JSX) ---- */
 run('js/ae-core.js');

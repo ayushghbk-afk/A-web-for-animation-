@@ -285,13 +285,11 @@
    ['skel-card', 'Card Placeholder', 0, '.sk2{width:var(--w,220px);border-radius:var(--radius,14px);padding:14px;display:grid;gap:10px;background:rgba(140,140,180,.1)}', '', ''],
    ['skel-avatar', 'Profile Row', 0, '.sk2{display:flex;gap:12px;align-items:center}', '', ''],
    ['skel-list', 'List Rows', 5, '.sk2{display:grid;gap:9px}', '', ''],
-   ['skel-image', 'Image Block', 0, '.sk2{width:var(--w,200px);height:var(--h,120px);border-radius:var(--radius,12px)}', '', ''],
    ['skel-wave', 'Wave Sweep', 8, '.sk2{display:flex;gap:6px;align-items:flex-end;height:var(--h,54px)}.sk2 i{flex:1;border-radius:4px}', '', '']
   ].forEach(function (s) {
     var body;
     if (s[0] === 'skel-card') body = '<div class="sk2"><i style="--i:0;width:60%"></i><i style="--i:1;width:100%"></i><i style="--i:2;width:85%"></i></div>';
     else if (s[0] === 'skel-avatar') body = '<div class="sk2"><b style="--i:0"></b><i style="--i:1"></i><i style="--i:2"></i></div>';
-    else if (s[0] === 'skel-image') body = '<div class="sk2"></div>';
     else body = '<div class="sk2">' + cells(s[2] || 3) + '</div>';
     var shimmer = 'background:linear-gradient(90deg,rgba(140,140,180,.14) 0 38%,color-mix(in srgb,var(--c1,' + C1 + ') 55%,rgba(140,140,180,.2)) 50%,rgba(140,140,180,.14) 62% 100%) 0 0 / 260% 100%;animation:sksh var(--dur,1.7s) ease-in-out infinite;animation-delay:calc(var(--i) * -.09s)';
     push({
