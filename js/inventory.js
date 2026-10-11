@@ -2,7 +2,7 @@
    Motion Lab — inventory ("All" section)
    1. Maps every animation and UI element this site itself uses,
       section by section.
-   2. Indexes the complete collection — all 6,500 effects, grouped
+   2. Indexes the complete collection — all 13,000 effects, grouped
       by section, each linked straight into the live lab.
    ============================================================ */
 (function () {

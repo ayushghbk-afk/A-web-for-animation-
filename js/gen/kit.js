@@ -120,12 +120,13 @@
   /* -------- item factory + registry -------- */
   var GEN = global.ML_GEN = global.ML_GEN || {};
   var SEEN = global.ML_SEEN_IDS = global.ML_SEEN_IDS || {};
-  var TARGET = global.ML_TARGET = 500;              // 500 effects in every category
-  /* every category is the same depth: 500 effects each — 6,500 in total */
+  var TARGET = global.ML_TARGET = 1000;             // 1,000 effects in every category
+  /* every category is the same depth: 1,000 effects each — 13,000 in total,
+     clearing the 10,000-effect goal with room to spare */
   var TARGETS = global.ML_TARGETS = {
-    loaders: 500, buttons: 500, text: 500, cards: 500, backgrounds: 500,
-    controls: 500, svg: 500, '3d': 500, motion: 500,
-    data: 500, nature: 500, retro: 500, transitions: 500
+    loaders: 1000, buttons: 1000, text: 1000, cards: 1000, backgrounds: 1000,
+    controls: 1000, svg: 1000, '3d': 1000, motion: 1000,
+    data: 1000, nature: 1000, retro: 1000, transitions: 1000
   };
   function targetFor(cat) { return TARGETS[cat] || TARGET; }
   /* the hand written set is already in MOTION_LAB — never reuse one of its ids */

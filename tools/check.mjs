@@ -3,7 +3,7 @@
    Usage: node tools/check.mjs
    Loads every data + generator file the way the browser does and asserts
    the invariants the site relies on: exactly the target count per category
-   (500 each — 6,500 in total), unique ids, valid demo sources, honest
+   (1,000 each — 13,000 in total), unique ids, valid demo sources, honest
    controls. Zero dependencies.
    ============================================================ */
 import fs from 'node:fs';
@@ -186,7 +186,7 @@ function checkAfterEffects() {
   profiles.forEach((p, i) => {
     const where = `AE profile #${i + 1} ${ITEMS[i].id}`;
     if (p.id !== ITEMS[i].id) { ok = false; note(`${where}: id changed to ${p.id}`); }
-    if (!p.fileBase || !/^\d{3,4}-[a-z0-9-]+$/.test(p.fileBase)) { ok = false; note(`${where}: bad fileBase "${p.fileBase}"`); }
+    if (!p.fileBase || !/^\d{3,5}-[a-z0-9-]+$/.test(p.fileBase)) { ok = false; note(`${where}: bad fileBase "${p.fileBase}"`); }
     if (!AE.ARCHETYPES.includes(p.archetype)) { ok = false; note(`${where}: unknown archetype "${p.archetype}"`); }
     if (!Array.isArray(p.colors) || p.colors.length < 3) { ok = false; note(`${where}: needs at least three AE colours`); }
     if (!(p.cycle > 0) || !(p.compDuration >= p.cycle)) { ok = false; note(`${where}: invalid cycle / comp duration`); }
