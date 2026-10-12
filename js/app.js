@@ -982,7 +982,7 @@
   function syncThemeColor() {
     if (!themeColor) return;
     themeColor.setAttribute('content',
-      document.documentElement.dataset.theme === 'light' ? '#f5f5f8' : '#05050a');
+      document.documentElement.dataset.theme === 'light' ? '#f4f6fb' : '#04060f');
   }
   var saved = localStorage.getItem('ml-theme');
   if (saved) document.documentElement.dataset.theme = saved;

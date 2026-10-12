@@ -5,27 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Solar Odyssey — Live 3D Animation Lab</title>
 <meta name="description" content="Every 3D model, animation and effect from Solar Odyssey, rendered live in the browser from the game's own procedural source code. Solar system motion, rocket launches, landing cinematics, particles, asteroids, stations and the astronaut walk cycle." />
-<meta name="theme-color" content="#05050a" />
+<meta name="theme-color" content="#04060f" />
 <meta name="robots" content="index,follow" />
 <meta property="og:title" content="Solar Odyssey — Live 3D Animation Lab" />
 <meta property="og:description" content="Solar system orbits, rocket staging, atmospheric re-entry, pooled particles, asteroid tumbling and the EVA walk cycle — all rendered live from the game's own code." />
 <meta property="og:type" content="website" />
 <link rel="canonical" href="https://ayushghbk-afk.github.io/A-web-for-animation-/solar-odyssey.html" />
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2305050a'/><circle cx='16' cy='16' r='11' fill='none' stroke='%2322d3ee' stroke-width='2'/><circle cx='16' cy='5.5' r='2.4' fill='%238b7dff'/><circle cx='16' cy='16' r='3.2' fill='%2322d3ee'/></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2304060f'/><circle cx='16' cy='16' r='11' fill='none' stroke='%2335dbf2' stroke-width='2'/><circle cx='16' cy='5.5' r='2.4' fill='%235b8cff'/><circle cx='16' cy='16' r='3.2' fill='%2335dbf2'/></svg>" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg: #05050a;
+    --bg: #04060f;
     --panel: rgba(255, 255, 255, 0.04);
     --panel-2: rgba(255, 255, 255, 0.06);
     --line: rgba(255, 255, 255, 0.09);
-    --line-strong: rgba(255, 255, 255, 0.16);
-    --text: #f4f4f8;
-    --muted: #8b8b9f;
-    --accent: #8b7dff;
-    --accent-2: #22d3ee;
+    --line-strong: rgba(255, 255, 255, 0.19);
+    --text: #f5f7fc;
+    --muted: #9aa2bd;
+    --accent: #5b8cff;
+    --accent-2: #35dbf2;
     --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     --sans: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   }
@@ -121,7 +121,7 @@
   .ctl:hover { color: var(--text); border-color: var(--line-strong); }
   .ctl.on { color: var(--accent); border-color: color-mix(in srgb, var(--accent) 55%, transparent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
   .ctl:disabled { opacity: .35; cursor: default; }
-  .ctl.primary { color: #0b0b12; background: linear-gradient(180deg, #b7a8ff, #8b7dff); border-color: transparent; font-weight: 700; }
+  .ctl.primary { color: var(--accent-ink, #050813); background: linear-gradient(180deg, #93b4ff, var(--accent)); border-color: transparent; font-weight: 700; }
   .ctl.primary:hover { filter: brightness(1.08); }
   .speed { display: inline-flex; height: 36px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden; }
   .speed select {

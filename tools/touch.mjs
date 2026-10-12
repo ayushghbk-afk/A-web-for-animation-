@@ -142,7 +142,7 @@ console.log('\n  \u001b[1mat 640px and below (phone)\u001b[0m');
   check('the relocated pause toggle stops the whole site', d.body.classList.contains('paused'));
   click(w, d.getElementById('themeToggle'));
   check('the relocated theme toggle repaints the mobile browser chrome',
-    d.documentElement.dataset.theme === 'light' && d.getElementById('themeColorMeta').getAttribute('content') === '#f5f5f8');
+    d.documentElement.dataset.theme === 'light' && d.getElementById('themeColorMeta').getAttribute('content') === '#f4f6fb');
 
   click(w, d.querySelector('#grid .card .mini.code'));
   check('the code dialog opens over a locked page', d.getElementById('modal').hidden === false && d.body.style.overflow === 'hidden');
