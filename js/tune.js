@@ -360,6 +360,16 @@
     return '' + (Math.round(v * 100) / 100) + (c.unit || '');
   }
 
+  /* The range widget is drawn in site.css; it needs to know where the thumb
+     currently sits so it can fill the track behind it. --p is that position. */
+  function paint(input) {
+    var min = parseFloat(input.min); if (!isFinite(min)) min = 0;
+    var max = parseFloat(input.max); if (!isFinite(max)) max = 100;
+    var val = parseFloat(input.value); if (!isFinite(val)) val = min;
+    var pct = max === min ? 0 : ((val - min) / (max - min)) * 100;
+    input.style.setProperty('--p', Math.max(0, Math.min(100, pct)).toFixed(2) + '%');
+  }
+
   /* one control row. `c` is a descriptor, `cur` its current value, `set` the sink */
   function buildRow(c, cur, onChange) {
     if (c.t === 'select') {
@@ -395,8 +405,9 @@
     if (cur == null) cur = def;
     input.value = cur;
     out.textContent = fmtVal(c, +cur);
-    input.addEventListener('input', function () { out.textContent = fmtVal(c, +input.value); onChange(+input.value); });
-    input.addEventListener('dblclick', function () { input.value = def; out.textContent = fmtVal(c, def); onChange(def); });
+    paint(input);
+    input.addEventListener('input', function () { out.textContent = fmtVal(c, +input.value); paint(input); onChange(+input.value); });
+    input.addEventListener('dblclick', function () { input.value = def; out.textContent = fmtVal(c, def); paint(input); onChange(def); });
     return row;
   }
 
